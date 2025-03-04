@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Orden.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.entity</a> &gt; <span class="el_source">Orden.java</span></div><h1>Orden.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
+
+import jakarta.json.bind.annotation.JsonbTransient;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
+/**
+ *
+ * @author mjlopez
+ */
+@Entity
+@Table(name = &quot;orden&quot;)
+@NamedQueries({
+    @NamedQuery(name = &quot;Orden.findAll&quot;, query = &quot;SELECT o FROM Orden o&quot;),
+    @NamedQuery(name = &quot;Orden.findByIdOrden&quot;, query = &quot;SELECT o FROM Orden o WHERE o.idOrden = :idOrden&quot;),
+    @NamedQuery(name = &quot;Orden.findByFecha&quot;, query = &quot;SELECT o FROM Orden o WHERE o.fecha = :fecha&quot;),
+    @NamedQuery(name = &quot;Orden.findBySucursal&quot;, query = &quot;SELECT o FROM Orden o WHERE o.sucursal = :sucursal&quot;),
+    @NamedQuery(name = &quot;Orden.findByAnulada&quot;, query = &quot;SELECT o FROM Orden o WHERE o.anulada = :anulada&quot;)})
+public class Orden implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;id_orden&quot;)
+    private Long idOrden;
+    @Column(name = &quot;fecha&quot;)
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+    @Column(name = &quot;sucursal&quot;)
+    private String sucursal;
+    @Column(name = &quot;anulada&quot;)
+    private Boolean anulada;
+    @JsonbTransient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;orden&quot;)
+    private List&lt;OrdenDetalle&gt; ordenDetalleList;
+    @OneToMany(mappedBy = &quot;idOrden&quot;)
+    private List&lt;Pago&gt; pagoList;
+
+<span class="fc" id="L58">    public Orden() {</span>
+<span class="fc" id="L59">    }</span>
+
+<span class="fc" id="L61">    public Orden(Long idOrden) {</span>
+<span class="fc" id="L62">        this.idOrden = idOrden;</span>
+<span class="fc" id="L63">    }</span>
+
+    public Long getIdOrden() {
+<span class="nc" id="L66">        return idOrden;</span>
+    }
+
+    public void setIdOrden(Long idOrden) {
+<span class="fc" id="L70">        this.idOrden = idOrden;</span>
+<span class="fc" id="L71">    }</span>
+
+    public Date getFecha() {
+<span class="nc" id="L74">        return fecha;</span>
+    }
+
+    public void setFecha(Date fecha) {
+<span class="fc" id="L78">        this.fecha = fecha;</span>
+<span class="fc" id="L79">    }</span>
+
+    public String getSucursal() {
+<span class="nc" id="L82">        return sucursal;</span>
+    }
+
+    public void setSucursal(String sucursal) {
+<span class="fc" id="L86">        this.sucursal = sucursal;</span>
+<span class="fc" id="L87">    }</span>
+
+    public Boolean getAnulada() {
+<span class="fc" id="L90">        return anulada;</span>
+    }
+
+    public void setAnulada(Boolean anulada) {
+<span class="fc" id="L94">        this.anulada = anulada;</span>
+<span class="fc" id="L95">    }</span>
+
+    public List&lt;OrdenDetalle&gt; getOrdenDetalleList() {
+<span class="nc" id="L98">        return ordenDetalleList;</span>
+    }
+
+    public void setOrdenDetalleList(List&lt;OrdenDetalle&gt; ordenDetalleList) {
+<span class="nc" id="L102">        this.ordenDetalleList = ordenDetalleList;</span>
+<span class="nc" id="L103">    }</span>
+
+    public List&lt;Pago&gt; getPagoList() {
+<span class="nc" id="L106">        return pagoList;</span>
+    }
+
+    public void setPagoList(List&lt;Pago&gt; pagoList) {
+<span class="fc" id="L110">        this.pagoList = pagoList;</span>
+<span class="fc" id="L111">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L115">        int hash = 0;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        hash += (idOrden != null ? idOrden.hashCode() : 0);</span>
+<span class="nc" id="L117">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (!(object instanceof Orden)) {</span>
+<span class="nc" id="L124">            return false;</span>
+        }
+<span class="fc" id="L126">        Orden other = (Orden) object;</span>
+<span class="pc bpc" id="L127" title="5 of 8 branches missed.">        if ((this.idOrden == null &amp;&amp; other.idOrden != null) || (this.idOrden != null &amp;&amp; !this.idOrden.equals(other.idOrden))) {</span>
+<span class="nc" id="L128">            return false;</span>
+        }
+<span class="fc" id="L130">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L135">        return &quot;com.mycompany.extreciondeentities.entities.Orden[ idOrden=&quot; + idOrden + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

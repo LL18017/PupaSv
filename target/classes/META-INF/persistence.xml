@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                                 http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="PupaSV-PU" transaction-type="JTA">
+        <jta-data-source>jdbc/pgdb</jta-data-source>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetalle</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.PagoDetalle</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto</class>
+    </persistence-unit>
+</persistence>

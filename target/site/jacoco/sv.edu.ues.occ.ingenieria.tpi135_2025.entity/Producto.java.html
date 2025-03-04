@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Producto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.entity</a> &gt; <span class="el_source">Producto.java</span></div><h1>Producto.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
+
+import java.io.Serializable;
+import java.util.List;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+/**
+ *
+ * @author mjlopez
+ */
+@Entity
+@Table(name = &quot;producto&quot;)
+@NamedQueries({
+    @NamedQuery(name = &quot;Producto.findAll&quot;, query = &quot;SELECT p FROM Producto p&quot;),
+    @NamedQuery(name = &quot;Producto.findByIdProducto&quot;, query = &quot;SELECT p FROM Producto p WHERE p.idProducto = :idProducto&quot;),
+    @NamedQuery(name = &quot;Producto.findByNombre&quot;, query = &quot;SELECT p FROM Producto p WHERE p.nombre = :nombre&quot;),
+    @NamedQuery(name = &quot;Producto.findByActivo&quot;, query = &quot;SELECT p FROM Producto p WHERE p.activo = :activo&quot;),
+    @NamedQuery(name = &quot;Producto.findByObservaciones&quot;, query = &quot;SELECT p FROM Producto p WHERE p.observaciones = :observaciones&quot;)})
+public class Producto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;id_producto&quot;)
+    private Long idProducto;
+    @Column(name = &quot;nombre&quot;)
+    private String nombre;
+    @Column(name = &quot;activo&quot;)
+    private Boolean activo;
+    @Column(name = &quot;observaciones&quot;)
+    private String observaciones;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;producto&quot;)
+    private List&lt;ComboDetalle&gt; comboDetalleList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;producto&quot;)
+    private List&lt;ProductoDetalle&gt; productoDetalleList;
+    @OneToMany(mappedBy = &quot;idProducto&quot;)
+    private List&lt;ProductoPrecio&gt; productoPrecioList;
+
+<span class="fc" id="L54">    public Producto() {</span>
+<span class="fc" id="L55">    }</span>
+
+<span class="nc" id="L57">    public Producto(Long idProducto) {</span>
+<span class="nc" id="L58">        this.idProducto = idProducto;</span>
+<span class="nc" id="L59">    }</span>
+
+    public Long getIdProducto() {
+<span class="nc" id="L62">        return idProducto;</span>
+    }
+
+    public void setIdProducto(Long idProducto) {
+<span class="nc" id="L66">        this.idProducto = idProducto;</span>
+<span class="nc" id="L67">    }</span>
+
+    public String getNombre() {
+<span class="nc" id="L70">        return nombre;</span>
+    }
+
+    public void setNombre(String nombre) {
+<span class="nc" id="L74">        this.nombre = nombre;</span>
+<span class="nc" id="L75">    }</span>
+
+    public Boolean getActivo() {
+<span class="nc" id="L78">        return activo;</span>
+    }
+
+    public void setActivo(Boolean activo) {
+<span class="nc" id="L82">        this.activo = activo;</span>
+<span class="nc" id="L83">    }</span>
+
+    public String getObservaciones() {
+<span class="nc" id="L86">        return observaciones;</span>
+    }
+
+    public void setObservaciones(String observaciones) {
+<span class="nc" id="L90">        this.observaciones = observaciones;</span>
+<span class="nc" id="L91">    }</span>
+
+    public List&lt;ComboDetalle&gt; getComboDetalleList() {
+<span class="nc" id="L94">        return comboDetalleList;</span>
+    }
+
+    public void setComboDetalleList(List&lt;ComboDetalle&gt; comboDetalleList) {
+<span class="nc" id="L98">        this.comboDetalleList = comboDetalleList;</span>
+<span class="nc" id="L99">    }</span>
+
+    public List&lt;ProductoDetalle&gt; getProductoDetalleList() {
+<span class="nc" id="L102">        return productoDetalleList;</span>
+    }
+
+    public void setProductoDetalleList(List&lt;ProductoDetalle&gt; productoDetalleList) {
+<span class="nc" id="L106">        this.productoDetalleList = productoDetalleList;</span>
+<span class="nc" id="L107">    }</span>
+
+    public List&lt;ProductoPrecio&gt; getProductoPrecioList() {
+<span class="nc" id="L110">        return productoPrecioList;</span>
+    }
+
+    public void setProductoPrecioList(List&lt;ProductoPrecio&gt; productoPrecioList) {
+<span class="nc" id="L114">        this.productoPrecioList = productoPrecioList;</span>
+<span class="nc" id="L115">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L119">        int hash = 0;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        hash += (idProducto != null ? idProducto.hashCode() : 0);</span>
+<span class="nc" id="L121">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (!(object instanceof Producto)) {</span>
+<span class="nc" id="L128">            return false;</span>
+        }
+<span class="nc" id="L130">        Producto other = (Producto) object;</span>
+<span class="nc bnc" id="L131" title="All 8 branches missed.">        if ((this.idProducto == null &amp;&amp; other.idProducto != null) || (this.idProducto != null &amp;&amp; !this.idProducto.equals(other.idProducto))) {</span>
+<span class="nc" id="L132">            return false;</span>
+        }
+<span class="nc" id="L134">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L139">        return &quot;com.mycompany.extreciondeentities.entities.Producto[ idProducto=&quot; + idProducto + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

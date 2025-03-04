@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrdenDetalleBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.control</a> &gt; <span class="el_source">OrdenDetalleBean.java</span></div><h1>OrdenDetalleBean.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
+
+/**
+ *
+ * @author mjlopez clase bean para control de la entidad OrdenDetalle
+ */
+@LocalBean
+@Stateless
+public class OrdenDetalleBean extends AbstractDataAccess&lt;OrdenDetalle&gt; implements Serializable {
+
+    @PersistenceContext(unitName = &quot;PupaSV-PU&quot;)
+    EntityManager em;
+
+    public OrdenDetalleBean() {
+<span class="nc" id="L30">        super(OrdenDetalle.class);</span>
+<span class="nc" id="L31">    }</span>
+
+    @Override
+    public EntityManager getEntityManager() {
+<span class="nc" id="L35">        return em;</span>
+    }
+
+    @Override
+    public String orderParameterQuery() {
+<span class="nc" id="L40">        return &quot;idOrdenDetalle&quot;;</span>
+    }
+    
+    public List&lt;OrdenDetalle&gt; findRangeByIdOrden(Long idOrden,int first , int max) {
+        try {
+<span class="nc" id="L45">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="nc" id="L46">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L47">                    .setFirstResult(first)</span>
+<span class="nc" id="L48">                    .setMaxResults(max)</span>
+<span class="nc" id="L49">                    .getResultList();</span>
+<span class="nc" id="L50">        } catch (Exception e) {</span>
+<span class="nc" id="L51">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+        
+<span class="nc" id="L54">        return List.of();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
