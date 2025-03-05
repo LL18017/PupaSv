@@ -231,7 +231,8 @@ public Long count() {
      * @throws IllegalStateException Si no se puede acceder al repositorio.
      * @throws IllegalArgumentException si el registro T es nulo.
      */
-    public void delete(T registro) {
+    public void delete(Object id) {
+        T registro=findById(id);
         if (registro != null) {
             EntityManager em = null;
             try {

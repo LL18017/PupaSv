@@ -10,11 +10,9 @@ import jakarta.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,7 +24,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
 /**
@@ -235,12 +232,12 @@ public class OrdenBeanIT {
         OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Orden ordenPrimera = new Orden(12345L);
+        Object idOrdenPrimera = 12345L;
 
         try {
             // Ahora proceder a eliminarla
             em.getTransaction().begin();
-            cut.delete(ordenPrimera);
+            cut.delete(idOrdenPrimera);
             em.getTransaction().commit();
 
             // Verificar que realmente se eliminó

@@ -55,28 +55,28 @@ public class Orden implements Serializable {
     @OneToMany(mappedBy = &quot;idOrden&quot;)
     private List&lt;Pago&gt; pagoList;
 
-<span class="fc" id="L58">    public Orden() {</span>
-<span class="fc" id="L59">    }</span>
+<span class="nc" id="L58">    public Orden() {</span>
+<span class="nc" id="L59">    }</span>
 
 <span class="fc" id="L61">    public Orden(Long idOrden) {</span>
 <span class="fc" id="L62">        this.idOrden = idOrden;</span>
 <span class="fc" id="L63">    }</span>
 
     public Long getIdOrden() {
-<span class="nc" id="L66">        return idOrden;</span>
+<span class="fc" id="L66">        return idOrden;</span>
     }
 
     public void setIdOrden(Long idOrden) {
-<span class="fc" id="L70">        this.idOrden = idOrden;</span>
-<span class="fc" id="L71">    }</span>
+<span class="nc" id="L70">        this.idOrden = idOrden;</span>
+<span class="nc" id="L71">    }</span>
 
     public Date getFecha() {
 <span class="nc" id="L74">        return fecha;</span>
     }
 
     public void setFecha(Date fecha) {
-<span class="fc" id="L78">        this.fecha = fecha;</span>
-<span class="fc" id="L79">    }</span>
+<span class="nc" id="L78">        this.fecha = fecha;</span>
+<span class="nc" id="L79">    }</span>
 
     public String getSucursal() {
 <span class="nc" id="L82">        return sucursal;</span>
@@ -87,12 +87,12 @@ public class Orden implements Serializable {
 <span class="fc" id="L87">    }</span>
 
     public Boolean getAnulada() {
-<span class="fc" id="L90">        return anulada;</span>
+<span class="nc" id="L90">        return anulada;</span>
     }
 
     public void setAnulada(Boolean anulada) {
-<span class="fc" id="L94">        this.anulada = anulada;</span>
-<span class="fc" id="L95">    }</span>
+<span class="nc" id="L94">        this.anulada = anulada;</span>
+<span class="nc" id="L95">    }</span>
 
     public List&lt;OrdenDetalle&gt; getOrdenDetalleList() {
 <span class="nc" id="L98">        return ordenDetalleList;</span>
@@ -107,8 +107,8 @@ public class Orden implements Serializable {
     }
 
     public void setPagoList(List&lt;Pago&gt; pagoList) {
-<span class="fc" id="L110">        this.pagoList = pagoList;</span>
-<span class="fc" id="L111">    }</span>
+<span class="nc" id="L110">        this.pagoList = pagoList;</span>
+<span class="nc" id="L111">    }</span>
 
     @Override
     public int hashCode() {

@@ -231,26 +231,27 @@ public Long count() {
      * @throws IllegalStateException Si no se puede acceder al repositorio.
      * @throws IllegalArgumentException si el registro T es nulo.
      */
-    public void delete(T registro) {
-<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (registro != null) {</span>
-<span class="fc" id="L236">            EntityManager em = null;</span>
+    public void delete(Object id) {
+<span class="fc" id="L235">        T registro=findById(id);</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (registro != null) {</span>
+<span class="fc" id="L237">            EntityManager em = null;</span>
             try {
-<span class="fc" id="L238">                em = getEntityManager();</span>
-<span class="fc bfc" id="L239" title="All 2 branches covered.">                if (em == null) {</span>
-<span class="fc" id="L240">                    throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
+<span class="fc" id="L239">                em = getEntityManager();</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                if (em == null) {</span>
+<span class="nc" id="L241">                    throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
                 }
-<span class="fc" id="L242">                 CriteriaBuilder cb = em.getCriteriaBuilder();</span>
-<span class="fc" id="L243">                    CriteriaDelete&lt;T&gt; cd = cb.createCriteriaDelete(this.tipoDato);</span>
-<span class="fc" id="L244">                    Root&lt;T&gt; raiz = cd.from(this.tipoDato);</span>
-<span class="fc" id="L245">                    cd.where(cb.equal(raiz, registro));</span>
-<span class="fc" id="L246">                em.createQuery(cd).executeUpdate();</span>
-<span class="fc" id="L247">                    return;</span>
-<span class="fc" id="L248">            } catch (Exception e) {</span>
-<span class="fc" id="L249">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="fc" id="L250">                 throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;, e);</span>
+<span class="fc" id="L243">                 CriteriaBuilder cb = em.getCriteriaBuilder();</span>
+<span class="fc" id="L244">                    CriteriaDelete&lt;T&gt; cd = cb.createCriteriaDelete(this.tipoDato);</span>
+<span class="fc" id="L245">                    Root&lt;T&gt; raiz = cd.from(this.tipoDato);</span>
+<span class="fc" id="L246">                    cd.where(cb.equal(raiz, registro));</span>
+<span class="fc" id="L247">                em.createQuery(cd).executeUpdate();</span>
+<span class="fc" id="L248">                    return;</span>
+<span class="nc" id="L249">            } catch (Exception e) {</span>
+<span class="nc" id="L250">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L251">                 throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L253">        throw new IllegalArgumentException();</span>
+<span class="nc" id="L254">        throw new IllegalArgumentException();</span>
     }
 
 }
