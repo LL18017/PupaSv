@@ -1,0 +1,202 @@
+------Start of DE processing------ = [13/3/25, 15:59:03:755 CST]
+Exception = com.ibm.wsspi.adaptable.module.UnableToAdaptException
+Source = com.ibm.ws.app.manager.module.internal.ContextRootUtil
+probeid = 45
+Stack Dump = com.ibm.wsspi.adaptable.module.UnableToAdaptException: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente.
+	at com.ibm.ws.javaee.ddmodel.web.WebAppEntryAdapter.adapt(WebAppEntryAdapter.java:63)
+	at com.ibm.ws.javaee.ddmodel.web.WebAppEntryAdapter.adapt(WebAppEntryAdapter.java:28)
+	at com.ibm.ws.adaptable.module.internal.AdapterFactoryServiceImpl.adapt(AdapterFactoryServiceImpl.java:233)
+	at com.ibm.ws.adaptable.module.internal.AdaptableEntryImpl.adapt(AdaptableEntryImpl.java:123)
+	at com.ibm.ws.javaee.ddmodel.web.WebAppAdapter.adapt(WebAppAdapter.java:40)
+	at com.ibm.ws.javaee.ddmodel.web.WebAppAdapter.adapt(WebAppAdapter.java:26)
+	at com.ibm.ws.adaptable.module.internal.AdapterFactoryServiceImpl.adapt(AdapterFactoryServiceImpl.java:202)
+	at com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl.adapt(AdaptableContainerImpl.java:176)
+	at com.ibm.ws.javaee.ddmodel.common.AppStructureHelper.getWebVersion(AppStructureHelper.java:41)
+	at com.ibm.ws.javaee.ddmodel.common.BndExtAdapter.getWebVersion(BndExtAdapter.java:576)
+	at com.ibm.ws.javaee.ddmodel.webext.WebExtAdapter.adapt(WebExtAdapter.java:72)
+	at com.ibm.ws.javaee.ddmodel.webext.WebExtAdapter.adapt(WebExtAdapter.java:47)
+	at com.ibm.ws.adaptable.module.internal.AdapterFactoryServiceImpl.adapt(AdapterFactoryServiceImpl.java:202)
+	at com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl.adapt(AdaptableContainerImpl.java:176)
+	at com.ibm.ws.app.manager.module.internal.ContextRootUtil.getContextRoot(ContextRootUtil.java:40)
+	at com.ibm.ws.app.manager.war.internal.WARDeployedAppInfo.<init>(WARDeployedAppInfo.java:62)
+	at com.ibm.ws.app.manager.war.internal.WARDeployedAppInfoFactoryImpl.createDeployedAppInfo(WARDeployedAppInfoFactoryImpl.java:170)
+	at com.ibm.ws.app.manager.war.internal.WARDeployedAppInfoFactoryImpl.createDeployedAppInfo(WARDeployedAppInfoFactoryImpl.java:37)
+	at com.ibm.ws.app.manager.war.internal.WARApplicationHandlerImpl.setUpApplicationMonitoring(WARApplicationHandlerImpl.java:52)
+	at com.ibm.ws.app.manager.internal.statemachine.StartAction.execute(StartAction.java:194)
+	at com.ibm.ws.app.manager.internal.statemachine.ApplicationStateMachineImpl.enterState(ApplicationStateMachineImpl.java:1369)
+	at com.ibm.ws.app.manager.internal.statemachine.ApplicationStateMachineImpl.run(ApplicationStateMachineImpl.java:912)
+	at com.ibm.ws.threading.internal.ExecutorServiceImpl$RunnableWrapper.run(ExecutorServiceImpl.java:298)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente.
+	at com.ibm.ws.javaee.ddmodel.DDParserSpec.createRootParsable(DDParserSpec.java:122)
+	at com.ibm.ws.javaee.ddmodel.DDParser.parseRootElement(DDParser.java:932)
+	at com.ibm.ws.javaee.ddmodel.DDParser.parse(DDParser.java:911)
+	at com.ibm.ws.javaee.ddmodel.web.WebAppDDParser.parse(WebAppDDParser.java:68)
+	at com.ibm.ws.javaee.ddmodel.web.WebAppEntryAdapter.adapt(WebAppEntryAdapter.java:61)
+	... 25 more
+
+Dump of callerThis
+null
+Dump of objectArray[0]
+Object type = com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl
+  root = class com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl@79d5085c
+  rootOverlay = class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerImpl@c503783
+    tc = class com.ibm.websphere.ras.TraceComponent@a09d07b
+      strings[0] = "TraceComponent[com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerImpl,class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerImpl,[archive.overlay],com.ibm.ws.artifact.overlay.internal.resources.ArtifactOverlayMessages,null]"
+    base = class com.ibm.ws.artifact.loose.internal.LooseArchive@71baed1f
+      cacheDir = class java.io.File@4abde677
+      xmlFile = class java.io.File@a955089
+      parent = null
+      cfh = class com.ibm.ws.artifact.loose.internal.LooseContainerFactoryHelper@4ca73dc3
+      pathInParent = null
+      _entries = class java.util.ArrayList@48751a9a
+      tc = class com.ibm.websphere.ras.TraceComponent@17b46f3e
+      artifactNotifier = null
+      serialVersionUID = 345486831272892625
+    maskSet = class java.util.HashSet@21d1ef0a
+      serialVersionUID = "/* Could not access serialVersionUID */"
+      map = "/* Could not access map */"
+      PRESENT = "/* Could not access PRESENT */"
+    cfHolder = class com.ibm.ws.artifact.overlay.internal.OverlayContainerFactoryImpl@6b34908c
+      containerFactory = class com.ibm.ws.artifact.internal.ArtifactContainerFactoryService@5dd3b76e
+      registeredContainers = class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerRegistry@156da94c
+      serialVersionUID = -6737526700663704564
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@e00e04f
+    fileOverlayContainer = class com.ibm.ws.artifact.file.internal.FileContainer@32b890af
+      containerFactoryHolder = class com.ibm.ws.artifact.file.internal.FileContainerFactory@6615e878
+      parent = null
+      thisInParent = null
+      dir = class java.io.File@144c41f2
+      cacheDir = class java.io.File@3a4b45ce
+      isRoot = true
+      root = class com.ibm.ws.artifact.file.internal.FileContainer@32b890af
+      artifactNotifier = class com.ibm.ws.artifact.file.FileArtifactNotifier@1eecc7e
+      serialVersionUID = 556130772302156267
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@6cab37a
+    overlayDirectory = class java.io.File@144c41f2
+      FS = "/* Could not access FS */"
+      path = "/* Could not access path */"
+      status = "/* Could not access status */"
+      prefixLength = "/* Could not access prefixLength */"
+      separatorChar = /
+      separator = "/"
+      pathSeparatorChar = :
+      pathSeparator = ":"
+      UNSAFE = "/* Could not access UNSAFE */"
+      PATH_OFFSET = "/* Could not access PATH_OFFSET */"
+      PREFIX_LENGTH_OFFSET = "/* Could not access PREFIX_LENGTH_OFFSET */"
+      serialVersionUID = "/* Could not access serialVersionUID */"
+      filePath = "/* Could not access filePath */"
+      $assertionsDisabled = "/* Could not access $assertionsDisabled */"
+    cacheDirForOverlay = class java.io.File@3a4b45ce
+      FS = "/* Could not access FS */"
+      path = "/* Could not access path */"
+      status = "/* Could not access status */"
+      prefixLength = "/* Could not access prefixLength */"
+      separatorChar = /
+      separator = "/"
+      pathSeparatorChar = :
+      pathSeparator = ":"
+      UNSAFE = "/* Could not access UNSAFE */"
+      PATH_OFFSET = "/* Could not access PATH_OFFSET */"
+      PREFIX_LENGTH_OFFSET = "/* Could not access PREFIX_LENGTH_OFFSET */"
+      serialVersionUID = "/* Could not access serialVersionUID */"
+      filePath = "/* Could not access filePath */"
+      $assertionsDisabled = "/* Could not access $assertionsDisabled */"
+    overlayNotifier = class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayNotifier@75b402fb
+      root = class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerImpl@c503783
+      overlayContainer = class com.ibm.ws.artifact.file.internal.FileContainer@32b890af
+      overlaidContainer = class com.ibm.ws.artifact.loose.internal.LooseArchive@71baed1f
+      listeningToContainers = false
+      listeners = class java.util.concurrent.ConcurrentHashMap@554a8098
+      pathsMonitored = class java.util.HashSet@1b621249
+      parentNotifier = null
+      pathOfEntryInParent = null
+      id = null
+      serialVersionUID = -5716655730663296309
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@7500cee6
+    enclosingContainer = null
+    entryInEnclosingContainer = null
+    nestedOverlays = class java.util.concurrent.ConcurrentHashMap@3ffd90a
+      serialVersionUID = "/* Could not access serialVersionUID */"
+      MAXIMUM_CAPACITY = "/* Could not access MAXIMUM_CAPACITY */"
+      DEFAULT_CAPACITY = "/* Could not access DEFAULT_CAPACITY */"
+      MAX_ARRAY_SIZE = "/* Could not access MAX_ARRAY_SIZE */"
+      DEFAULT_CONCURRENCY_LEVEL = "/* Could not access DEFAULT_CONCURRENCY_LEVEL */"
+      LOAD_FACTOR = "/* Could not access LOAD_FACTOR */"
+      TREEIFY_THRESHOLD = "/* Could not access TREEIFY_THRESHOLD */"
+      UNTREEIFY_THRESHOLD = "/* Could not access UNTREEIFY_THRESHOLD */"
+      MIN_TREEIFY_CAPACITY = "/* Could not access MIN_TREEIFY_CAPACITY */"
+      MIN_TRANSFER_STRIDE = "/* Could not access MIN_TRANSFER_STRIDE */"
+      RESIZE_STAMP_BITS = "/* Could not access RESIZE_STAMP_BITS */"
+      MAX_RESIZERS = "/* Could not access MAX_RESIZERS */"
+      RESIZE_STAMP_SHIFT = "/* Could not access RESIZE_STAMP_SHIFT */"
+      MOVED = "/* Could not access MOVED */"
+      TREEBIN = "/* Could not access TREEBIN */"
+      RESERVED = "/* Could not access RESERVED */"
+      HASH_BITS = "/* Could not access HASH_BITS */"
+      NCPU = "/* Could not access NCPU */"
+      serialPersistentFields = "/* Could not access serialPersistentFields */"
+      table = "/* Could not access table */"
+      nextTable = "/* Could not access nextTable */"
+      baseCount = "/* Could not access baseCount */"
+      sizeCtl = "/* Could not access sizeCtl */"
+      transferIndex = "/* Could not access transferIndex */"
+      cellsBusy = "/* Could not access cellsBusy */"
+      counterCells = "/* Could not access counterCells */"
+      keySet = "/* Could not access keySet */"
+      values = "/* Could not access values */"
+      entrySet = "/* Could not access entrySet */"
+      U = "/* Could not access U */"
+      SIZECTL = "/* Could not access SIZECTL */"
+      TRANSFERINDEX = "/* Could not access TRANSFERINDEX */"
+      BASECOUNT = "/* Could not access BASECOUNT */"
+      CELLSBUSY = "/* Could not access CELLSBUSY */"
+      CELLVALUE = "/* Could not access CELLVALUE */"
+      ABASE = "/* Could not access ABASE */"
+      ASHIFT = "/* Could not access ASHIFT */"
+      keySet = "/* Could not access keySet */"
+      values = "/* Could not access values */"
+    cacheStore = class com.ibm.ws.artifact.overlay.internal.OverlayCache@754a4b56
+      cache = class java.util.HashMap@61bb8761
+      serialVersionUID = 4443220618296337968
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@284f35dd
+    parentOverlay = null
+    isPassThroughMode = true
+    serialVersionUID = -8445278173803874173
+  factoryHolder = class com.ibm.ws.adaptable.module.internal.AdaptableModuleFactoryImpl@46931296
+    adapterFactoryService = class com.ibm.ws.adaptable.module.internal.AdapterFactoryServiceImpl@60261313
+      toType = "toType"
+      priv = class com.ibm.ws.kernel.service.util.SecureAction@dd68e9a
+      containerHelperMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@2d1078a2
+      entryHelperMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@2c5f63d8
+      containerToTypes = class java.util.Collections$SynchronizedSet@27a4dc40
+      entryToTypes = class java.util.Collections$SynchronizedSet@1e3f3470
+      baseProperties = class org.apache.felix.scr.impl.helper.ReadOnlyDictionary@30c49a7d
+      registration = class com.ibm.ws.kernel.service.util.ServiceRegistrationModifier@67d26e1e
+      serialVersionUID = 292472261820243508
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@260c0a69
+    containerFactory = class com.ibm.ws.artifact.internal.ArtifactContainerFactoryService@5dd3b76e
+      CATEGORY_PROP_NAME = "category"
+      ENTRY_KEY = "com.ibm.wsspi.artifact.ArtifactEntry"
+      helperMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@2824e506
+      contributorMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@5fde5140
+      helperCategoryMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@2701b43e
+      contributorCategoryMap = class com.ibm.wsspi.kernel.service.utils.ConcurrentServiceReferenceSetMap@1abcaf30
+      categories = class java.util.Collections$SynchronizedSet@15bf65b4
+      baseProperties = class org.apache.felix.scr.impl.helper.ReadOnlyDictionary@38467212
+      registration = class com.ibm.ws.kernel.service.util.ServiceRegistrationModifier@124c9160
+      serialVersionUID = 6566424214406946230
+      $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@2a3619c6
+    overlayContainerFactory = class com.ibm.ws.artifact.overlay.internal.OverlayContainerFactoryImpl@6b34908c
+    serialVersionUID = 4200251809856292987
+    $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@462d111d
+      strings[0] = "TraceComponent[com.ibm.ws.adaptable.module.internal.AdaptableModuleFactoryImpl,class com.ibm.ws.adaptable.module.internal.AdaptableModuleFactoryImpl,[archive.adaptable],null,null]"
+  delegate = class com.ibm.ws.artifact.overlay.internal.DirectoryBasedOverlayContainerImpl@c503783
+  notifier = null
+  serialVersionUID = -5950528200509051684
+  $$$tc$$$ = class com.ibm.websphere.ras.TraceComponent@66a1cb46
+    strings[0] = "TraceComponent[com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl,class com.ibm.ws.adaptable.module.internal.AdaptableContainerImpl,[archive.adaptable],null,null]"
+

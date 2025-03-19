@@ -3,8 +3,9 @@
 
     <!-- Enable features -->
     <featureManager>
+        <feature>servlet-6.0</feature>
         <feature>jakartaee-10.0</feature>
-<!--        <feature>websocket-1.1</feature>-->
+        <!--        <feature>websocket-1.1</feature>-->
     </featureManager>
 
     <!-- This template enables security. To get the full use of all the capabilities, a keystore and user registry are required. -->
@@ -47,6 +48,7 @@
                     user="postgres"
                     password="12345"/>
     </dataSource>
+
 
 
 

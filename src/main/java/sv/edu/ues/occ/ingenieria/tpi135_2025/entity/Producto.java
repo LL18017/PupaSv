@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,7 +31,12 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
     @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Producto.findByActivo", query = "SELECT p FROM Producto p WHERE p.activo = :activo"),
-    @NamedQuery(name = "Producto.findByObservaciones", query = "SELECT p FROM Producto p WHERE p.observaciones = :observaciones")})
+    @NamedQuery(name = "Producto.findByObservaciones", query = "SELECT p FROM Producto p WHERE p.observaciones = :observaciones"),
+    @NamedQuery(name = "Producto.findByidTipoProducto", query = "SELECT DISTINCT p FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto\n"),
+    @NamedQuery(name = "Producto.countByidTipoProducto", query = "SELECT DISTINCT count (p) FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto\n"),
+
+
+})
 public class Producto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,9 +51,11 @@ public class Producto implements Serializable {
     private Boolean activo;
     @Column(name = "observaciones")
     private String observaciones;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
     private List<ComboDetalle> comboDetalleList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    @JsonbTransient
     private List<ProductoDetalle> productoDetalleList;
     @OneToMany(mappedBy = "idProducto")
     private List<ProductoPrecio> productoPrecioList;

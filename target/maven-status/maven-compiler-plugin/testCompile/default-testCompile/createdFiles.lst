@@ -2,6 +2,6 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/JerseyTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceIT$1.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/resources/JakartaEE10ResourceTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanTest.class
-sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanIT.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractDataAccessTest.class

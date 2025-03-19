@@ -53,5 +53,16 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         
         return List.of();
     }
+    public Long countByIdOrden(Long idOrden) {
+        try {
+            return em.createNamedQuery("OrdenDetalle.countAllByIdOrden",Long.class)
+                    .setParameter("idOrden", idOrden)
+                    .getSingleResult();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+
+        return 0L;
+    }
 
 }

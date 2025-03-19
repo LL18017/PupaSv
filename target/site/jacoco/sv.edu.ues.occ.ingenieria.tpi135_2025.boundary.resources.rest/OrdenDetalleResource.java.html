@@ -26,7 +26,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  *
  * @author mjlopez
  */
-@Path(&quot;orden/{idOrden}/ordenDetalle&quot;)
+@Path(&quot;orden/ordendetalle&quot;)
 <span class="nc" id="L30">public class OrdenDetalleResource implements Serializable {</span>
 
     @Inject
@@ -39,24 +39,33 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
             @DefaultValue(&quot;0&quot;) int first,
             @QueryParam(&quot;max&quot;)
             @DefaultValue(&quot;20&quot;) int max,
-            @PathParam(&quot;idOrden&quot;) Long idOrden
+            @QueryParam(&quot;idOrden&quot;) Long idOrden
     ) {
-        
+
         try {
 <span class="nc bnc" id="L46" title="All 8 branches missed.">            if ((first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;=50) || idOrden==null) {</span>
 
-<span class="nc" id="L48">            List&lt;OrdenDetalle&gt; encontrados= odBean.findRangeByIdOrden(idOrden,first,max);</span>
-<span class="nc" id="L49">            long total=odBean.count();</span>
-<span class="nc" id="L50">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L51">                        header(&quot;Total-records&quot;, total).</span>
-<span class="nc" id="L52">                        type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L53">                return builder.build();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">                if (idOrden==null){</span>
+<span class="nc" id="L49">                    List&lt;OrdenDetalle&gt; allOrdenDetalle=odBean.findAll();</span>
+<span class="nc" id="L50">                    long totalOrdenDetalleByIdOrden=odBean.count();</span>
+<span class="nc" id="L51">                    Response.ResponseBuilder builder = Response.ok(allOrdenDetalle).</span>
+<span class="nc" id="L52">                            header(Headers.TOTAL_RECORD, totalOrdenDetalleByIdOrden).</span>
+<span class="nc" id="L53">                            type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L54">                    return builder.build();</span>
+
+                }
+<span class="nc" id="L57">            List&lt;OrdenDetalle&gt; encontrados= odBean.findRangeByIdOrden(idOrden,first,max);</span>
+<span class="nc" id="L58">            long total=odBean.count();</span>
+<span class="nc" id="L59">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L60">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L61">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L62">                return builder.build();</span>
             }else{
-<span class="nc" id="L55">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first+&quot;,max: &quot;+max +&quot; ,idOrden: &quot;+idOrden  ).header(&quot;wrong parameter : max&quot;,&quot;s&quot;).build();</span>
+<span class="nc" id="L64">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first+&quot;,max: &quot;+max +&quot; ,idOrden: &quot;+idOrden  ).header(&quot;wrong parameter : max&quot;,&quot;s&quot;).build();</span>
             }
-<span class="nc" id="L57">        }catch (Exception e) {</span>
-<span class="nc" id="L58">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L59">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L66">        }catch (Exception e) {</span>
+<span class="nc" id="L67">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L68">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
     }
 

@@ -43,13 +43,12 @@ public class Orden implements Serializable {
     @Column(name = "id_orden")
     private Long idOrden;
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @Column(name = "sucursal")
     private String sucursal;
     @Column(name = "anulada")
     private Boolean anulada;
-    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orden")
     private List<OrdenDetalle> ordenDetalleList;
     @OneToMany(mappedBy = "idOrden")

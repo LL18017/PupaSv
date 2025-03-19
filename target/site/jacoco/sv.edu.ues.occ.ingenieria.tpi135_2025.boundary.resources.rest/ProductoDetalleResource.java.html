@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoDetalleResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">ProductoDetalleResource.java</span></div><h1>ProductoDetalleResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.transaction.UserTransaction;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Path(&quot;tipoproducto/{idtipoproducto}/producto/{idProducto}/productoDetalle&quot;)
+<span class="nc" id="L19">public class ProductoDetalleResource implements Serializable {</span>
+    @Inject
+    ProductoDetalleBean pdBean;
+
+    /**
+     * metodo que devueleve una rango de datos de tipo ProductoDetalle
+     * @param idTipoProducto id de tipo TipoProducto Relacionado al detalle
+     * @param idProducto id de tipo Producto Relacionado al detalle
+      * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(
+            @PathParam(&quot;idtipoproducto&quot;) Integer idTipoProducto,
+            @PathParam(&quot;idProducto&quot;) Long idProducto,
+            @QueryParam(&quot;first&quot;)
+            @DefaultValue(&quot;0&quot;) int first,
+            @QueryParam(&quot;max&quot;)
+            @DefaultValue(&quot;20&quot;) int max
+
+    ) {
+        try {
+<span class="nc bnc" id="L44" title="All 4 branches missed.">            if (idTipoProducto!=null &amp;&amp; idProducto!=null) {</span>
+
+<span class="nc" id="L46">                List&lt;ProductoDetalle&gt; encontrados = pdBean.findByIdProductoAndIdProductoDetalle(idTipoProducto,idProducto,first, max);</span>
+<span class="nc" id="L47">                long total = pdBean.countByIdProductoAndIdProductoDetalle(idTipoProducto,idProducto);</span>
+<span class="nc" id="L48">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L49">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L50">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L51">                return builder.build();</span>
+            } else {
+<span class="nc" id="L53">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L55">        } catch (Exception e) {</span>
+<span class="nc" id="L56">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L57">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * metodo para encontrar un registro especifico de producto dado su id
+     *
+     * @param id del registro a buscar
+     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
+     * encuentra ningun registro con el id especificado 400 si se envia mal una
+     * parametro
+     */
+
+    @Path(&quot;/{id}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L77">                ProductoDetalle encontrado = pdBean.findById(id);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L79">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L80">                    return builder.build();</span>
+                }
+<span class="nc" id="L82">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L83">            } catch (Exception e) {</span>
+<span class="nc" id="L84">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L85">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L88">        return Response.status(400).header(&quot;wrong-parameter : id&quot;, id).build();</span>
+    }
+
+
+    /**
+     * registra una entidad ProductoDetalle ademas de establecer la relacion producto detalle
+     *
+     * @param idTipoProducto id de la entidad tipoProductoRelacionada con producto
+     * @param uriInfo informacion de URl donde se encuantra la peticion
+     * @return un estatus 201 si la entidad es creada junto con la url donde se
+     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
+     * entidad y 500 si por fall el servidor
+     */
+    @Path(&quot;&quot;)
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+
+    public Response create(ProductoDetalle registro, @PathParam(&quot;idtipoproducto&quot;) Integer idTipoProducto, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L107" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getProductoDetallePK() == null) {</span>
+            try {
+<span class="nc" id="L109">                pdBean.create(registro);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                if (registro.getProductoDetallePK() != null) {</span>
+
+<span class="nc" id="L112">                    return Response.ok().build();</span>
+                }
+<span class="nc" id="L114">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
+<span class="nc" id="L115">            } catch (Exception e) {</span>
+<span class="nc" id="L116">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L117">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L120">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
+
+    /**
+     * borra un REGISTRO Producto Especifico
+     *
+     * @param idTipoProducto id de TipoProducto para PK
+     * @param idProducto id de Producto para PK
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
+     * y 500 si falla el servdor
+     */
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(&quot;&quot;)
+    public Response delete( @PathParam(&quot;idtipoproducto&quot;) Integer idTipoProducto,@PathParam(&quot;idProducto&quot;) Long idProducto , @Context UriInfo uriInfo) {
+<span class="nc" id="L137">        ProductoDetalle registro = new ProductoDetalle(idTipoProducto,idTipoProducto);</span>
+<span class="nc bnc" id="L138" title="All 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
+            try {
+<span class="nc" id="L140">                pdBean.delete(registro);</span>
+<span class="nc" id="L141">                return Response.status(200).build();</span>
+<span class="nc" id="L142">            } catch (Exception e) {</span>
+<span class="nc" id="L143">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L144">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
+            }
+        }
+<span class="nc" id="L147">        return Response.status(500).header(Headers.WRONG_PARAMETER, idProducto).build();</span>
+    }
+
+    /**
+     * actualiza una entidad de base de datos
+     *
+     * @param registro entidda a ser actualizada
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
+     * problema y 500 si falla el servidor
+     */
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(ProductoDetalle registro, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L162" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getProductoDetallePK() != null) {</span>
+            try {
+<span class="nc" id="L164">                pdBean.update(registro);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                if (registro.getProductoDetallePK() != null) {</span>
+
+<span class="nc" id="L167">                    return Response.status(200).build();</span>
+                }
+<span class="nc" id="L169">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L170">            } catch (Exception e) {</span>
+<span class="nc" id="L171">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L172">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L175">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

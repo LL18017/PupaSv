@@ -9,6 +9,11 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 
 /**
@@ -23,17 +28,40 @@ public class ProductoPrecioBean extends AbstractDataAccess&lt;ProductoPrecio&gt;
     EntityManager em;
 
     public ProductoPrecioBean() {
-<span class="nc" id="L26">        super(ProductoPrecio.class);</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L31">        super(ProductoPrecio.class);</span>
+<span class="nc" id="L32">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L31">        return em;</span>
+<span class="nc" id="L36">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L36">        return &quot;idProductoPrecio&quot;;</span>
+<span class="nc" id="L41">        return &quot;idProductoPrecio&quot;;</span>
+    }
+
+    public List&lt;ProductoPrecio&gt; findByIdProducto(Integer idProducto, int first , int max) {
+        try {
+<span class="nc" id="L46">            return em.createNamedQuery(&quot;ProductoPrecio.findByIdTipoProductoAndIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="nc" id="L47">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
+<span class="nc" id="L48">                    .setFirstResult(first)</span>
+<span class="nc" id="L49">                    .setMaxResults(max)</span>
+<span class="nc" id="L50">                    .getResultList();</span>
+<span class="nc" id="L51">        } catch (Exception e) {</span>
+<span class="nc" id="L52">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+<span class="nc" id="L54">        return List.of();</span>
+    }
+    public Long countByIdProducto(Integer idProducto) {
+        try {
+<span class="nc" id="L58">            return em.createNamedQuery(&quot;ProductoPrecio.countByIdTipoProductoAndIdProducto&quot;,Long.class)</span>
+<span class="nc" id="L59">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
+<span class="nc" id="L60">                    .getSingleResult();</span>
+<span class="nc" id="L61">        } catch (Exception e) {</span>
+<span class="nc" id="L62">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+<span class="nc" id="L64">        return 0L;</span>
     }
 
 }

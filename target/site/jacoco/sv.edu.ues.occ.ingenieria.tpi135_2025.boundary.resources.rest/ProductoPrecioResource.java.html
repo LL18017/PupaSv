@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoPrecioResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">ProductoPrecioResource.java</span></div><h1>ProductoPrecioResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.transaction.UserTransaction;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Path(&quot;tipoproducto/producto/{idproducto}/productoPrecio&quot;)
+<span class="nc" id="L21">public class ProductoPrecioResource implements Serializable {</span>
+
+    @Inject
+    ProductoPrecioBean ppBean;
+
+
+    /**
+     * metodo que devueleve una rango de datos de tipo Producto sin importar el idTipoProductos
+     *
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(int first, int max) {
+        try {
+<span class="nc bnc" id="L39" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L41">                List&lt;ProductoPrecio&gt; encontrados = ppBean.findRange(first, max);</span>
+<span class="nc" id="L42">                long total = ppBean.count();</span>
+<span class="nc" id="L43">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L44">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L45">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L46">                return builder.build();</span>
+            } else {
+<span class="nc" id="L48">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L50">        } catch (Exception e) {</span>
+<span class="nc" id="L51">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L52">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * metodo que devueleve una rango de datos de tipo Producto
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     @param idProducto string que indica si se quiere encontra todos los registro &quot;any&quot; o los relacionados con idEspecifico
+      * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(
+            @QueryParam(&quot;first&quot;)
+            @DefaultValue(&quot;0&quot;) int first,
+            @QueryParam(&quot;max&quot;)
+            @DefaultValue(&quot;20&quot;) int max,
+            @PathParam(&quot;idproducto&quot;) String idProducto
+    ) {
+        try {
+<span class="nc bnc" id="L76" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50 ) {</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (idProducto.equals(&quot;any&quot;)) {</span>
+<span class="nc" id="L79">                    return findRange(first, max);</span>
+                }
+<span class="nc" id="L81">                List&lt;ProductoPrecio&gt; encontrados = ppBean.findByIdProducto(Integer.parseInt(idProducto),first, max);</span>
+<span class="nc" id="L82">                long total = ppBean.countByIdProducto(Integer.parseInt(idProducto));</span>
+<span class="nc" id="L83">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L84">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L85">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L86">                return builder.build();</span>
+            } else {
+<span class="nc" id="L88">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L90">        } catch (Exception e) {</span>
+<span class="nc" id="L91">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L92">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * metodo para encontrar un registro especifico de producto dado su id
+     *
+     * @param id del registro a buscar
+     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
+     * encuentra ningun registro con el id especificado 400 si se envia mal una
+     * parametro
+     */
+
+    @Path(&quot;/{id}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L112">                ProductoPrecio encontrado = ppBean.findById(id);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L114">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L115">                    return builder.build();</span>
+                }
+<span class="nc" id="L117">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L118">            } catch (Exception e) {</span>
+<span class="nc" id="L119">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L120">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L123">        return Response.status(400).header(&quot;wrong-parameter : id&quot;, id).build();</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

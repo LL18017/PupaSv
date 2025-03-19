@@ -26,7 +26,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  *
  * @author mjlopez
  */
-@Path("orden/{idOrden}/ordenDetalle")
+@Path("orden/ordendetalle")
 public class OrdenDetalleResource implements Serializable {
 
     @Inject
@@ -39,16 +39,25 @@ public class OrdenDetalleResource implements Serializable {
             @DefaultValue("0") int first,
             @QueryParam("max")
             @DefaultValue("20") int max,
-            @PathParam("idOrden") Long idOrden
+            @QueryParam("idOrden") Long idOrden
     ) {
-        
+
         try {
             if ((first >= 0 && max >= 0 && max <=50) || idOrden==null) {
 
+                if (idOrden==null){
+                    List<OrdenDetalle> allOrdenDetalle=odBean.findAll();
+                    long totalOrdenDetalleByIdOrden=odBean.count();
+                    Response.ResponseBuilder builder = Response.ok(allOrdenDetalle).
+                            header(Headers.TOTAL_RECORD, totalOrdenDetalleByIdOrden).
+                            type(MediaType.APPLICATION_JSON);
+                    return builder.build();
+
+                }
             List<OrdenDetalle> encontrados= odBean.findRangeByIdOrden(idOrden,first,max);
             long total=odBean.count();
                 Response.ResponseBuilder builder = Response.ok(encontrados).
-                        header("Total-records", total).
+                        header(Headers.TOTAL_RECORD, total).
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             }else{

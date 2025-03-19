@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,6 +47,7 @@ public class TipoProducto implements Serializable {
     private Boolean activo;
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoProducto")
     private List<ProductoDetalle> productoDetalleList;
 

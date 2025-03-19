@@ -9,6 +9,10 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 /**
@@ -23,18 +27,45 @@ public class ProductoBean extends AbstractDataAccess&lt;Producto&gt; implements 
     EntityManager em;
 
     public ProductoBean() {
-<span class="nc" id="L26">        super(Producto.class);</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L30">        super(Producto.class);</span>
+<span class="nc" id="L31">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L31">        return em;</span>
+<span class="nc" id="L35">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L36">        return &quot;idProducto&quot;;</span>
+<span class="nc" id="L40">        return &quot;idProducto&quot;;</span>
     }
+
+    public List&lt;Producto&gt; findRangeByIdTipoProductos(Integer idTipoProducto,Integer firstResult, Integer max) {
+
+        try {
+<span class="nc" id="L46">            return em.createNamedQuery(&quot;Producto.findByidTipoProducto&quot;,Producto.class)</span>
+<span class="nc" id="L47">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
+<span class="nc" id="L48">                    .setFirstResult(firstResult)</span>
+<span class="nc" id="L49">                    .setMaxResults(max)</span>
+<span class="nc" id="L50">                    .getResultList();</span>
+<span class="nc" id="L51">        } catch (Exception e) {</span>
+<span class="nc" id="L52">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+<span class="nc" id="L54">        return List.of();</span>
+    }
+    public Integer countByIdTipoProductos(Integer idTipoProducto,Integer firstResult, Integer max) {
+
+        try {
+<span class="nc" id="L59">            return em.createNamedQuery(&quot;Producto.countByidTipoProducto&quot;,Integer.class)</span>
+<span class="nc" id="L60">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
+<span class="nc" id="L61">                    .getSingleResult();</span>
+<span class="nc" id="L62">        } catch (Exception e) {</span>
+<span class="nc" id="L63">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+<span class="nc" id="L65">        return 0;</span>
+    }
+
+
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

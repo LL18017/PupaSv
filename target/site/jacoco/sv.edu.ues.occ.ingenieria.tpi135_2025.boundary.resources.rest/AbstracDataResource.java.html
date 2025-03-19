@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstracDataResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">AbstracDataResource.java</span></div><h1>AbstracDataResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
+
+/**
+ *
+ * @author mjlopez
+ * @param &lt;T&gt; Clase abstracta que implementa el patrón de diseño Fabrica
+ * Abstracta. Proporciona métodos genéricos para exponer los datos mediante
+ * rest.
+ *
+ */
+<span class="nc" id="L19">public abstract class AbstracDataResource&lt;T&gt; implements Serializable {</span>
+
+    /**
+     * metodo para obtener acceso al bean para la persistencia de datos
+     *
+     * @return un Bean de tipo ABstractDataAccess
+     */
+    public abstract AbstractDataAccess&lt;T&gt; getBean();
+
+    /**
+     * metodo generico para la obtencion del id el cual pued ser integer o Long
+     * dependiendo del caso
+     *
+     * @param registro
+     * @return id de la entidad
+     */
+    public abstract Object getId(T registro);
+
+    /**
+     * metodo para obtener el nombre de la entidad
+     *
+     * @return el nombre de la entidad
+     */
+    public abstract String getClassName();
+
+    /**
+     * metodo que devueleve una rango de datos de tipo T
+     *
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(
+            @QueryParam(&quot;first&quot;)
+            @DefaultValue(&quot;0&quot;) int first,
+            @QueryParam(&quot;max&quot;)
+            @DefaultValue(&quot;20&quot;) int max
+    ) {
+        try {
+<span class="nc bnc" id="L61" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L63">                List&lt;T&gt; encontrados = getBean().findRange(first, max);</span>
+<span class="nc" id="L64">                long total = getBean().count();</span>
+<span class="nc" id="L65">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L66">                        header(&quot;Total-records&quot;, total).</span>
+<span class="nc" id="L67">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L68">                return builder.build();</span>
+            } else {
+<span class="nc" id="L70">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L72">        } catch (Exception e) {</span>
+<span class="nc" id="L73">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L74">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * metodo para encontrar un registro especifico dado su id
+     *
+     * @param id del registro a buscar
+     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
+     * encuentra ningun registro con el id especificado 400 si se envia mal una
+     * parametro
+     */
+
+    @Path(&quot;/{id}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L94">                T encontrado = getBean().findById(id);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L96">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L97">                    return builder.build();</span>
+                }
+<span class="nc" id="L99">                return Response.status(404).header(&quot;not-found-id&quot;, id).build();</span>
+<span class="nc" id="L100">            } catch (Exception e) {</span>
+<span class="nc" id="L101">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L102">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L105">        return Response.status(400).header(&quot;wrong-parameter : id&quot;, id).build();</span>
+    }
+
+    /**
+     * registra una entidad T
+     *
+     * @param registro entidad a persistir
+     * @param uriInfo informacion de URl donde se encuantra la peticion
+     * @return un estatus 201 si la entidad es creada junto con la url donde se
+     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
+     * entidad y 500 si por fall el servidor
+     */
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response create(T registro, @Context UriInfo uriInfo) {
+
+<span class="nc" id="L122">        System.out.println(registro);</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        if (registro != null &amp;&amp; getId(registro) == null) {</span>
+            try {
+<span class="nc" id="L125">                getBean().create(registro);</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                if (getId(registro) != null) {</span>
+<span class="nc" id="L127">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L128">                    uriBuilder.path(String.valueOf(getId(registro)));</span>
+<span class="nc" id="L129">                    return Response.created(uriBuilder.build()).build();</span>
+                }
+<span class="nc" id="L131">                return Response.status(422).header(&quot;Unprocessable Entity&quot;, &quot;Record couldnt be created&quot;).build();</span>
+<span class="nc" id="L132">            } catch (Exception e) {</span>
+<span class="nc" id="L133">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L134">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L137">        return Response.status(500).header(&quot;Wrong-parameter&quot;, registro).build();</span>
+    }
+
+    /**
+     * borra un entidad
+     *
+     * @param id
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
+     * y 500 si falla el servdor
+     */
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(&quot;/{id}&quot;)
+    public Response delete(@PathParam(&quot;id&quot;) Long id, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L155">                getBean().delete(id);</span>
+<span class="nc" id="L156">                return Response.status(200).build();</span>
+<span class="nc" id="L157">            } catch (Exception e) {</span>
+<span class="nc" id="L158">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L159">                return Response.status(422).header(&quot;process-error&quot;, &quot;Record couldnt be deleted&quot;).build();</span>
+            }
+        }
+<span class="nc" id="L162">        return Response.status(500).header(&quot;Wrong-parameter&quot;, id).build();</span>
+    }
+
+    /**
+     * actualiza una entidad de base de datos
+     *
+     * @param registro entidda a ser actualizada
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
+     * problema y 500 si falla el servidor
+     */
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(T registro, @Context UriInfo uriInfo) {
+<span class="nc" id="L177">        System.out.println(getId(registro));</span>
+<span class="nc bnc" id="L178" title="All 4 branches missed.">        if (registro != null &amp;&amp; getId(registro) != null) {</span>
+            try {
+<span class="nc" id="L180">                getBean().update(registro);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                if (getId(registro) != null) {</span>
+
+<span class="nc" id="L183">                    return Response.status(200).build();</span>
+                }
+<span class="nc" id="L185">                return Response.status(500).header(&quot;process-error&quot;, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L186">            } catch (Exception e) {</span>
+<span class="nc" id="L187">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L188">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L191">        return Response.status(500).header(&quot;Wrong-parameter&quot;, registro).build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

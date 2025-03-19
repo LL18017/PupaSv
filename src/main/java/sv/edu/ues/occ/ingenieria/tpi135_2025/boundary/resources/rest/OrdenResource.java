@@ -17,7 +17,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
  * implementacion para exponer recurso rest para Orden
  */
 @Path("orden")
-public class OrdenResource extends AbstracDataSource<Orden> implements Serializable{
+public class OrdenResource extends AbstracDataResource<Orden> implements Serializable{
     @Inject
     OrdenBean ordenBean;
     

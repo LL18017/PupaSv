@@ -5,6 +5,8 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -23,6 +25,11 @@ import jakarta.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "ProductoDetalle.findAll", query = "SELECT p FROM ProductoDetalle p"),
     @NamedQuery(name = "ProductoDetalle.findByIdTipoProducto", query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto"),
+    @NamedQuery(name = "ProductoDetalle.findByIdTipoProductoAndIdProducto",
+            query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
+  @NamedQuery(name = "ProductoDetalle.countByIdTipoProductoAndIdProducto",
+            query = "SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
+
     @NamedQuery(name = "ProductoDetalle.findByIdProducto", query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto = :idProducto"),
     @NamedQuery(name = "ProductoDetalle.findByActivo", query = "SELECT p FROM ProductoDetalle p WHERE p.activo = :activo"),
     @NamedQuery(name = "ProductoDetalle.findByObservaciones", query = "SELECT p FROM ProductoDetalle p WHERE p.observaciones = :observaciones")})
@@ -35,6 +42,7 @@ public class ProductoDetalle implements Serializable {
     private Boolean activo;
     @Column(name = "observaciones")
     private String observaciones;
+
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Producto producto;

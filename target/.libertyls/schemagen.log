@@ -1,0 +1,4 @@
+CWWKG0030E: La referencia de pid com.ibm.ws.jca.resourceAdapter indicada en la extensión ibm:reference no existe.
+CWWKG0030E: La referencia de pid com.ibm.ws.sslchannel.options indicada en la extensión ibm:reference no existe.
+CWWKG0030E: La referencia de pid com.ibm.ws.security.jca.internal.authdata.config indicada en la extensión ibm:reference no existe.
+CWWKG0109I: Se ha creado el esquema en el archivo [/usr/local/proyectos/PupaSv/target/.libertyls/ol-25.0.0.2.xsd].

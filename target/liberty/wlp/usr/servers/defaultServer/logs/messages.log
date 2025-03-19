@@ -1,0 +1,30 @@
+********************************************************************************
+product = Open Liberty 25.0.0.2 (wlp-1.0.98.cl250220250209-1902)
+wlp.install.dir = /usr/local/proyectos/PupaSv/target/liberty/wlp/
+java.home = /usr/lib/jvm/java-21-openjdk-amd64
+java.version = 21.0.6
+java.runtime = OpenJDK Runtime Environment (21.0.6+7-Ubuntu-124.04.1)
+os = Linux (6.11.0-19-generic; amd64) (es_ES)
+process = 24660@mjlopez-A520M-H
+Classpath = /usr/local/proyectos/PupaSv/target/liberty/wlp/bin/tools/ws-server.jar
+Java Library path = /usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+********************************************************************************
+[13/3/25, 15:59:02:812 CST] 00000001 com.ibm.ws.kernel.launch.internal.FrameworkManager           A CWWKE0001I: El servidor defaultServer se ha lanzado.
+[13/3/25, 15:59:03:281 CST] 00000001 com.ibm.ws.kernel.launch.internal.FrameworkManager           I CWWKE0002I: El kernel se ha iniciado después de 0,614 segundos
+[13/3/25, 15:59:03:290 CST] 00000037 com.ibm.ws.kernel.feature.internal.FeatureManager            I CWWKF0007I: La actualización de características se ha iniciado.
+[13/3/25, 15:59:03:642 CST] 0000002d com.ibm.ws.app.manager.internal.monitor.DropinMonitor        A CWWKZ0058I: Supervisando aplicaciones de dropins.
+[13/3/25, 15:59:03:735 CST] 0000003f com.ibm.ws.app.manager.AppMessageHelper                      I CWWKZ0018I: Iniciando la aplicación PupaSv-1.0-SNAPSHOT.
+[13/3/25, 15:59:03:735 CST] 0000003f bm.ws.app.manager.war.internal.WARDeployedAppInfoFactoryImpl I CWWKZ0134I: La aplicación PupaSv-1.0-SNAPSHOT está utilizando la definición de aplicación dinámica en la ubicación /usr/local/proyectos/PupaSv/target/liberty/wlp/usr/servers/defaultServer/dropins/PupaSv-1.0-SNAPSHOT.war.xml.
+[13/3/25, 15:59:03:779 CST] 0000003f com.ibm.ws.logging.internal.impl.IncidentImpl                I FFDC1015I: Se ha creado una incidencia FFDC: "com.ibm.wsspi.adaptable.module.UnableToAdaptException: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente. com.ibm.ws.app.manager.module.internal.ContextRootUtil 45" en ffdc_25.03.13_15.59.03.0.log
+[13/3/25, 15:59:03:832 CST] 0000003f com.ibm.ws.logging.internal.impl.IncidentImpl                I FFDC1015I: Se ha creado una incidencia FFDC: "com.ibm.wsspi.adaptable.module.UnableToAdaptException: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente. com.ibm.ws.app.manager.war.internal.WARApplicationHandlerImpl 53" en ffdc_25.03.13_15.59.03.1.log
+[13/3/25, 15:59:03:872 CST] 0000003f com.ibm.ws.logging.internal.impl.IncidentImpl                I FFDC1015I: Se ha creado una incidencia FFDC: "java.lang.IllegalStateException: com.ibm.wsspi.adaptable.module.UnableToAdaptException: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente. com.ibm.ws.app.manager.internal.statemachine.StartAction 205" en ffdc_25.03.13_15.59.03.2.log
+[13/3/25, 15:59:03:873 CST] 0000003f com.ibm.ws.app.manager.AppMessageHelper                      E CWWKZ0002E: Se ha producido una excepción al iniciar la aplicación PupaSv-1.0-SNAPSHOT. El mensaje de la excepción es: java.lang.IllegalStateException: com.ibm.wsspi.adaptable.module.UnableToAdaptException: com.ibm.ws.javaee.ddmodel.DDParser$ParseException: CWWKC2263E: El descriptor de despliegue webapp : WEB-INF/web.xml de la línea 5 especifica la versión 60, que es superior a la versión 31 suministrada actualmente.
+[13/3/25, 15:59:03:882 CST] 00000037 com.ibm.ws.tcpchannel.internal.TCPPort                       I CWWKO0219I: El canal TCP defaultHttpEndpoint se ha iniciado y ahora está a la escucha de solicitudes en el host localhost  (IPv4: 127.0.0.1) puerto 9080.
+[13/3/25, 15:59:03:889 CST] 00000037 com.ibm.ws.kernel.feature.internal.FeatureManager            A CWWKF0012I: El servidor ha instalado las características siguientes: [el-3.0, jsp-2.3, servlet-3.1].
+[13/3/25, 15:59:03:889 CST] 00000037 com.ibm.ws.kernel.feature.internal.FeatureManager            I CWWKF0008I: La actualización de características se ha completado en 0,609 segundos.
+[13/3/25, 15:59:03:890 CST] 00000037 com.ibm.ws.kernel.feature.internal.FeatureManager            A CWWKF0011I: El servidor defaultServer está preparado para ejecutar un planeta más inteligente. El servidor defaultServer se ha iniciado en 1,222 segundos.
+[13/3/25, 16:42:13:318 CST] 0000001e com.ibm.ws.kernel.launch.internal.ServerCommandListener      A CWWKE0055I: Conclusión del servidor solicitada el jueves, 13 de marzo de 2025 a las 16:42. El servidor defaultServer se está cerrando.
+[13/3/25, 16:42:13:320 CST] 00000057 com.ibm.ws.runtime.update.internal.RuntimeUpdateManagerImpl  A CWWKE1100I: Esperando un máximo de 30 segundos para que el servidor se desactive temporalmente.
+[13/3/25, 16:42:13:323 CST] 00000048 com.ibm.ws.tcpchannel.internal.TCPChannel                    I CWWKO0220I: El canal TCP defaultHttpEndpoint ha detenido la escucha de solicitudes en el host localhost  (IPv4: 127.0.0.1) puerto 9080.
+[13/3/25, 16:42:14:324 CST] 00000057 com.ibm.ws.runtime.update.internal.RuntimeUpdateManagerImpl  I CWWKE1101I: La desactivación temporal del servidor ha finalizado.
+[13/3/25, 16:42:14:409 CST] 00000001 com.ibm.ws.kernel.launch.internal.FrameworkManager           A CWWKE0036I: El servidor defaultServer se ha detenido después de 43 minutos, 11,742 segundos.
