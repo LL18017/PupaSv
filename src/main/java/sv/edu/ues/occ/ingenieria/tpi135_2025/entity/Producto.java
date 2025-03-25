@@ -32,8 +32,8 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Producto.findByActivo", query = "SELECT p FROM Producto p WHERE p.activo = :activo"),
     @NamedQuery(name = "Producto.findByObservaciones", query = "SELECT p FROM Producto p WHERE p.observaciones = :observaciones"),
-    @NamedQuery(name = "Producto.findByidTipoProducto", query = "SELECT DISTINCT p FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto\n"),
-    @NamedQuery(name = "Producto.countByidTipoProducto", query = "SELECT DISTINCT count (p) FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto\n"),
+    @NamedQuery(name = "Producto.findByIdTipoProducto", query = "SELECT DISTINCT p FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto"),
+    @NamedQuery(name = "Producto.countByidTipoProducto", query = "SELECT DISTINCT count (p) FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto"),
 
 
 })

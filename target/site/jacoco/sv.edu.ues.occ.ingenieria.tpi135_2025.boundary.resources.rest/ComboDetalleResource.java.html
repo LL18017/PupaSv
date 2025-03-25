@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComboDetalleResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">ComboDetalleResource.java</span></div><h1>ComboDetalleResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Path(&quot;combo&quot;)
+<span class="nc" id="L18">public class ComboDetalleResource implements Serializable {</span>
+    @Inject
+    ComboDetalleBean cdBean;
+
+
+    /**
+     * Metodo que devueleve un rango de datos de tipo ComboDetalle sin importar el idProductos o idCombo
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+    @Path(&quot;/producto/ComboDetalle&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(
+            @QueryParam(&quot;first&quot;)
+            @DefaultValue(&quot;0&quot;) int first,
+            @QueryParam(&quot;max&quot;)
+            @DefaultValue(&quot;20&quot;) int max
+    ) {
+
+        try {
+<span class="nc bnc" id="L41" title="All 6 branches missed.">            if ((first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;=50) ) {</span>
+
+<span class="nc" id="L43">                List&lt;ComboDetalle&gt; encontrados= cdBean.findRange(first,max);</span>
+<span class="nc" id="L44">                long total=cdBean.count();</span>
+<span class="nc" id="L45">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L46">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L47">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L48">                return builder.build();</span>
+            }else{
+<span class="nc" id="L50">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first+&quot;,max: &quot;+max  ).header(&quot;wrong parameter : max&quot;,&quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L52">        }catch (Exception e) {</span>
+<span class="nc" id="L53">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L54">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+
+    /**
+     * metodo que devueleve una rango de datos de tipo ComboDetalle con relacion a un idProductos
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * @param idProducto
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;/productos/{idProducto}/comboDetalle&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRangeByIdProducto(@QueryParam(&quot;first&quot;) int first,
+                            @QueryParam(&quot;max&quot;) int max,
+                            @PathParam(&quot;idProducto&quot;) Long idProducto) {
+        try {
+<span class="nc bnc" id="L74" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L76">                List&lt;ComboDetalle&gt; encontrados = cdBean.findByIdProducto(idProducto,first,max);</span>
+<span class="nc" id="L77">                long total = cdBean.countByIdProducto(idProducto);</span>
+<span class="nc" id="L78">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L79">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L80">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L81">                return builder.build();</span>
+            } else {
+<span class="nc" id="L83">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max +&quot; , idProducto: &quot;+idProducto).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L85">        } catch (Exception e) {</span>
+<span class="nc" id="L86">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L87">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+
+    /**
+     * metodo que devueleve una rango de datos de tipo ComboDetalle con relacion a un idCombo
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * @param idCombo id relacionado a combo detalle
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;{idCombo}/productos/comboDetalle&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRangeByIdCombo(@QueryParam(&quot;first&quot;) int first,
+                            @QueryParam(&quot;max&quot;) int max,
+                            @PathParam(&quot;idCombo&quot;) Long idCombo) {
+        try {
+<span class="nc bnc" id="L107" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L109">                List&lt;ComboDetalle&gt; encontrados = cdBean.findByIdCombo(idCombo,first,max);</span>
+<span class="nc" id="L110">                long total = cdBean.countByIdCombo(idCombo);</span>
+<span class="nc" id="L111">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L112">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L113">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L114">                return builder.build();</span>
+            } else {
+<span class="nc" id="L116">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max +&quot; , idCombo: &quot;+idCombo).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L118">        } catch (Exception e) {</span>
+<span class="nc" id="L119">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L120">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+    /**
+     * Metodo que devueleve un rango de datos de tipo ComboDetalle con relacion a un idComboy un idProducto
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * @param idCombo id relacionado con comboDetalle
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;{idCombo}/producto/{idProducto}/comboDetalle&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(@QueryParam(&quot;first&quot;) int first,
+                            @QueryParam(&quot;max&quot;) int max,
+                            @PathParam(&quot;idCombo&quot;) Long idCombo ,
+                            @PathParam(&quot;idProducto&quot;) Long idProducto)
+    {
+        try {
+<span class="nc bnc" id="L140" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L142">                List&lt;ComboDetalle&gt; encontrados = cdBean.findByIdComboAndIdProducto(idCombo,idProducto,first,max);</span>
+<span class="nc" id="L143">                long total = cdBean.countByIdComboAndIdProducto(idCombo,idProducto);</span>
+<span class="nc" id="L144">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L145">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L146">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L147">                return builder.build();</span>
+            } else {
+<span class="nc" id="L149">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max +&quot; , idCombo: &quot;+idCombo).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L151">        } catch (Exception e) {</span>
+<span class="nc" id="L152">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L153">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * Metodo para encontrar un registro especifico de producto dado su id
+     * @param id del registro a buscar
+     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
+     * encuentra ningun registro con el id especificado 400 si se envia mal una
+     * parametro
+     */
+    @Path(&quot;producto/comboDetale/{id}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam(&quot;id&quot;) Integer id) {
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L171">                ComboDetalle encontrado = cdBean.findById(id);</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L173">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L174">                    return builder.build();</span>
+                }
+<span class="nc" id="L176">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L177">            } catch (Exception e) {</span>
+<span class="nc" id="L178">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L179">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L182">        return Response.status(400).header(&quot;wrong-parameter : id&quot;, id).build();</span>
+    }
+
+    /**
+     * Borra un ComboDetalle Especifico
+     *
+     * @param idCombo id del Combo relacionado con ComboDetalle
+     * @param idProducto id del Combo relacionado con ComboDetalle
+     * @param uriInfo info de url de donde se ha realizado la peticion
+     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
+     * y 500 si falla el servdor
+     */
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(&quot;{idCombo}/producto/{idProducto}/comboDetalle/&quot;)
+    public Response delete(@PathParam(&quot;idCombo&quot;) Long idCombo, @PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
+
+<span class="nc bnc" id="L200" title="All 4 branches missed.">        if (idCombo != null &amp;&amp; idProducto != null) {</span>
+            try {
+<span class="nc" id="L202">                ComboDetallePK id=new ComboDetallePK(idCombo,idProducto);</span>
+<span class="nc" id="L203">                cdBean.delete(id);</span>
+<span class="nc" id="L204">                return Response.status(200).build();</span>
+<span class="nc" id="L205">            } catch (Exception e) {</span>
+<span class="nc" id="L206">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L207">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
+            }
+        }
+<span class="nc" id="L210">        return Response.status(500).header(Headers.WRONG_PARAMETER,&quot;idCombo: &quot;+ idCombo +&quot; ,idProducto: &quot;+idProducto).build();</span>
+    }
+
+    /**
+     * Actualiza el COmboDetalle de base de datos
+     *
+     * @param registro entidda a ser actualizada
+     * @param uriInfo info de url de donde se ha realizado la peticion
+     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
+     * problema y 500 si falla el servidor
+     */
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(ComboDetalle registro, @Context UriInfo uriInfo) {
+
+<span class="nc bnc" id="L226" title="All 6 branches missed.">        if (registro != null &amp;&amp; registro.getComboDetallePK().getIdCombo()!= 0 &amp;&amp; registro.getComboDetallePK().getIdProducto()!= 0) {</span>
+
+            try {
+<span class="nc" id="L229">                cdBean.update(registro);</span>
+<span class="nc bnc" id="L230" title="All 4 branches missed.">                if (registro.getComboDetallePK().getIdCombo() != 0 &amp;&amp; registro.getComboDetallePK().getIdProducto() != 0) {</span>
+<span class="nc" id="L231">                    return Response.status(200).build();</span>
+                }
+<span class="nc" id="L233">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L234">            } catch (Exception e) {</span>
+<span class="nc" id="L235">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L236">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L239">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

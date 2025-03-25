@@ -10,18 +10,19 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.SystemException;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @param <T> Tipo de entidad manejada por la clase hija.
  * @author mjlopez Clase abstracta que implementa el patrón de diseño Fabrica
  * Abstracta. Proporciona métodos genéricos para el acceso a datos usando JPA
  * Criterial Query.
- *
- * @param <T> Tipo de entidad manejada por la clase hija.
  */
 public abstract class AbstractDataAccess<T> {
 
@@ -87,7 +88,7 @@ public abstract class AbstractDataAccess<T> {
      * @param id ID del objeto a buscar el cual no debe ser nulo.
      * @return Objeto de tipo T correspondiente al ID.
      * @throws IllegalArgumentException Si el ID es nulo o inválido.
-     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws IllegalStateException    Si no se puede acceder al repositorio.
      */
     public T findById(Object id) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
@@ -110,7 +111,7 @@ public abstract class AbstractDataAccess<T> {
      * Encuentra un una lista de registros de la entidad segun una rango.
      *
      * @param first rango de inicio de los registros totales.
-     * @param max cantidad maxima de registros
+     * @param max   cantidad maxima de registros
      * @return lista de tipo T correspondiente al rango. devuelve una lista
      * vacion si no hay registros o si el rango es incorrecto
      * @throws IllegalStateException Si no se puede acceder al repositorio.
@@ -123,18 +124,18 @@ public abstract class AbstractDataAccess<T> {
                 if (em == null) {
                     throw new IllegalStateException("error al aceder al repositorio");
                 }
-                 // Construir consultas de criterios
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<T> cq = cb.createQuery(this.tipoDato);
-                    Root<T> raiz = cq.from(this.tipoDato);
-                    cq.select(raiz).orderBy(cb.asc(raiz.get(orderParameterQuery())));
-                    TypedQuery<T> query = em.createQuery(cq);
-                    query.setFirstResult(first);
-                    query.setMaxResults(max);
-                    return query.getResultList();
+                // Construir consultas de criterios
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<T> cq = cb.createQuery(this.tipoDato);
+                Root<T> raiz = cq.from(this.tipoDato);
+                cq.select(raiz).orderBy(cb.asc(raiz.get(orderParameterQuery())));
+                TypedQuery<T> query = em.createQuery(cq);
+                query.setFirstResult(first);
+                query.setMaxResults(max);
+                return query.getResultList();
             } catch (IllegalStateException e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                 throw new IllegalStateException("error al aceder al repositorio");
+                throw new IllegalStateException("error al aceder al repositorio");
             }
         }
         return List.of();
@@ -147,36 +148,36 @@ public abstract class AbstractDataAccess<T> {
      * si no hay registros o si em es nulo
      * @throws IllegalStateException Si no se puede acceder al repositorio.
      */
-public Long count() {
-    EntityManager em = null;
-    try {
-        em = getEntityManager();
+    public Long count() {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
 
-        if (em == null) {
+            if (em == null) {
+                throw new IllegalStateException("error al aceder al repositorio");
+            }
+
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class); // Parametrizar con Long
+            Root<T> raiz = cq.from(this.tipoDato);
+            cq.select(cb.count(raiz)); // Contar registros
+
+            TypedQuery<Long> q = em.createQuery(cq);
+
+            return q.getSingleResult();
+        } catch (IllegalStateException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("error al aceder al repositorio");
         }
-
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class); // Parametrizar con Long
-        Root<T> raiz = cq.from(this.tipoDato);
-        cq.select(cb.count(raiz)); // Contar registros
-
-        TypedQuery<Long> q = em.createQuery(cq);
-
-        return q.getSingleResult();
-    } catch (IllegalStateException e) {
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        throw new IllegalStateException("error al aceder al repositorio");
     }
-}
 
     /**
      * persite un registro T en la base de datos.
      *
      * @param registro entidad a ser persistida. devuelve una lista vacion si no
-     * hay registros o si el rango es incorrecto
-     * @throws IllegalStateException Si no se puede acceder al repositorio o la
-     * entidad no ha sido persistida.
+     *                 hay registros o si el rango es incorrecto
+     * @throws IllegalStateException    Si no se puede acceder al repositorio o la
+     *                                  entidad no ha sido persistida.
      * @throws IllegalArgumentException si el registro T es nulo.
      */
     public void create(T registro) throws IllegalStateException, IllegalArgumentException {
@@ -192,7 +193,7 @@ public Long count() {
             em.persist(registro);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
-             throw new IllegalStateException("Error al acceder al repositorio");
+            throw new IllegalStateException("Error al acceder al repositorio");
         }
     }
 
@@ -201,7 +202,7 @@ public Long count() {
      *
      * @param registro entidad a ser actualizada.
      * @return la entidad midificada.
-     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws IllegalStateException    Si no se puede acceder al repositorio.
      * @throws IllegalArgumentException si el registro T es nulo.
      */
 
@@ -214,42 +215,43 @@ public Long count() {
         try {
             em = getEntityManager();
             if (em == null) {
-            throw new IllegalStateException("Error al acceder al repositorio");
+                throw new IllegalStateException("Error al acceder al repositorio");
             }
             modificado = em.merge(registro);
         } catch (IllegalStateException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("Error al acceder al repositorio", e);
         }
         return modificado;
-    } 
-    
+    }
+
     /**
      * Elimina un registro T de la base d edatos.
      *
-     * @param registro entidad a ser borrada.
-     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @param id entidad a ser borrada.
+     * @throws IllegalStateException    Si no se puede acceder al repositorio.
      * @throws IllegalArgumentException si el registro T es nulo.
      */
     public void delete(Object id) {
-        T registro=findById(id);
-        if (registro != null) {
-            EntityManager em = null;
-            try {
+        T registro = findById(id);
+        try {
+
+            if (registro != null) {
+                EntityManager em = null;
                 em = getEntityManager();
                 if (em == null) {
                     throw new IllegalStateException("Error al acceder al repositorio");
                 }
-                 CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaDelete<T> cd = cb.createCriteriaDelete(this.tipoDato);
-                    Root<T> raiz = cd.from(this.tipoDato);
-                    cd.where(cb.equal(raiz, registro));
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaDelete<T> cd = cb.createCriteriaDelete(this.tipoDato);
+                Root<T> raiz = cd.from(this.tipoDato);
+                cd.where(cb.equal(raiz, registro));
                 em.createQuery(cd).executeUpdate();
-                    return;
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                 throw new IllegalStateException("Error al acceder al repositorio", e);
+                return;
             }
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error al acceder al repositorio", e);
         }
         throw new IllegalArgumentException();
     }

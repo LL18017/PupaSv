@@ -2,7 +2,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 public class Headers {
     public static final String TOTAL_RECORD="Total-records";
-    public static final String UNPROCESSABLE_ENTITY = "Unprocessable Entity"; // Tipo de contenido (ej. JSON, XML)
+    public static final String UNPROCESSABLE_ENTITY = "Unprocessable-Entity"; // Tipo de contenido (ej. JSON, XML)
     public static final String WRONG_PARAMETER = "Wrong-parameter"; // Tipo de contenido (ej. JSON, XML)
     public static final String NOT_FOUND_ID = "not-found-id"; // Tipo de contenido (ej. JSON, XML)
     public static final String PROCESS_ERROR = "process-error"; // Tipo de contenido (ej. JSON, XML)

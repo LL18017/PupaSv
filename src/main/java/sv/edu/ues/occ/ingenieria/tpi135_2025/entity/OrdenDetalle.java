@@ -25,10 +25,12 @@ import jakarta.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "OrdenDetalle.findAll", query = "SELECT o FROM OrdenDetalle o"),
     @NamedQuery(name = "OrdenDetalle.findByIdOrden", query = "SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idOrden = :idOrden"),
-    @NamedQuery(name = "OrdenDetalle.countAllByIdOrden", query = "SELECT count (o) FROM OrdenDetalle o WHERE o.ordenDetallePK.idOrden = :idOrden"),
+    @NamedQuery(name = "OrdenDetalle.countByIdOrden", query = "SELECT count (o) FROM OrdenDetalle o WHERE o.ordenDetallePK.idOrden = :idOrden"),
     @NamedQuery(name = "OrdenDetalle.findByIdProductoPrecio", query = "SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio"),
     @NamedQuery(name = "OrdenDetalle.findByCantidad", query = "SELECT o FROM OrdenDetalle o WHERE o.cantidad = :cantidad"),
     @NamedQuery(name = "OrdenDetalle.findByPrecio", query = "SELECT o FROM OrdenDetalle o WHERE o.precio = :precio"),
+    @NamedQuery(name = "OrdenDetalle.findByPrecioProductoAndIdOrden",
+            query = "SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio and o.ordenDetallePK.idOrden=:idOrden"),
     @NamedQuery(name = "OrdenDetalle.findByObservaciones", query = "SELECT o FROM OrdenDetalle o WHERE o.observaciones = :observaciones")})
 public class OrdenDetalle implements Serializable {
 

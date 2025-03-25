@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PagoDetalleResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">PagoDetalleResource.java</span></div><h1>PagoDetalleResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.PagoDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.PagoDetalle;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Path(&quot;orden&quot;)
+<span class="nc" id="L16">public class PagoDetalleResource implements Serializable {</span>
+
+    @Inject
+    PagoDetalleBean pdBean;
+
+    /**
+     * Metodo que devueleve un rango de datos de tipo Pago sin importar el idPago
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;pago/pagoDetalle&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(int first, int max) {
+        try {
+<span class="nc bnc" id="L33" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+
+<span class="nc" id="L35">                List&lt;PagoDetalle&gt; encontrados = pdBean.findRange(first, max);</span>
+<span class="nc" id="L36">                long total = pdBean.count();</span>
+<span class="nc" id="L37">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L38">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L39">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L40">                return builder.build();</span>
+            } else {
+<span class="nc" id="L42">                return Response.status(400).header(Headers.WRONG_PARAMETER,  &quot;first: &quot;+first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L44">        } catch (Exception e) {</span>
+<span class="nc" id="L45">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L46">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * metodo que devueleve una rango de datos de tipo Pago de acuerdo a su idPago
+     * @param first la pocicion del primer dat
+     * @param max la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
+     * devuelve los primeros 20 registros
+     */
+
+    @Path(&quot;pago/{idPago}/productoPrecio&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRange(
+            @QueryParam(&quot;first&quot;)
+            @DefaultValue(&quot;0&quot;) int first,
+            @QueryParam(&quot;max&quot;)
+            @DefaultValue(&quot;20&quot;) int max,
+            @PathParam(&quot;idPago&quot;) Long idPago
+    ) {
+        try {
+<span class="nc bnc" id="L69" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50 ) {</span>
+<span class="nc" id="L70">                List&lt;PagoDetalle&gt; encontrados = pdBean.findByIdPago(idPago,first, max);</span>
+<span class="nc" id="L71">                long total = pdBean.countByIdPago(idPago);</span>
+<span class="nc" id="L72">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L73">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L74">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L75">                return builder.build();</span>
+            } else {
+<span class="nc" id="L77">                return Response.status(400).header(Headers.WRONG_PARAMETER,&quot; first:&quot;+ first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+            }
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L81">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
+
+    /**
+     * Metodo para encontrar un registro especifico de un PagoDetalle dado su id
+     * @param id del registro a buscar
+     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
+     * encuentra ningun registro con el id especificado 400 si se envia mal una
+     * parametro
+     */
+
+    @Path(&quot;/pago/{idPago}/pago/{id}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L100">                PagoDetalle encontrado = pdBean.findById(id);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L102">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L103">                    return builder.build();</span>
+                }
+<span class="nc" id="L105">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L106">            } catch (Exception e) {</span>
+<span class="nc" id="L107">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L108">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L111">        return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;id: &quot;+ id).build();</span>
+    }
+
+    /**
+     * Registra una entidad Pago a un
+     * @param uriInfo informacion de URl donde se encuantra la peticion
+     * @return un estatus 201 si la entidad es creada junto con la url donde se
+     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
+     * entidad y 500 si por fall el servidor
+     * */
+
+    @Path(&quot;pago/{idPago}/pagoDetalle&quot;)
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response create(PagoDetalle registro,
+                           @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L128" title="All 6 branches missed.">        if (registro != null &amp;&amp; registro.getIdPago() == null &amp;&amp; registro.getIdPagoDetalle() != null) {</span>
+            try {
+<span class="nc" id="L130">                pdBean.create(registro);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (registro.getIdPago() != null) {</span>
+<span class="nc" id="L132">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L133">                    uriBuilder.path(String.valueOf(registro.getIdPago()));</span>
+<span class="nc" id="L134">                    return Response.created(uriBuilder.build()).build();</span>
+                }
+<span class="nc" id="L136">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
+<span class="nc" id="L137">            } catch (Exception e) {</span>
+<span class="nc" id="L138">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L139">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L142">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
+
+    /**
+     * Borra un registro de tipo PAgo Especifico
+     * @param id id del TipoProducto a eliminar
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
+     * y 500 si falla el servdor
+     */
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path(&quot;pago/pagoDetalle/{id}&quot;)
+    public Response delete(@PathParam(&quot;id&quot;) Integer id, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (id != null) {</span>
+            try {
+<span class="nc" id="L159">                pdBean.delete(id);</span>
+<span class="nc" id="L160">                return Response.status(200).build();</span>
+<span class="nc" id="L161">            } catch (Exception e) {</span>
+<span class="nc" id="L162">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L163">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
+            }
+        }
+<span class="nc" id="L166">        return Response.status(500).header(Headers.WRONG_PARAMETER, id).build();</span>
+    }
+
+    /**
+     * Actualiza una entidad de base de datos
+     * @param registro entidda a ser actualizada
+     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
+     * problema y 500 si falla el servidor
+     */
+    @Path(&quot;pago&quot;)
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(PagoDetalle registro, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L181" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getIdPago() != null) {</span>
+            try {
+<span class="nc" id="L183">                pdBean.update(registro);</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                if (registro.getIdPago() != null) {</span>
+<span class="nc" id="L185">                    return Response.status(200).build();</span>
+                }
+<span class="nc" id="L187">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L188">            } catch (Exception e) {</span>
+<span class="nc" id="L189">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L190">                return Response.status(500).entity(e.getMessage()).build();</span>
+            }
+        }
+<span class="nc" id="L193">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

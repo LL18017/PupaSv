@@ -1,6 +1,9 @@
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanTest.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanIT.java
+/usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanTest.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractDataAccessTest.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceIT.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/JerseyTest.java
+/usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanTest.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/resources/JakartaEE10ResourceTest.java
+/usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/TipoProductoBeanIT.java

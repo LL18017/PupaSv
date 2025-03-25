@@ -9,6 +9,10 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 
 /**
@@ -23,17 +27,40 @@ public class PagoBean extends AbstractDataAccess&lt;Pago&gt; implements Serializ
     EntityManager em;
 
     public PagoBean() {
-<span class="nc" id="L26">        super(Pago.class);</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L30">        super(Pago.class);</span>
+<span class="nc" id="L31">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L31">        return em;</span>
+<span class="nc" id="L35">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L36">        return &quot;idPago&quot;;</span>
+<span class="nc" id="L40">        return &quot;idPago&quot;;</span>
+    }
+
+    public List&lt;Pago&gt; findByIdOrden(Long idPago,int first, int max) {
+
+        try {
+<span class="nc" id="L46">            return em.createNamedQuery(&quot;Pago.findByIdOrden&quot;, Pago.class).</span>
+<span class="nc" id="L47">                    setParameter(&quot;idOrden&quot;, idPago).setFirstResult(first).setMaxResults(max).getResultList();</span>
+<span class="nc" id="L48">        }catch (Exception e) {</span>
+<span class="nc" id="L49">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L52">        return List.of();</span>
+    }
+    public Long countByIdOrden(Long idOrden) {
+
+        try {
+<span class="nc" id="L57">            return em.createNamedQuery(&quot;Pago.countByIdOrden&quot;, Long.class).</span>
+<span class="nc" id="L58">                    setParameter(&quot;idOrden&quot;, idOrden).getSingleResult();</span>
+<span class="nc" id="L59">        }catch (Exception e) {</span>
+<span class="nc" id="L60">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L63">        return 0L;</span>
     }
 
 }

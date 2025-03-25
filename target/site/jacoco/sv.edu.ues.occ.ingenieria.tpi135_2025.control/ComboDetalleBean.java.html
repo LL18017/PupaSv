@@ -9,7 +9,13 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetallePK;
 
 /**
  *
@@ -23,17 +29,99 @@ public class ComboDetalleBean extends AbstractDataAccess&lt;ComboDetalle&gt; imp
     EntityManager em;
 
     public ComboDetalleBean() {
-<span class="nc" id="L26">        super(ComboDetalle.class);</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L32">        super(ComboDetalle.class);</span>
+<span class="nc" id="L33">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L31">        return em;</span>
+<span class="nc" id="L37">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L36">        return &quot;idComboDetalle&quot;;</span>
+<span class="nc" id="L42">        return &quot;idComboDetalle&quot;;</span>
+    }
+
+
+    public void deleteByComboDetallePK(ComboDetallePK id) {
+        try {
+<span class="nc" id="L48">            em.createNamedQuery(&quot;ComboDetalle.deleteByComboDetallePK&quot;).</span>
+<span class="nc" id="L49">                    setParameter(&quot;idCombo&quot;, id.getIdCombo()).</span>
+<span class="nc" id="L50">                    setParameter(&quot;idProducto&quot;, id.getIdProducto())</span>
+<span class="nc" id="L51">                    .executeUpdate();</span>
+<span class="nc" id="L52">        } catch (Exception e) {</span>
+<span class="nc" id="L53">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, null, e);</span>
+<span class="nc" id="L54">        }</span>
+<span class="nc" id="L55">    }</span>
+
+    public List&lt;ComboDetalle&gt; findByIdProducto(Long idProducto, int first, int max) {
+
+        try {
+<span class="nc" id="L60">            return em.createNamedQuery(&quot;ComboDetalle.findByIdProducto&quot;, ComboDetalle.class)</span>
+<span class="nc" id="L61">                    .setParameter(&quot;idProducto&quot;,idProducto)</span>
+<span class="nc" id="L62">                    .setFirstResult(first).setMaxResults(max).getResultList();</span>
+<span class="nc" id="L63">        }catch (Exception e) {</span>
+<span class="nc" id="L64">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L67">        return List.of();</span>
+    }
+    public Long countByIdProducto(Long idProducto) {
+
+        try {
+<span class="nc" id="L72">            return em.createNamedQuery(&quot;ComboDetalle.countByIdProducto&quot;, Long.class)</span>
+<span class="nc" id="L73">                    .setParameter(&quot;idProducto&quot;,idProducto).getSingleResult();</span>
+<span class="nc" id="L74">        }catch (Exception e) {</span>
+<span class="nc" id="L75">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L78">        return 0L;</span>
+    }
+    public List&lt;ComboDetalle&gt; findByIdCombo(Long idCombo,int first,int max) {
+
+        try {
+<span class="nc" id="L83">            return em.createNamedQuery(&quot;ComboDetalle.countByIdCombo&quot;, ComboDetalle.class)</span>
+<span class="nc" id="L84">                    .setParameter(&quot;idCombo&quot;,idCombo)</span>
+<span class="nc" id="L85">                    .setFirstResult(first).setMaxResults(max).getResultList();</span>
+<span class="nc" id="L86">        }catch (Exception e) {</span>
+<span class="nc" id="L87">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L90">        return List.of();</span>
+    }
+    public Long countByIdCombo(Long idCombo) {
+
+        try {
+<span class="nc" id="L95">            return em.createNamedQuery(&quot;ComboDetalle.countByIdCombo&quot;, Long.class)</span>
+<span class="nc" id="L96">                    .setParameter(&quot;idCombo&quot;,idCombo).getSingleResult();</span>
+<span class="nc" id="L97">        }catch (Exception e) {</span>
+<span class="nc" id="L98">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L101">        return 0L;</span>
+    }
+    public List&lt;ComboDetalle&gt; findByIdComboAndIdProducto(Long idCombo,Long idProducto,int first,int max) {
+
+        try {
+<span class="nc" id="L106">            return em.createNamedQuery(&quot;ComboDetalle.countByIdComboAndIdProducto&quot;, ComboDetalle.class)</span>
+<span class="nc" id="L107">                    .setParameter(&quot;idCombo&quot;,idCombo)</span>
+<span class="nc" id="L108">                    .setFirstResult(first).setMaxResults(max).getResultList();</span>
+<span class="nc" id="L109">        }catch (Exception e) {</span>
+<span class="nc" id="L110">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L113">        return List.of();</span>
+    }
+    public Long countByIdComboAndIdProducto(Long idCombo,Long idProducto) {
+
+        try {
+<span class="nc" id="L118">            return em.createNamedQuery(&quot;ComboDetalle.countByIdComboAndIdProducto&quot;, Long.class)</span>
+<span class="nc" id="L119">                    .setParameter(&quot;idCombo&quot;,idCombo).getSingleResult();</span>
+<span class="nc" id="L120">        }catch (Exception e) {</span>
+<span class="nc" id="L121">            Logger.getLogger(ComboDetalleBean.class.getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+        }
+
+<span class="nc" id="L124">        return 0L;</span>
     }
 
 }

@@ -31,6 +31,9 @@ import jakarta.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Pago.findAll", query = "SELECT p FROM Pago p"),
     @NamedQuery(name = "Pago.findByIdPago", query = "SELECT p FROM Pago p WHERE p.idPago = :idPago"),
+    @NamedQuery(name = "Pago.countByIdPago", query = "SELECT COUNT (p) FROM Pago p WHERE p.idPago = :idPago"),
+        @NamedQuery(name = "Pago.findByIdOrden", query = "SELECT p FROM Pago p WHERE p.idOrden.idOrden = :idOrden"),
+    @NamedQuery(name = "Pago.countByIdOrden", query = "SELECT COUNT (p) FROM Pago p WHERE p.idOrden.idOrden = :idOrden"),
     @NamedQuery(name = "Pago.findByFecha", query = "SELECT p FROM Pago p WHERE p.fecha = :fecha"),
     @NamedQuery(name = "Pago.findByMetodoPago", query = "SELECT p FROM Pago p WHERE p.metodoPago = :metodoPago"),
     @NamedQuery(name = "Pago.findByReferencia", query = "SELECT p FROM Pago p WHERE p.referencia = :referencia")})

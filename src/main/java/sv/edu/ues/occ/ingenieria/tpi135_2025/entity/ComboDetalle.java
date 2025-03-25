@@ -22,9 +22,14 @@ import jakarta.persistence.Table;
 @Table(name = "combo_detalle")
 @NamedQueries({
     @NamedQuery(name = "ComboDetalle.findAll", query = "SELECT c FROM ComboDetalle c"),
-    @NamedQuery(name = "ComboDetalle.findByIdCombo", query = "SELECT c FROM ComboDetalle c WHERE c.comboDetallePK.idCombo = :idCombo"),
-    @NamedQuery(name = "ComboDetalle.findByIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.comboDetallePK.idProducto = :idProducto"),
     @NamedQuery(name = "ComboDetalle.findByCantidad", query = "SELECT c FROM ComboDetalle c WHERE c.cantidad = :cantidad"),
+    @NamedQuery(name = "ComboDetalle.findByIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto"),
+    @NamedQuery(name = "ComboDetalle.countByIdProducto", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto"),
+        @NamedQuery(name = "ComboDetalle.findByIdCombo", query = "SELECT c FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo"),
+    @NamedQuery(name = "ComboDetalle.countByIdCombo", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo"),
+        @NamedQuery(name = "ComboDetalle.findByIdComboAndIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
+    @NamedQuery(name = "ComboDetalle.countByIdComboAndIdProducto", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
+    @NamedQuery(name = "ComboDetalle.deleteByComboDetallePK", query = "DELETE  FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
     @NamedQuery(name = "ComboDetalle.findByActivo", query = "SELECT c FROM ComboDetalle c WHERE c.activo = :activo")})
 public class ComboDetalle implements Serializable {
 

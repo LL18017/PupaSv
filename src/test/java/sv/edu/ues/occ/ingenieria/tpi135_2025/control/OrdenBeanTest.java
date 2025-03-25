@@ -165,7 +165,7 @@ public class OrdenBeanTest {
         TypedQuery<Long> mockTq = Mockito.mock(TypedQuery.class);
         // em nulo
         Assertions.assertThrows(IllegalStateException.class, () -> cut.count());
-        
+
         // Flujo normal
         cut.em = mockEm;
         Mockito.when(mockEm.getCriteriaBuilder()).thenReturn(mockCb);
@@ -191,7 +191,7 @@ public class OrdenBeanTest {
         System.out.println("test update");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
-        Orden Ordenmodificar = LIST_ORDEN_TEST.getFirst();
+        Orden Ordenmodificar = LIST_ORDEN_TEST.get(0);
         Ordenmodificar.setSucursal("santa Ana");
 
         //entity nulo
@@ -202,12 +202,12 @@ public class OrdenBeanTest {
         //flujo normal
 
         cut.em = mockEm;
-        Mockito.when(mockEm.merge(Ordenmodificar)).thenReturn(LIST_ORDEN_TEST.getFirst());
+        Mockito.when(mockEm.merge(Ordenmodificar)).thenReturn(LIST_ORDEN_TEST.get(0));
         Orden respuesta = cut.update(Ordenmodificar);
-        LIST_ORDEN_TEST.getFirst().setSucursal("santa Ana");
+        LIST_ORDEN_TEST.get(0).setSucursal("santa Ana");
 
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(LIST_ORDEN_TEST.getFirst(), respuesta);
+        Assertions.assertEquals(LIST_ORDEN_TEST.get(0), respuesta);
 //        Assertions.fail("la prueba fallo exitosamente");
     }
 
@@ -220,7 +220,7 @@ public class OrdenBeanTest {
         CriteriaDelete<Orden> mockCd = Mockito.mock(CriteriaDelete.class);
         Root<Orden> mockR = Mockito.mock(Root.class);
         TypedQuery<Orden> mockTq = Mockito.mock(TypedQuery.class);
-        Object OrdenEliminadaId = LIST_ORDEN_TEST.getFirst().getIdOrden(); // Asegúrate de que LIST_ORDEN_TEST tenga elementos
+        Object OrdenEliminadaId = LIST_ORDEN_TEST.get(0).getIdOrden(); // Asegúrate de que LIST_ORDEN_TEST tenga elementos
 
         // Test para entidad nula
         Assertions.assertThrows(IllegalStateException.class, () -> cut.delete(OrdenEliminadaId));
@@ -230,7 +230,7 @@ public class OrdenBeanTest {
 
         // Flujo normal
         cut.em = mockEm;
-        Mockito.when(mockEm.find(Orden.class, OrdenEliminadaId)).thenReturn(LIST_ORDEN_TEST.getFirst());
+        Mockito.when(mockEm.find(Orden.class, OrdenEliminadaId)).thenReturn(LIST_ORDEN_TEST.get(0));
         Mockito.when(mockEm.getCriteriaBuilder()).thenReturn(mockCb);
         Mockito.when(mockCb.createCriteriaDelete(Orden.class)).thenReturn(mockCd);
         Mockito.when(mockCd.from(Orden.class)).thenReturn(mockR);

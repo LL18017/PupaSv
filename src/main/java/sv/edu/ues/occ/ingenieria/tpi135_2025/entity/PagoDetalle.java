@@ -28,6 +28,9 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "PagoDetalle.findAll", query = "SELECT p FROM PagoDetalle p"),
     @NamedQuery(name = "PagoDetalle.findByIdPagoDetalle", query = "SELECT p FROM PagoDetalle p WHERE p.idPagoDetalle = :idPagoDetalle"),
     @NamedQuery(name = "PagoDetalle.findByMonto", query = "SELECT p FROM PagoDetalle p WHERE p.monto = :monto"),
+    @NamedQuery(name = "PagoDetalle.findByIdPago", query = "SELECT p FROM PagoDetalle p WHERE p.idPago.idPago = :idPago"),
+    @NamedQuery(name = "PagoDetalle.countByIdPago", query = "SELECT COUNT (p) FROM PagoDetalle p WHERE p.idPago.idPago = :idPago"),
+    @NamedQuery(name = "PagoDetalle.findByMonto", query = "SELECT p FROM PagoDetalle p WHERE p.monto = :monto"),
     @NamedQuery(name = "PagoDetalle.findByObservaciones", query = "SELECT p FROM PagoDetalle p WHERE p.observaciones = :observaciones")})
 public class PagoDetalle implements Serializable {
 

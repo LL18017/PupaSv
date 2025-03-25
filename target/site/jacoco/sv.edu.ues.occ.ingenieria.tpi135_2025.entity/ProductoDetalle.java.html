@@ -25,11 +25,9 @@ import jakarta.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = &quot;ProductoDetalle.findAll&quot;, query = &quot;SELECT p FROM ProductoDetalle p&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProducto&quot;, query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto&quot;),
-    @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;,
-            query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
-  @NamedQuery(name = &quot;ProductoDetalle.countByIdTipoProductoAndIdProducto&quot;,
-            query = &quot;SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
-
+    @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;,query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
+    @NamedQuery(name = &quot;ProductoDetalle.countByIdTipoProductoAndIdProducto&quot;,query = &quot;SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
+    @NamedQuery(name = &quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;,query = &quot;DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.findByIdProducto&quot;, query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto = :idProducto&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.findByActivo&quot;, query = &quot;SELECT p FROM ProductoDetalle p WHERE p.activo = :activo&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.findByObservaciones&quot;, query = &quot;SELECT p FROM ProductoDetalle p WHERE p.observaciones = :observaciones&quot;)})
@@ -40,9 +38,9 @@ public class ProductoDetalle implements Serializable {
     protected ProductoDetallePK productoDetallePK;
     @Column(name = &quot;activo&quot;)
     private Boolean activo;
+
     @Column(name = &quot;observaciones&quot;)
     private String observaciones;
-
     @JoinColumn(name = &quot;id_producto&quot;, referencedColumnName = &quot;id_producto&quot;, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Producto producto;
@@ -50,80 +48,80 @@ public class ProductoDetalle implements Serializable {
     @ManyToOne(optional = false)
     private TipoProducto tipoProducto;
 
-<span class="nc" id="L53">    public ProductoDetalle() {</span>
-<span class="nc" id="L54">    }</span>
+<span class="fc" id="L51">    public ProductoDetalle() {</span>
+<span class="fc" id="L52">    }</span>
 
-<span class="nc" id="L56">    public ProductoDetalle(ProductoDetallePK productoDetallePK) {</span>
-<span class="nc" id="L57">        this.productoDetallePK = productoDetallePK;</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L54">    public ProductoDetalle(ProductoDetallePK productoDetallePK) {</span>
+<span class="nc" id="L55">        this.productoDetallePK = productoDetallePK;</span>
+<span class="nc" id="L56">    }</span>
 
-<span class="nc" id="L60">    public ProductoDetalle(int idTipoProducto, long idProducto) {</span>
-<span class="nc" id="L61">        this.productoDetallePK = new ProductoDetallePK(idTipoProducto, idProducto);</span>
-<span class="nc" id="L62">    }</span>
+<span class="fc" id="L58">    public ProductoDetalle(int idTipoProducto, long idProducto) {</span>
+<span class="fc" id="L59">        this.productoDetallePK = new ProductoDetallePK(idTipoProducto, idProducto);</span>
+<span class="fc" id="L60">    }</span>
 
     public ProductoDetallePK getProductoDetallePK() {
-<span class="nc" id="L65">        return productoDetallePK;</span>
+<span class="fc" id="L63">        return productoDetallePK;</span>
     }
 
     public void setProductoDetallePK(ProductoDetallePK productoDetallePK) {
-<span class="nc" id="L69">        this.productoDetallePK = productoDetallePK;</span>
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L67">        this.productoDetallePK = productoDetallePK;</span>
+<span class="fc" id="L68">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L73">        return activo;</span>
+<span class="nc" id="L71">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="nc" id="L77">        this.activo = activo;</span>
-<span class="nc" id="L78">    }</span>
+<span class="fc" id="L75">        this.activo = activo;</span>
+<span class="fc" id="L76">    }</span>
 
     public String getObservaciones() {
-<span class="nc" id="L81">        return observaciones;</span>
+<span class="nc" id="L79">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="nc" id="L85">        this.observaciones = observaciones;</span>
-<span class="nc" id="L86">    }</span>
+<span class="nc" id="L83">        this.observaciones = observaciones;</span>
+<span class="nc" id="L84">    }</span>
 
     public Producto getProducto() {
-<span class="nc" id="L89">        return producto;</span>
+<span class="nc" id="L87">        return producto;</span>
     }
 
     public void setProducto(Producto producto) {
-<span class="nc" id="L93">        this.producto = producto;</span>
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L91">        this.producto = producto;</span>
+<span class="nc" id="L92">    }</span>
 
     public TipoProducto getTipoProducto() {
-<span class="nc" id="L97">        return tipoProducto;</span>
+<span class="nc" id="L95">        return tipoProducto;</span>
     }
 
     public void setTipoProducto(TipoProducto tipoProducto) {
-<span class="nc" id="L101">        this.tipoProducto = tipoProducto;</span>
-<span class="nc" id="L102">    }</span>
+<span class="nc" id="L99">        this.tipoProducto = tipoProducto;</span>
+<span class="nc" id="L100">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L106">        int hash = 0;</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        hash += (productoDetallePK != null ? productoDetallePK.hashCode() : 0);</span>
-<span class="nc" id="L108">        return hash;</span>
+<span class="nc" id="L104">        int hash = 0;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        hash += (productoDetallePK != null ? productoDetallePK.hashCode() : 0);</span>
+<span class="nc" id="L106">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (!(object instanceof ProductoDetalle)) {</span>
-<span class="nc" id="L115">            return false;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (!(object instanceof ProductoDetalle)) {</span>
+<span class="nc" id="L113">            return false;</span>
         }
-<span class="nc" id="L117">        ProductoDetalle other = (ProductoDetalle) object;</span>
-<span class="nc bnc" id="L118" title="All 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
-<span class="nc" id="L119">            return false;</span>
+<span class="nc" id="L115">        ProductoDetalle other = (ProductoDetalle) object;</span>
+<span class="nc bnc" id="L116" title="All 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
+<span class="nc" id="L117">            return false;</span>
         }
-<span class="nc" id="L121">        return true;</span>
+<span class="nc" id="L119">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L126">        return &quot;com.mycompany.extreciondeentities.entities.ProductoDetalle[ productoDetallePK=&quot; + productoDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L124">        return &quot;com.mycompany.extreciondeentities.entities.ProductoDetalle[ productoDetallePK=&quot; + productoDetallePK + &quot; ]&quot;;</span>
     }
     
 }

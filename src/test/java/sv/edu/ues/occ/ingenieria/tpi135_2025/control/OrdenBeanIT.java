@@ -146,7 +146,7 @@ public class OrdenBeanIT {
         OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Orden esperado = LISTA_ORDEN.getFirst();
+        Orden esperado = LISTA_ORDEN.get(0);
 
         try {
             Orden respuesta = cut.findById(12345L);//id primer elemento
@@ -179,7 +179,7 @@ public class OrdenBeanIT {
             cut.em.getTransaction().begin();
             cut.create(creado);
             cut.em.getTransaction().commit();
-            Orden respuesta = cut.findAll().getFirst();//obtenemos el ultimo
+            Orden respuesta = cut.findAll().get(0);//obtenemos el ultimo
             Assertions.assertNotNull(respuesta);
             Assertions.assertEquals(creado, respuesta);
         } catch (Exception e) {

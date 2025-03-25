@@ -8,15 +8,17 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
 
 /**
- *
  * @author mjlopez bean para control de entidad ProductoDetalle
  */
 @LocalBean
@@ -40,29 +42,68 @@ public class ProductoDetalleBean extends AbstractDataAccess<ProductoDetalle> imp
         return "idProductoDetalle";
     }
 
-    public List<ProductoDetalle> findByIdProductoAndIdProductoDetalle(Integer idTipoProducto, Long idProducto, int first ,int max) {
-        try {
-            return em.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto",ProductoDetalle.class)
-                    .setParameter("idTipoProducto", idTipoProducto)
-                    .setParameter("idProducto", idProducto)
-                    .setFirstResult(first)
-                    .setMaxResults(max)
-                    .getResultList();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+    public List<ProductoDetalle> findByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto, Integer first, Integer max) {
+        if (idTipoProducto != null && idProducto != null && first != null && max != null) {
+            try {
+                return em.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto", ProductoDetalle.class)
+                        .setParameter("idTipoProducto", idTipoProducto)
+                        .setParameter("idProducto", idProducto)
+                        .setFirstResult(first)
+                        .setMaxResults(max)
+                        .getResultList();
+            } catch (Exception e) {
+
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                throw new IllegalStateException("error al aceder al repositorio", e);
+            }
         }
-        return List.of();
+        throw new IllegalArgumentException("idTipoProducto , idProducto,first y max no pueden ser nulos");
     }
-    public Long countByIdProductoAndIdProductoDetalle(Integer idTipoProducto, Long idProducto) {
-        try {
-            return em.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto",Long.class)
-                    .setParameter("idTipoProducto", idTipoProducto)
-                    .setParameter("idProducto", idProducto)
-                    .getSingleResult();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+
+    public Long countByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto) {
+        if (idTipoProducto != null && idProducto != null) {
+            try {
+                return em.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto", Long.class)
+                        .setParameter("idTipoProducto", idTipoProducto)
+                        .setParameter("idProducto", idProducto)
+                        .getSingleResult();
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                throw new IllegalStateException("error al aceder al repositorio", e);
+
+            }
         }
-        return 0L;
+
+        throw new IllegalArgumentException("idTipoProducto , idProducto no pueden ser nulos");
+    }
+
+
+    public void deleteByPk(ProductoDetallePK pk) {
+        if (pk != null) {
+            try {
+                em.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto").setParameter("idProducto", pk.getIdProducto()).setParameter("idTipoProducto", pk.getIdTipoProducto()).executeUpdate();
+                return;
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                throw new IllegalStateException("error al aceder al repositorio", e);
+            }
+        }
+        throw new IllegalArgumentException("la llave no pueden ser null");
+    }
+
+
+    public List<ProductoDetalle> findAll(Integer first, Integer max) {
+        if (first != null && max != null) {
+            try {
+                 return em.createNamedQuery("ProductoDetalle.findAll", ProductoDetalle.class)
+                         .setFirstResult(first)
+                         .setMaxResults(max)
+                         .getResultList();
+            } catch (Exception e) {
+                throw new IllegalStateException("error al aceder al repositorio", e);
+            }
+        }
+        throw new IllegalArgumentException("first y max no pueden ser nulos");
     }
 
 }

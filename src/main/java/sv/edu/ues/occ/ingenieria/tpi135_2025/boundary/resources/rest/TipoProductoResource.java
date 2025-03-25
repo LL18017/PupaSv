@@ -24,7 +24,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  *
  * @author mjlopez
  */
-@Path("tipoproducto")
+@Path("tipoProducto")
 public class TipoProductoResource implements Serializable {
 
     @Inject
@@ -44,12 +44,12 @@ public class TipoProductoResource implements Serializable {
     @Path("")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange( @QueryParam("first")
-                                   @DefaultValue("0") int first,
+                                   @DefaultValue("0") Integer first,
                                @QueryParam("max")
-                                   @DefaultValue("20") int max){
+                                   @DefaultValue("20") Integer max){
         try {
+            System.out.println("First: " + first + ", Max: " + max);
             if (first >= 0 && max >= 0 && max <= 50) {
-
                 List<TipoProducto> encontrados = tpBean.findRange(first, max);
 
                 long total = tpBean.count();
@@ -58,7 +58,7 @@ public class TipoProductoResource implements Serializable {
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             } else {
-                return Response.status(400).header("wrong parameter, first:", first + ",max: " + max).header("wrong parameter : max", "s").build();
+                return Response.status(400).header(Headers.WRONG_PARAMETER,"first:"+ first + ",max: " + max).build();
             }
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
@@ -67,10 +67,9 @@ public class TipoProductoResource implements Serializable {
     }
 
     /**
-     * metodo para encontrar un registro especifico de producto dado su id
-     *
+     * Metodo para encontrar un registro especifico de producto dado su id
      * @param id del registro a buscar
-     * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
+     * @return un esatatus 200 si se logro encontrar la entidad junto con dicha entidad
      * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
      * encuentra ningun registro con el id especificado 400 si se envia mal una
      * parametro
@@ -80,7 +79,7 @@ public class TipoProductoResource implements Serializable {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam("id") Integer id) {
-        if (id != null) {
+        if (id >0) {
             try {
                 TipoProducto encontrado = tpBean.findById(id);
                 if (encontrado != null) {
@@ -93,11 +92,11 @@ public class TipoProductoResource implements Serializable {
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(400).header("wrong-parameter : id", id).build();
+        return Response.status(400).header(Headers.WRONG_PARAMETER ,"id: "+ id).build();
     }
 
     /**
-     * registra una entidad TipoProducto
+     * Registra una entidad TipoProducto
      * @param uriInfo informacion de URl donde se encuantra la peticion
      * @return un estatus 201 si la entidad es creada junto con la url donde se
      * puede encontra dicha entidad 422 en dado caso falle la creacion de la
@@ -124,12 +123,11 @@ public class TipoProductoResource implements Serializable {
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
+        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();
     }
 
     /**
-     * borra un REGISTRO Producto Especifico
-     *
+     * Borra un registro de tipo TipoProducto Especifico
      * @param id id del TipoProducto a eliminar
      * @param uriInfo info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
@@ -140,7 +138,7 @@ public class TipoProductoResource implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
-        if (id != null) {
+        if (id != null && id > 0) {
             try {
                 tpBean.delete(id);
                 return Response.status(200).build();
@@ -149,23 +147,25 @@ public class TipoProductoResource implements Serializable {
                 return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
             }
         }
-        return Response.status(500).header("Wrong-parameter", id).build();
+        return Response.status(500).header(Headers.WRONG_PARAMETER, "id: "+id).build();
     }
 
     /**
-     * actualiza una entidad de base de datos
-     *
+     * Actualiza una entidad de base de datos
      * @param registro entidda a ser actualizada
      * @param uriInfo info de url de donde se esta realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
+    @Path("/{id}")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(TipoProducto registro, @Context UriInfo uriInfo) {
-        if (registro != null && registro.getIdTipoProducto() != null) {
+    public Response update(TipoProducto registro, @Context UriInfo uriInfo
+    , @PathParam("id") Integer id) {
+        if (registro != null && id != null && id>0) {
             try {
+                registro.setIdTipoProducto(id);
                 tpBean.update(registro);
                 if (registro.getIdTipoProducto() != null) {
 
@@ -177,7 +177,7 @@ public class TipoProductoResource implements Serializable {
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
+        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();
     }
 
 

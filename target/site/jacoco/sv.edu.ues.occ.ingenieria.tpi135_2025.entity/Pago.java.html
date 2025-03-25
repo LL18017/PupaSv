@@ -31,6 +31,9 @@ import jakarta.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = &quot;Pago.findAll&quot;, query = &quot;SELECT p FROM Pago p&quot;),
     @NamedQuery(name = &quot;Pago.findByIdPago&quot;, query = &quot;SELECT p FROM Pago p WHERE p.idPago = :idPago&quot;),
+    @NamedQuery(name = &quot;Pago.countByIdPago&quot;, query = &quot;SELECT COUNT (p) FROM Pago p WHERE p.idPago = :idPago&quot;),
+        @NamedQuery(name = &quot;Pago.findByIdOrden&quot;, query = &quot;SELECT p FROM Pago p WHERE p.idOrden.idOrden = :idOrden&quot;),
+    @NamedQuery(name = &quot;Pago.countByIdOrden&quot;, query = &quot;SELECT COUNT (p) FROM Pago p WHERE p.idOrden.idOrden = :idOrden&quot;),
     @NamedQuery(name = &quot;Pago.findByFecha&quot;, query = &quot;SELECT p FROM Pago p WHERE p.fecha = :fecha&quot;),
     @NamedQuery(name = &quot;Pago.findByMetodoPago&quot;, query = &quot;SELECT p FROM Pago p WHERE p.metodoPago = :metodoPago&quot;),
     @NamedQuery(name = &quot;Pago.findByReferencia&quot;, query = &quot;SELECT p FROM Pago p WHERE p.referencia = :referencia&quot;)})
@@ -55,84 +58,84 @@ public class Pago implements Serializable {
     @ManyToOne
     private Orden idOrden;
 
-<span class="nc" id="L58">    public Pago() {</span>
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L61">    public Pago() {</span>
+<span class="fc" id="L62">    }</span>
 
-<span class="nc" id="L61">    public Pago(Long idPago) {</span>
-<span class="nc" id="L62">        this.idPago = idPago;</span>
-<span class="nc" id="L63">    }</span>
+<span class="nc" id="L64">    public Pago(Long idPago) {</span>
+<span class="nc" id="L65">        this.idPago = idPago;</span>
+<span class="nc" id="L66">    }</span>
 
     public Long getIdPago() {
-<span class="nc" id="L66">        return idPago;</span>
+<span class="nc" id="L69">        return idPago;</span>
     }
 
     public void setIdPago(Long idPago) {
-<span class="nc" id="L70">        this.idPago = idPago;</span>
-<span class="nc" id="L71">    }</span>
+<span class="nc" id="L73">        this.idPago = idPago;</span>
+<span class="nc" id="L74">    }</span>
 
     public Date getFecha() {
-<span class="nc" id="L74">        return fecha;</span>
+<span class="nc" id="L77">        return fecha;</span>
     }
 
     public void setFecha(Date fecha) {
-<span class="nc" id="L78">        this.fecha = fecha;</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L81">        this.fecha = fecha;</span>
+<span class="nc" id="L82">    }</span>
 
     public String getMetodoPago() {
-<span class="nc" id="L82">        return metodoPago;</span>
+<span class="nc" id="L85">        return metodoPago;</span>
     }
 
     public void setMetodoPago(String metodoPago) {
-<span class="nc" id="L86">        this.metodoPago = metodoPago;</span>
-<span class="nc" id="L87">    }</span>
+<span class="nc" id="L89">        this.metodoPago = metodoPago;</span>
+<span class="nc" id="L90">    }</span>
 
     public String getReferencia() {
-<span class="nc" id="L90">        return referencia;</span>
+<span class="nc" id="L93">        return referencia;</span>
     }
 
     public void setReferencia(String referencia) {
-<span class="nc" id="L94">        this.referencia = referencia;</span>
-<span class="nc" id="L95">    }</span>
+<span class="nc" id="L97">        this.referencia = referencia;</span>
+<span class="nc" id="L98">    }</span>
 
     public List&lt;PagoDetalle&gt; getPagoDetalleList() {
-<span class="nc" id="L98">        return pagoDetalleList;</span>
+<span class="nc" id="L101">        return pagoDetalleList;</span>
     }
 
     public void setPagoDetalleList(List&lt;PagoDetalle&gt; pagoDetalleList) {
-<span class="nc" id="L102">        this.pagoDetalleList = pagoDetalleList;</span>
-<span class="nc" id="L103">    }</span>
+<span class="nc" id="L105">        this.pagoDetalleList = pagoDetalleList;</span>
+<span class="nc" id="L106">    }</span>
 
     public Orden getIdOrden() {
-<span class="nc" id="L106">        return idOrden;</span>
+<span class="nc" id="L109">        return idOrden;</span>
     }
 
     public void setIdOrden(Orden idOrden) {
-<span class="nc" id="L110">        this.idOrden = idOrden;</span>
-<span class="nc" id="L111">    }</span>
+<span class="nc" id="L113">        this.idOrden = idOrden;</span>
+<span class="nc" id="L114">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L115">        int hash = 0;</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        hash += (idPago != null ? idPago.hashCode() : 0);</span>
-<span class="nc" id="L117">        return hash;</span>
+<span class="nc" id="L118">        int hash = 0;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        hash += (idPago != null ? idPago.hashCode() : 0);</span>
+<span class="nc" id="L120">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (!(object instanceof Pago)) {</span>
-<span class="nc" id="L124">            return false;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (!(object instanceof Pago)) {</span>
+<span class="nc" id="L127">            return false;</span>
         }
-<span class="nc" id="L126">        Pago other = (Pago) object;</span>
-<span class="nc bnc" id="L127" title="All 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
-<span class="nc" id="L128">            return false;</span>
+<span class="nc" id="L129">        Pago other = (Pago) object;</span>
+<span class="nc bnc" id="L130" title="All 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
+<span class="nc" id="L131">            return false;</span>
         }
-<span class="nc" id="L130">        return true;</span>
+<span class="nc" id="L133">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L135">        return &quot;com.mycompany.extreciondeentities.entities.Pago[ idPago=&quot; + idPago + &quot; ]&quot;;</span>
+<span class="nc" id="L138">        return &quot;com.mycompany.extreciondeentities.entities.Pago[ idPago=&quot; + idPago + &quot; ]&quot;;</span>
     }
     
 }

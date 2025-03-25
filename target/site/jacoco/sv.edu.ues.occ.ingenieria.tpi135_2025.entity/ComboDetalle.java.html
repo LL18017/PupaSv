@@ -22,9 +22,14 @@ import jakarta.persistence.Table;
 @Table(name = &quot;combo_detalle&quot;)
 @NamedQueries({
     @NamedQuery(name = &quot;ComboDetalle.findAll&quot;, query = &quot;SELECT c FROM ComboDetalle c&quot;),
-    @NamedQuery(name = &quot;ComboDetalle.findByIdCombo&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.comboDetallePK.idCombo = :idCombo&quot;),
-    @NamedQuery(name = &quot;ComboDetalle.findByIdProducto&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.comboDetallePK.idProducto = :idProducto&quot;),
     @NamedQuery(name = &quot;ComboDetalle.findByCantidad&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.cantidad = :cantidad&quot;),
+    @NamedQuery(name = &quot;ComboDetalle.findByIdProducto&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto&quot;),
+    @NamedQuery(name = &quot;ComboDetalle.countByIdProducto&quot;, query = &quot;SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto&quot;),
+        @NamedQuery(name = &quot;ComboDetalle.findByIdCombo&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo&quot;),
+    @NamedQuery(name = &quot;ComboDetalle.countByIdCombo&quot;, query = &quot;SELECT COUNT (c) FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo&quot;),
+        @NamedQuery(name = &quot;ComboDetalle.findByIdComboAndIdProducto&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo&quot;),
+    @NamedQuery(name = &quot;ComboDetalle.countByIdComboAndIdProducto&quot;, query = &quot;SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo&quot;),
+    @NamedQuery(name = &quot;ComboDetalle.deleteByComboDetallePK&quot;, query = &quot;DELETE  FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo&quot;),
     @NamedQuery(name = &quot;ComboDetalle.findByActivo&quot;, query = &quot;SELECT c FROM ComboDetalle c WHERE c.activo = :activo&quot;)})
 public class ComboDetalle implements Serializable {
 
@@ -42,80 +47,80 @@ public class ComboDetalle implements Serializable {
     @ManyToOne(optional = false)
     private Producto producto;
 
-<span class="nc" id="L45">    public ComboDetalle() {</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L50">    public ComboDetalle() {</span>
+<span class="fc" id="L51">    }</span>
 
-<span class="nc" id="L48">    public ComboDetalle(ComboDetallePK comboDetallePK) {</span>
-<span class="nc" id="L49">        this.comboDetallePK = comboDetallePK;</span>
-<span class="nc" id="L50">    }</span>
+<span class="nc" id="L53">    public ComboDetalle(ComboDetallePK comboDetallePK) {</span>
+<span class="nc" id="L54">        this.comboDetallePK = comboDetallePK;</span>
+<span class="nc" id="L55">    }</span>
 
-<span class="nc" id="L52">    public ComboDetalle(long idCombo, long idProducto) {</span>
-<span class="nc" id="L53">        this.comboDetallePK = new ComboDetallePK(idCombo, idProducto);</span>
-<span class="nc" id="L54">    }</span>
+<span class="nc" id="L57">    public ComboDetalle(long idCombo, long idProducto) {</span>
+<span class="nc" id="L58">        this.comboDetallePK = new ComboDetallePK(idCombo, idProducto);</span>
+<span class="nc" id="L59">    }</span>
 
     public ComboDetallePK getComboDetallePK() {
-<span class="nc" id="L57">        return comboDetallePK;</span>
+<span class="nc" id="L62">        return comboDetallePK;</span>
     }
 
     public void setComboDetallePK(ComboDetallePK comboDetallePK) {
-<span class="nc" id="L61">        this.comboDetallePK = comboDetallePK;</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L66">        this.comboDetallePK = comboDetallePK;</span>
+<span class="nc" id="L67">    }</span>
 
     public Integer getCantidad() {
-<span class="nc" id="L65">        return cantidad;</span>
+<span class="nc" id="L70">        return cantidad;</span>
     }
 
     public void setCantidad(Integer cantidad) {
-<span class="nc" id="L69">        this.cantidad = cantidad;</span>
-<span class="nc" id="L70">    }</span>
+<span class="nc" id="L74">        this.cantidad = cantidad;</span>
+<span class="nc" id="L75">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L73">        return activo;</span>
+<span class="nc" id="L78">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="nc" id="L77">        this.activo = activo;</span>
-<span class="nc" id="L78">    }</span>
+<span class="nc" id="L82">        this.activo = activo;</span>
+<span class="nc" id="L83">    }</span>
 
     public Combo getCombo() {
-<span class="nc" id="L81">        return combo;</span>
+<span class="nc" id="L86">        return combo;</span>
     }
 
     public void setCombo(Combo combo) {
-<span class="nc" id="L85">        this.combo = combo;</span>
-<span class="nc" id="L86">    }</span>
+<span class="nc" id="L90">        this.combo = combo;</span>
+<span class="nc" id="L91">    }</span>
 
     public Producto getProducto() {
-<span class="nc" id="L89">        return producto;</span>
+<span class="nc" id="L94">        return producto;</span>
     }
 
     public void setProducto(Producto producto) {
-<span class="nc" id="L93">        this.producto = producto;</span>
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L98">        this.producto = producto;</span>
+<span class="nc" id="L99">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L98">        int hash = 0;</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        hash += (comboDetallePK != null ? comboDetallePK.hashCode() : 0);</span>
-<span class="nc" id="L100">        return hash;</span>
+<span class="nc" id="L103">        int hash = 0;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        hash += (comboDetallePK != null ? comboDetallePK.hashCode() : 0);</span>
+<span class="nc" id="L105">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (!(object instanceof ComboDetalle)) {</span>
-<span class="nc" id="L107">            return false;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (!(object instanceof ComboDetalle)) {</span>
+<span class="nc" id="L112">            return false;</span>
         }
-<span class="nc" id="L109">        ComboDetalle other = (ComboDetalle) object;</span>
-<span class="nc bnc" id="L110" title="All 8 branches missed.">        if ((this.comboDetallePK == null &amp;&amp; other.comboDetallePK != null) || (this.comboDetallePK != null &amp;&amp; !this.comboDetallePK.equals(other.comboDetallePK))) {</span>
-<span class="nc" id="L111">            return false;</span>
+<span class="nc" id="L114">        ComboDetalle other = (ComboDetalle) object;</span>
+<span class="nc bnc" id="L115" title="All 8 branches missed.">        if ((this.comboDetallePK == null &amp;&amp; other.comboDetallePK != null) || (this.comboDetallePK != null &amp;&amp; !this.comboDetallePK.equals(other.comboDetallePK))) {</span>
+<span class="nc" id="L116">            return false;</span>
         }
-<span class="nc" id="L113">        return true;</span>
+<span class="nc" id="L118">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L118">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=&quot; + comboDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L123">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=&quot; + comboDetallePK + &quot; ]&quot;;</span>
     }
     
 }

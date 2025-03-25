@@ -40,6 +40,18 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         return "idOrdenDetalle";
     }
     
+    public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
+        try {
+            return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden",OrdenDetalle.class)
+                    .setParameter("idOrden", idOrden)
+                    .setParameter("idProductoPrecio", idProductoPrecio)
+                    .getSingleResult();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        
+        return null;
+    }
     public List<OrdenDetalle> findRangeByIdOrden(Long idOrden,int first , int max) {
         try {
             return em.createNamedQuery("OrdenDetalle.findByIdOrden",OrdenDetalle.class)
@@ -50,12 +62,12 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
         }
-        
+
         return List.of();
     }
     public Long countByIdOrden(Long idOrden) {
         try {
-            return em.createNamedQuery("OrdenDetalle.countAllByIdOrden",Long.class)
+            return em.createNamedQuery("OrdenDetalle.countByIdOrden",Long.class)
                     .setParameter("idOrden", idOrden)
                     .getSingleResult();
         } catch (Exception e) {
@@ -64,5 +76,6 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
 
         return 0L;
     }
+
 
 }

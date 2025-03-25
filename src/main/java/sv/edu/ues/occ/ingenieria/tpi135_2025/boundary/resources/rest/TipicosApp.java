@@ -4,8 +4,17 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.ws.rs.ApplicationPath;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,5 +22,7 @@ import jakarta.ws.rs.core.Application;
  */
 @ApplicationPath("v1")
 public class TipicosApp extends Application{
+
+
     
 }

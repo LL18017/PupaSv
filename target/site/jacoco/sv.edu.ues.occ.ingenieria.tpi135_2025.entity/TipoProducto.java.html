@@ -51,12 +51,12 @@ public class TipoProducto implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;tipoProducto&quot;)
     private List&lt;ProductoDetalle&gt; productoDetalleList;
 
-<span class="nc" id="L54">    public TipoProducto() {</span>
-<span class="nc" id="L55">    }</span>
+<span class="fc" id="L54">    public TipoProducto() {</span>
+<span class="fc" id="L55">    }</span>
 
-<span class="nc" id="L57">    public TipoProducto(Integer idTipoProducto) {</span>
-<span class="nc" id="L58">        this.idTipoProducto = idTipoProducto;</span>
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L57">    public TipoProducto(Integer idTipoProducto) {</span>
+<span class="fc" id="L58">        this.idTipoProducto = idTipoProducto;</span>
+<span class="fc" id="L59">    }</span>
 
 <span class="nc" id="L61">    public TipoProducto(Integer idTipoProducto, String nombre) {</span>
 <span class="nc" id="L62">        this.idTipoProducto = idTipoProducto;</span>
@@ -64,36 +64,36 @@ public class TipoProducto implements Serializable {
 <span class="nc" id="L64">    }</span>
 
     public Integer getIdTipoProducto() {
-<span class="nc" id="L67">        return idTipoProducto;</span>
+<span class="fc" id="L67">        return idTipoProducto;</span>
     }
 
     public void setIdTipoProducto(Integer idTipoProducto) {
-<span class="nc" id="L71">        this.idTipoProducto = idTipoProducto;</span>
-<span class="nc" id="L72">    }</span>
+<span class="fc" id="L71">        this.idTipoProducto = idTipoProducto;</span>
+<span class="fc" id="L72">    }</span>
 
     public String getNombre() {
-<span class="nc" id="L75">        return nombre;</span>
+<span class="fc" id="L75">        return nombre;</span>
     }
 
     public void setNombre(String nombre) {
-<span class="nc" id="L79">        this.nombre = nombre;</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L79">        this.nombre = nombre;</span>
+<span class="fc" id="L80">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L83">        return activo;</span>
+<span class="fc" id="L83">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="nc" id="L87">        this.activo = activo;</span>
-<span class="nc" id="L88">    }</span>
+<span class="fc" id="L87">        this.activo = activo;</span>
+<span class="fc" id="L88">    }</span>
 
     public String getObservaciones() {
-<span class="nc" id="L91">        return observaciones;</span>
+<span class="fc" id="L91">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="nc" id="L95">        this.observaciones = observaciones;</span>
-<span class="nc" id="L96">    }</span>
+<span class="fc" id="L95">        this.observaciones = observaciones;</span>
+<span class="fc" id="L96">    }</span>
 
     public List&lt;ProductoDetalle&gt; getProductoDetalleList() {
 <span class="nc" id="L99">        return productoDetalleList;</span>
@@ -105,27 +105,27 @@ public class TipoProducto implements Serializable {
 
     @Override
     public int hashCode() {
-<span class="nc" id="L108">        int hash = 0;</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">        hash += (idTipoProducto != null ? idTipoProducto.hashCode() : 0);</span>
-<span class="nc" id="L110">        return hash;</span>
+<span class="fc" id="L108">        int hash = 0;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        hash += (idTipoProducto != null ? idTipoProducto.hashCode() : 0);</span>
+<span class="fc" id="L110">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (!(object instanceof TipoProducto)) {</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (!(object instanceof TipoProducto)) {</span>
 <span class="nc" id="L117">            return false;</span>
         }
-<span class="nc" id="L119">        TipoProducto other = (TipoProducto) object;</span>
-<span class="nc bnc" id="L120" title="All 8 branches missed.">        if ((this.idTipoProducto == null &amp;&amp; other.idTipoProducto != null) || (this.idTipoProducto != null &amp;&amp; !this.idTipoProducto.equals(other.idTipoProducto))) {</span>
-<span class="nc" id="L121">            return false;</span>
+<span class="fc" id="L119">        TipoProducto other = (TipoProducto) object;</span>
+<span class="pc bpc" id="L120" title="4 of 8 branches missed.">        if ((this.idTipoProducto == null &amp;&amp; other.idTipoProducto != null) || (this.idTipoProducto != null &amp;&amp; !this.idTipoProducto.equals(other.idTipoProducto))) {</span>
+<span class="fc" id="L121">            return false;</span>
         }
-<span class="nc" id="L123">        return true;</span>
+<span class="fc" id="L123">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L128">        return &quot;com.mycompany.extreciondeentities.entities.TipoProducto[ idTipoProducto=&quot; + idTipoProducto + &quot; ]&quot;;</span>
+<span class="fc" id="L128">        return &quot;com.mycompany.extreciondeentities.entities.TipoProducto[ idTipoProducto=&quot; + idTipoProducto + &quot; ]&quot;;</span>
     }
     
 }

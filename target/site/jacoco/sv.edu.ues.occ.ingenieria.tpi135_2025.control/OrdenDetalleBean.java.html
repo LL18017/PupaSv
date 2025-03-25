@@ -40,30 +40,43 @@ public class OrdenDetalleBean extends AbstractDataAccess&lt;OrdenDetalle&gt; imp
 <span class="nc" id="L40">        return &quot;idOrdenDetalle&quot;;</span>
     }
     
-    public List&lt;OrdenDetalle&gt; findRangeByIdOrden(Long idOrden,int first , int max) {
+    public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
         try {
-<span class="nc" id="L45">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="nc" id="L45">            return em.createNamedQuery(&quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,OrdenDetalle.class)</span>
 <span class="nc" id="L46">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L47">                    .setFirstResult(first)</span>
-<span class="nc" id="L48">                    .setMaxResults(max)</span>
-<span class="nc" id="L49">                    .getResultList();</span>
-<span class="nc" id="L50">        } catch (Exception e) {</span>
-<span class="nc" id="L51">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L47">                    .setParameter(&quot;idProductoPrecio&quot;, idProductoPrecio)</span>
+<span class="nc" id="L48">                    .getSingleResult();</span>
+<span class="nc" id="L49">        } catch (Exception e) {</span>
+<span class="nc" id="L50">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
         
-<span class="nc" id="L54">        return List.of();</span>
+<span class="nc" id="L53">        return null;</span>
+    }
+    public List&lt;OrdenDetalle&gt; findRangeByIdOrden(Long idOrden,int first , int max) {
+        try {
+<span class="nc" id="L57">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="nc" id="L58">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L59">                    .setFirstResult(first)</span>
+<span class="nc" id="L60">                    .setMaxResults(max)</span>
+<span class="nc" id="L61">                    .getResultList();</span>
+<span class="nc" id="L62">        } catch (Exception e) {</span>
+<span class="nc" id="L63">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+        }
+
+<span class="nc" id="L66">        return List.of();</span>
     }
     public Long countByIdOrden(Long idOrden) {
         try {
-<span class="nc" id="L58">            return em.createNamedQuery(&quot;OrdenDetalle.countAllByIdOrden&quot;,Long.class)</span>
-<span class="nc" id="L59">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L60">                    .getSingleResult();</span>
-<span class="nc" id="L61">        } catch (Exception e) {</span>
-<span class="nc" id="L62">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L70">            return em.createNamedQuery(&quot;OrdenDetalle.countByIdOrden&quot;,Long.class)</span>
+<span class="nc" id="L71">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L72">                    .getSingleResult();</span>
+<span class="nc" id="L73">        } catch (Exception e) {</span>
+<span class="nc" id="L74">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
 
-<span class="nc" id="L65">        return 0L;</span>
+<span class="nc" id="L77">        return 0L;</span>
     }
+
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

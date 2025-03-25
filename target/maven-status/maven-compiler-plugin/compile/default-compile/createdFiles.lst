@@ -10,9 +10,11 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenDetalleResour
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ComboDetallePK.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoResouce.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ProductoPrecio.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/AbstracDataResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ComboDetalle.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoDetalleResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/Combo.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoPrecioBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/OrdenDetalle.class
@@ -26,6 +28,8 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioReso
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/TipoProducto.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboDetallePKBean.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GeneralResources.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/Orden.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/OrdenDetallePK.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResource.class
@@ -35,6 +39,7 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResource.clas
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ProductoDetallePK.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/CORSFilter.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboDetalleResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/rest/JakartaRestConfiguration.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/Producto.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/PagoDetalle.class
