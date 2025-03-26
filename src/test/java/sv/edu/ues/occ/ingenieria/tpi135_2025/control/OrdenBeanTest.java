@@ -220,17 +220,18 @@ public class OrdenBeanTest {
         CriteriaDelete<Orden> mockCd = Mockito.mock(CriteriaDelete.class);
         Root<Orden> mockR = Mockito.mock(Root.class);
         TypedQuery<Orden> mockTq = Mockito.mock(TypedQuery.class);
-        Object OrdenEliminadaId = LIST_ORDEN_TEST.get(0).getIdOrden(); // Asegúrate de que LIST_ORDEN_TEST tenga elementos
+        Object ordenIdEliminado = LIST_ORDEN_TEST.get(0).getIdOrden(); // Asegúrate de que LIST_ORDEN_TEST tenga elementos
 
-        // Test para entidad nula
-        Assertions.assertThrows(IllegalStateException.class, () -> cut.delete(OrdenEliminadaId));
+
+        // Test entidad a eliminar inexistente
+        Assertions.assertThrows(IllegalStateException.class, () -> cut.delete(1000));
 
         // Test para registro nulo
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.delete(null));
 
         // Flujo normal
         cut.em = mockEm;
-        Mockito.when(mockEm.find(Orden.class, OrdenEliminadaId)).thenReturn(LIST_ORDEN_TEST.get(0));
+        Mockito.when(mockEm.find(Orden.class, ordenIdEliminado)).thenReturn(LIST_ORDEN_TEST.get(0));
         Mockito.when(mockEm.getCriteriaBuilder()).thenReturn(mockCb);
         Mockito.when(mockCb.createCriteriaDelete(Orden.class)).thenReturn(mockCd);
         Mockito.when(mockCd.from(Orden.class)).thenReturn(mockR);
@@ -241,7 +242,7 @@ public class OrdenBeanTest {
 
         // Llamamos al método delete y verificamos que no se lance ninguna excepción
         try {
-            cut.delete(OrdenEliminadaId); // Llamamos al método delete con el mock
+            cut.delete(ordenIdEliminado); // Llamamos al método delete con el mock
         } catch (Exception e) {
             Assertions.fail("No se esperaba una excepción: " + e.getMessage());
         }

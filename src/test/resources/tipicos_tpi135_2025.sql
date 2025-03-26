@@ -445,9 +445,19 @@ ALTER TABLE ONLY public.tipo_producto ALTER COLUMN id_tipo_producto SET DEFAULT 
 -- Data for Name: tipo_producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.tipo_producto VALUES (1, 'bebida', true, NULL);
-INSERT INTO public.tipo_producto VALUES (2, 'comida', true, NULL);
-INSERT INTO public.tipo_producto VALUES (3, 'tipicos', true, NULL);
+INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, NULL);
+INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, NULL);
+INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, NULL);
+
+INSERT INTO public.producto VALUES (1001, 'coca', true, NULL);
+INSERT INTO public.producto VALUES (1002, 'pepsi', false, NULL);
+INSERT INTO public.producto VALUES (1003, 'pupusas', false, NULL);
+INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
+
+INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
+INSERT INTO public.producto_detalle VALUES (1001,1002 ,false,  NULL);
+INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
+INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);

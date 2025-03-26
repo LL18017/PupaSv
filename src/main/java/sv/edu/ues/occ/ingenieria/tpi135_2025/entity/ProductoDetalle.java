@@ -28,6 +28,7 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "ProductoDetalle.findByIdTipoProductoAndIdProducto",query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.countByIdTipoProductoAndIdProducto",query = "SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.deleteByIdProductoAndIdProducto",query = "DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
+    @NamedQuery(name = "ProductoDetalle.deleteByIdProducto",query = "DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.findByIdProducto", query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto = :idProducto"),
     @NamedQuery(name = "ProductoDetalle.findByActivo", query = "SELECT p FROM ProductoDetalle p WHERE p.activo = :activo"),
     @NamedQuery(name = "ProductoDetalle.findByObservaciones", query = "SELECT p FROM ProductoDetalle p WHERE p.observaciones = :observaciones")})

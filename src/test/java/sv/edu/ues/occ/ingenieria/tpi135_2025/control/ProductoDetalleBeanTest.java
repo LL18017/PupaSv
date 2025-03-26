@@ -25,7 +25,7 @@ class ProductoDetalleBeanTest {
             new ProductoDetalle(1,2L),
             new ProductoDetalle(1,3L),
             new ProductoDetalle(1,4L),
-            
+
             new ProductoDetalle(2,5L),
             new ProductoDetalle(2,5L),
             new ProductoDetalle(2,6L),

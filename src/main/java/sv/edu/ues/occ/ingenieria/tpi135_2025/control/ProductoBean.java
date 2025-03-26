@@ -77,7 +77,6 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
 
-
     public void createProducto(Producto registro, Integer idTipoProducto) {
         if (registro == null || idTipoProducto == null) {
             throw new IllegalArgumentException("El registro y el idTipoProducto no pueden ser nulos");
@@ -91,9 +90,50 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
             em.persist(detalle);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error durante la creación", e);
-                throw new IllegalStateException("error al aceder al repositorio", e);
+            throw new IllegalStateException("error al aceder al repositorio", e);
         }
     }
 
+    public List<Producto> findRangeProductoActivos(Integer idTipoProducto ,Integer first, Integer max) {
+        if (first == null || max == null || first <0 ||max < 0 || idTipoProducto==null) {
+            throw new IllegalArgumentException("first , max no pueden ser nulos o menores que cero");
+        }
+        try {
+         return em.createNamedQuery("Producto.findActivosAndIdTipoProducto",Producto.class)
+                 .setParameter("idTipoProducto", idTipoProducto)
+                    .setFirstResult(first)
+                    .setMaxResults(max).
+                    getResultList();
+        } catch (IllegalStateException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("error al aceder al repositorio", e);
+        }
+    }
+    public Long countProductoActivosByIdTipoProducto(Integer idTipoProducto) {
+        if (idTipoProducto==null) {
+            throw new IllegalArgumentException("idTipoProducto ,  ser nulos o menores que cero");
+        }
+        try {
+         return em.createNamedQuery("Producto.countActivosAndIdTipoProducto",Long.class)
+                 .setParameter("idTipoProducto", idTipoProducto).
+                    getSingleResult();
+        } catch (IllegalStateException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("error al aceder al repositorio", e);
+        }
+    }
 
+    @Override
+    public void delete(Object id) {
+        if (id == null) {
+            throw new IllegalArgumentException("El id del producto no puede ser null");
+        }
+        try {
+            em.createNamedQuery("ProductoDetalle.deleteByIdProducto").setParameter("idProducto", id).executeUpdate();
+            super.delete(id);
+            return;
+        } catch (Exception e) {
+            throw new IllegalStateException("error en el repositorio");
+        }
+    }
 }

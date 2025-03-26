@@ -37,6 +37,7 @@ public class ProductoResource implements Serializable {
      * metodo que devueleve una rango de datos de tipo Producto
      * @param first la pocicion del primer dat
      * @param max la cantidad de datos que se desea obtener
+     * @param activo indica si se desea solo registros con la propiedad activo
      @param idTipoProducto string que indica si se quiere encontra todos los registro "any" o los relacionados con idEspecifico
      * @return una lista de tipo T si no definel los parametros entonces
      * devuelve los primeros 20 registros
@@ -45,16 +46,14 @@ public class ProductoResource implements Serializable {
     @Path("")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRangeByIdTipoProducto(
-            @QueryParam("first")
-            @DefaultValue("0") int first,
-            @QueryParam("max")
-            @DefaultValue("20") int max,
-            @PathParam("idTipoProducto") Integer idTipoProducto
-    ) {
+    public Response findRangeByIdTipoProducto(@QueryParam("first") @DefaultValue("0") Integer first,@QueryParam("max") @DefaultValue("20") Integer max,@PathParam("idTipoProducto") Integer idTipoProducto,@QueryParam("activo") @DefaultValue("false") boolean activo) {
         try {
             if (first >= 0 && max >= 0 && max <= 50 ) {
-
+                //solicitud de activos
+                if (activo) {
+                    return findRangeProductoActivos(first, max, idTipoProducto);
+                }
+                //flujo normal
                 List<Producto> encontrados = pBean.findRangeByIdTipoProductos(idTipoProducto,first, max);
                 long total = pBean.countByIdTipoProductos(idTipoProducto);
                 Response.ResponseBuilder builder = Response.ok(encontrados).
@@ -62,11 +61,11 @@ public class ProductoResource implements Serializable {
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             } else {
-                return Response.status(400).header(Headers.WRONG_PARAMETER,"first:"+ first + ",max: " + max).header("wrong parameter : max", "s").build();
+                return Response.status(400).header(Headers.WRONG_PARAMETER,"first:"+ first + ",max: " + max).build();
             }
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
+            return Response.status(400).entity(e.getMessage()).build();
         }
     }
 
@@ -82,8 +81,8 @@ public class ProductoResource implements Serializable {
     @Path("{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findById(@PathParam("id") Long id) {
-        if (id != null) {
+    public Response findById(@PathParam("idTipoProducto") Integer idTipoProducto,@PathParam("id") Long id) {
+        if (idTipoProducto != null) {
             try {
                 Producto encontrado = pBean.findById(id);
                 if (encontrado != null) {
@@ -96,7 +95,7 @@ public class ProductoResource implements Serializable {
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER," id"+ id).build();
+        return Response.status(404).header(Headers.WRONG_PARAMETER," idTipoProducto"+ id).build();
     }
 
 
@@ -114,8 +113,7 @@ public class ProductoResource implements Serializable {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(Producto registro, @PathParam("idTipoProducto") Integer idTipoProducto,
-                           @Context UriInfo uriInfo) {
+    public Response create(Producto registro, @PathParam("idTipoProducto") Integer idTipoProducto,@Context UriInfo uriInfo) {
         if (registro != null && idTipoProducto != null) {
             try {
                 pBean.createProducto(registro,idTipoProducto);
@@ -169,23 +167,35 @@ public class ProductoResource implements Serializable {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(Producto registro,
-                           @PathParam("id") Long id,
-                           @Context UriInfo uriInfo) {
-        if (registro != null && id != null) {
+    public Response update(Producto registro,@PathParam("id") Long id,@PathParam("idTipoProducto") Integer idTipoProducto,@Context UriInfo uriInfo) {
+        if (registro != null && id != null && id > 0 && idTipoProducto >0) {
             try {
                 registro.setIdProducto(id);
                 pBean.update(registro);
                 if (registro.getIdProducto() != null) {
                     return Response.status(200).build();
                 }
-                return Response.status(500).header(Headers.PROCESS_ERROR, "Record couldnt be updated").build();
+                return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be updated").build();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, "id: "+id+" ,registro :"+registro).build();
+        return Response.status(400).header(Headers.WRONG_PARAMETER, "id: "+id+" ,registro :"+registro).build();
+    }
+
+    public Response findRangeProductoActivos(Integer idTipoProducto ,Integer first, Integer max) {
+        if (idTipoProducto != null && first != null && max != null) {
+            try {
+                List<Producto> resultado = pBean.findRangeProductoActivos(idTipoProducto,first,max);
+                Long total= pBean.countByIdTipoProductos(idTipoProducto);
+                return Response.ok(resultado).header(Headers.TOTAL_RECORD,total).build();
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
+            }
+        }
+        return Response.status(400).header(Headers.WRONG_PARAMETER, idTipoProducto).build();
     }
 
 

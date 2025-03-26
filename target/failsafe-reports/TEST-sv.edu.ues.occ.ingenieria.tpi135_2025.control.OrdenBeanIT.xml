@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-failsafe-plugin/xsd/failsafe-test-report.xsd" version="3.0.2" name="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="4.073" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-failsafe-plugin/xsd/failsafe-test-report.xsd" version="3.0.2" name="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="3.121" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -13,7 +13,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ES"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/usr/local/proyectos/PupaSv/target/surefire/surefirebooter-20250325104819337_3.jar /usr/local/proyectos/PupaSv/target/surefire 2025-03-25T10-48-19_296-jvmRun1 surefire-20250325104819337_1tmp surefire_0-20250325104819337_2tmp"/>
+    <property name="sun.java.command" value="/usr/local/proyectos/PupaSv/target/surefire/surefirebooter-20250325133330165_3.jar /usr/local/proyectos/PupaSv/target/surefire 2025-03-25T13-33-30_129-jvmRun1 surefire-20250325133330165_1tmp surefire_0-20250325133330165_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/usr/local/proyectos/PupaSv/target/test-classes:/usr/local/proyectos/PupaSv/target/classes:/home/mjlopez/.m2/repository/jakarta/platform/jakarta.jakartaee-api/10.0.0/jakarta.jakartaee-api-10.0.0.jar:/home/mjlopez/.m2/repository/jakarta/platform/jakarta.jakartaee-web-api/10.0.0/jakarta.jakartaee-web-api-10.0.0.jar:/home/mjlopez/.m2/repository/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar:/home/mjlopez/.m2/repository/jakarta/servlet/jsp/jakarta.servlet.jsp-api/3.1.0/jakarta.servlet.jsp-api-3.1.0.jar:/home/mjlopez/.m2/repository/jakarta/el/jakarta.el-api/5.0.1/jakarta.el-api-5.0.1.jar:/home/mjlopez/.m2/repository/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/3.0.0/jakarta.servlet.jsp.jstl-api-3.0.0.jar:/home/mjlopez/.m2/repository/jakarta/faces/jakarta.faces-api/4.0.1/jakarta.faces-api-4.0.1.jar:/home/mjlopez/.m2/repository/jakarta/websocket/jakarta.websocket-api/2.1.0/jakarta.websocket-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/websocket/jakarta.websocket-client-api/2.1.0/jakarta.websocket-client-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/ejb/jakarta.ejb-api/4.0.1/jakarta.ejb-api-4.0.1.jar:/home/mjlopez/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/home/mjlopez/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/home/mjlopez/.m2/repository/jakarta/interceptor/jakarta.interceptor-api/2.1.0/jakarta.interceptor-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/enterprise/jakarta.enterprise.cdi-api/4.0.1/jakarta.enterprise.cdi-api-4.0.1.jar:/home/mjlopez/.m2/repository/jakarta/enterprise/jakarta.enterprise.lang-model/4.0.1/jakarta.enterprise.lang-model-4.0.1.jar:/home/mjlopez/.m2/repository/jakarta/authentication/jakarta.authentication-api/3.0.0/jakarta.authentication-api-3.0.0.jar:/home/mjlopez/.m2/repository/jakarta/security/enterprise/jakarta.security.enterprise-api/3.0.0/jakarta.security.enterprise-api-3.0.0.jar:/home/mjlopez/.m2/repository/jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar:/home/mjlopez/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.0/jakarta.activation-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/mail/jakarta.mail-api/2.1.0/jakarta.mail-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/resource/jakarta.resource-api/2.1.0/jakarta.resource-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/authorization/jakarta.authorization-api/2.1.0/jakarta.authorization-api-2.1.0.jar:/home/mjlopez/.m2/repository/jakarta/batch/jakarta.batch-api/2.1.1/jakarta.batch-api-2.1.1.jar:/home/mjlopez/.m2/repository/org/mockito/mockito-core/5.12.0/mockito-core-5.12.0.jar:/home/mjlopez/.m2/repository/net/bytebuddy/byte-buddy/1.14.15/byte-buddy-1.14.15.jar:/home/mjlopez/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.15/byte-buddy-agent-1.14.15.jar:/home/mjlopez/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/mjlopez/.m2/repository/org/mockito/mockito-junit-jupiter/5.12.0/mockito-junit-jupiter-5.12.0.jar:/home/mjlopez/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.2/junit-jupiter-api-5.10.2.jar:/home/mjlopez/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/mjlopez/.m2/repository/org/junit/platform/junit-platform-commons/1.10.2/junit-platform-commons-1.10.2.jar:/home/mjlopez/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/mjlopez/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.2/junit-jupiter-engine-5.10.2.jar:/home/mjlopez/.m2/repository/org/junit/platform/junit-platform-engine/1.10.2/junit-platform-engine-1.10.2.jar:/home/mjlopez/.m2/repository/org/glassfish/jersey/core/jersey-client/3.1.3/jersey-client-3.1.3.jar:/home/mjlopez/.m2/repository/jakarta/ws/rs/jakarta.ws.rs-api/3.1.0/jakarta.ws.rs-api-3.1.0.jar:/home/mjlopez/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/home/mjlopez/.m2/repository/org/glassfish/jersey/core/jersey-common/3.1.3/jersey-common-3.1.3.jar:/home/mjlopez/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/home/mjlopez/.m2/repository/org/glassfish/hk2/osgi-resource-locator/1.0.3/osgi-resource-locator-1.0.3.jar:/home/mjlopez/.m2/repository/org/glassfish/jersey/media/jersey-media-json-binding/3.1.3/jersey-media-json-binding-3.1.3.jar:/home/mjlopez/.m2/repository/jakarta/json/jakarta.json-api/2.1.2/jakarta.json-api-2.1.2.jar:/home/mjlopez/.m2/repository/jakarta/json/bind/jakarta.json.bind-api/3.0.0/jakarta.json.bind-api-3.0.0.jar:/home/mjlopez/.m2/repository/org/eclipse/parsson/parsson/1.1.1/parsson-1.1.1.jar:/home/mjlopez/.m2/repository/org/eclipse/yasson/3.0.3/yasson-3.0.3.jar:/home/mjlopez/.m2/repository/org/glassfish/jersey/media/jersey-media-jaxb/3.1.2/jersey-media-jaxb-3.1.2.jar:/home/mjlopez/.m2/repository/org/testcontainers/junit-jupiter/1.20.4/junit-jupiter-1.20.4.jar:/home/mjlopez/.m2/repository/org/testcontainers/testcontainers/1.20.4/testcontainers-1.20.4.jar:/home/mjlopez/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/mjlopez/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/mjlopez/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/mjlopez/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/home/mjlopez/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/mjlopez/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/mjlopez/.m2/repository/com/github/docker-java/docker-java-api/3.4.0/docker-java-api-3.4.0.jar:/home/mjlopez/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3.jar:/home/mjlopez/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.4.0/docker-java-transport-zerodep-3.4.0.jar:/home/mjlopez/.m2/repository/com/github/docker-java/docker-java-transport/3.4.0/docker-java-transport-3.4.0.jar:/home/mjlopez/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/home/mjlopez/.m2/repository/org/testcontainers/postgresql/1.20.4/postgresql-1.20.4.jar:/home/mjlopez/.m2/repository/org/testcontainers/jdbc/1.20.4/jdbc-1.20.4.jar:/home/mjlopez/.m2/repository/org/testcontainers/database-commons/1.20.4/database-commons-1.20.4.jar:/home/mjlopez/.m2/repository/org/eclipse/persistence/org.eclipse.persistence.jpa/4.0.5/org.eclipse.persistence.jpa-4.0.5.jar:/home/mjlopez/.m2/repository/org/eclipse/persistence/org.eclipse.persistence.asm/9.7.1/org.eclipse.persistence.asm-9.7.1.jar:/home/mjlopez/.m2/repository/org/eclipse/persistence/org.eclipse.persistence.core/4.0.5/org.eclipse.persistence.core-4.0.5.jar:/home/mjlopez/.m2/repository/org/eclipse/persistence/org.eclipse.persistence.jpa.jpql/4.0.5/org.eclipse.persistence.jpa.jpql-4.0.5.jar:/home/mjlopez/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/home/mjlopez/.m2/repository/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar:/home/mjlopez/.m2/repository/org/checkerframework/checker-qual/3.42.0/checker-qual-3.42.0.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/usr/local/proyectos/PupaSv/target/surefire/surefirebooter-20250325104819337_3.jar"/>
+    <property name="surefire.real.class.path" value="/usr/local/proyectos/PupaSv/target/surefire/surefirebooter-20250325133330165_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.6+7-Ubuntu-124.04.1"/>
     <property name="user.name" value="mjlopez"/>
@@ -55,38 +55,768 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="contar" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.225">
-    <system-out><![CDATA[Puerto Mapeado: 32889
-testIT Contar
-[EL Info]: 2025-03-25 10:48:23.426--ServerSession(206531931)--EclipseLink, version: Eclipse Persistence Services - 4.0.5.v202412231137-a96b873527f305f932543045c8679bb1de8d3a43
-]]></system-out>
+  <testcase name="" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="3.121">
+    <error message="Container startup failed for image postgres:16-alpine" type="org.testcontainers.containers.ContainerLaunchException"><![CDATA[org.testcontainers.containers.ContainerLaunchException: Container startup failed for image postgres:16-alpine
+	at org.testcontainers.containers.GenericContainer.doStart(GenericContainer.java:351)
+	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:322)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.start(TestcontainersExtension.java:276)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.access$200(TestcontainersExtension.java:263)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$null$4(TestcontainersExtension.java:83)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$startContainers$5(TestcontainersExtension.java:83)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.startContainers(TestcontainersExtension.java:83)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:57)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.rnorth.ducttape.RetryCountExceededException: Retry limit hit with exception
+	at org.rnorth.ducttape.unreliables.Unreliables.retryUntilSuccess(Unreliables.java:88)
+	at org.testcontainers.containers.GenericContainer.doStart(GenericContainer.java:336)
+	... 9 more
+Caused by: org.testcontainers.containers.ContainerLaunchException: Could not create/start container
+	at org.testcontainers.containers.GenericContainer.tryStart(GenericContainer.java:556)
+	at org.testcontainers.containers.GenericContainer.lambda$doStart$0(GenericContainer.java:346)
+	at org.rnorth.ducttape.unreliables.Unreliables.retryUntilSuccess(Unreliables.java:81)
+	... 10 more
+Caused by: org.testcontainers.ext.ScriptUtils$UncategorizedScriptException: Failed to execute database script from resource [
+CREATE TABLE public.combo (
+    id_combo bigint NOT NULL,
+    nombre character varying(155),
+    activo boolean,
+    descripcion_publica text
+);
+
+
+ALTER TABLE public.combo OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 25334)
+-- Name: combo_detalle; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.combo_detalle (
+    id_combo bigint NOT NULL,
+    id_producto bigint NOT NULL,
+    cantidad integer DEFAULT 1,
+    activo boolean
+);
+
+
+ALTER TABLE public.combo_detalle OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 25319)
+-- Name: orden; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orden (
+    id_orden bigint NOT NULL,
+    fecha date DEFAULT now(),
+    sucursal character varying(5),
+    anulada boolean DEFAULT false
+);
+
+
+ALTER TABLE public.orden OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 25352)
+-- Name: orden_detalle; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orden_detalle (
+    id_orden bigint NOT NULL,
+    id_producto_precio bigint NOT NULL,
+    cantidad integer DEFAULT 1 NOT NULL,
+    precio numeric(6,2),
+    observaciones text
+);
+
+
+ALTER TABLE public.orden_detalle OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 25318)
+-- Name: orden_id_orden_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orden_id_orden_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orden_id_orden_seq OWNER TO postgres;
+
+--
+-- TOC entry 3499 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: orden_id_orden_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orden_id_orden_seq OWNED BY public.orden.id_orden;
+
+
+--
+-- TOC entry 228 (class 1259 OID 25371)
+-- Name: pago; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.pago (
+    id_pago bigint NOT NULL,
+    id_orden bigint,
+    fecha date DEFAULT now(),
+    metodo_pago character varying(10) DEFAULT 'EFECTIVO'::character varying,
+    referencia text
+);
+
+
+ALTER TABLE public.pago OWNER TO postgres;
+
+--
+-- TOC entry 230 (class 1259 OID 25387)
+-- Name: pago_detalle; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.pago_detalle (
+    id_pago_detalle bigint NOT NULL,
+    id_pago bigint,
+    monto numeric(6,2),
+    observaciones text
+);
+
+
+ALTER TABLE public.pago_detalle OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 25386)
+-- Name: pago_detalle_id_pago_detalle_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.pago_detalle_id_pago_detalle_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.pago_detalle_id_pago_detalle_seq OWNER TO postgres;
+
+--
+-- TOC entry 3500 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: pago_detalle_id_pago_detalle_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.pago_detalle_id_pago_detalle_seq OWNED BY public.pago_detalle.id_pago_detalle;
+
+
+--
+-- TOC entry 227 (class 1259 OID 25370)
+-- Name: pago_id_pago_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.pago_id_pago_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.pago_id_pago_seq OWNER TO postgres;
+
+--
+-- TOC entry 3501 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: pago_id_pago_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.pago_id_pago_seq OWNED BY public.pago.id_pago;
+
+
+--
+-- TOC entry 218 (class 1259 OID 25278)
+-- Name: producto; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.producto (
+    id_producto bigint NOT NULL,
+    nombre character varying(155),
+    activo boolean DEFAULT true,
+    observaciones text
+);
+
+
+ALTER TABLE public.producto OWNER TO postgres;
+
+--
+-- TOC entry 3502 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: TABLE producto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.producto IS 'Productos disponibles para consumo';
+
+
+--
+-- TOC entry 219 (class 1259 OID 25287)
+-- Name: producto_detalle; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.producto_detalle (
+    id_tipo_producto integer NOT NULL,
+    id_producto bigint NOT NULL,
+    activo boolean DEFAULT true,
+    observaciones text
+);
+
+
+ALTER TABLE public.producto_detalle OWNER TO postgres;
+
+--
+-- TOC entry 3503 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: TABLE producto_detalle; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.producto_detalle IS 'Determina los tipos de producto que aplican para un producto';
+
+
+--
+-- TOC entry 217 (class 1259 OID 25277)
+-- Name: producto_id_producto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.producto_id_producto_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.producto_id_producto_seq OWNER TO postgres;
+
+--
+-- TOC entry 3504 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: producto_id_producto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.producto_id_producto_seq OWNED BY public.producto.id_producto;
+
+
+--
+-- TOC entry 221 (class 1259 OID 25306)
+-- Name: producto_precio; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.producto_precio (
+    id_producto_precio bigint NOT NULL,
+    id_producto bigint,
+    fecha_desde date DEFAULT now(),
+    fecha_hasta date,
+    precio_sugerido numeric(8,2)
+);
+
+
+ALTER TABLE public.producto_precio OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 25305)
+-- Name: producto_precio_id_producto_precio_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.producto_precio_id_producto_precio_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.producto_precio_id_producto_precio_seq OWNER TO postgres;
+
+--
+-- TOC entry 3505 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: producto_precio_id_producto_precio_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.producto_precio_id_producto_precio_seq OWNED BY public.producto_precio.id_producto_precio;
+
+
+--
+-- TOC entry 216 (class 1259 OID 25268)
+-- Name: tipo_producto; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tipo_producto (
+    id_tipo_producto integer NOT NULL,
+    nombre character varying(155) NOT NULL,
+    activo boolean DEFAULT true,
+    observaciones text
+);
+
+
+ALTER TABLE public.tipo_producto OWNER TO postgres;
+
+--
+-- TOC entry 3506 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: TABLE tipo_producto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.tipo_producto IS 'Califica los tipos de productos';
+
+
+--
+-- TOC entry 215 (class 1259 OID 25267)
+-- Name: tipo_producto_id_tipo_producto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tipo_producto_id_tipo_producto_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.tipo_producto_id_tipo_producto_seq OWNER TO postgres;
+
+--
+-- TOC entry 3507 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: tipo_producto_id_tipo_producto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tipo_producto_id_tipo_producto_seq OWNED BY public.tipo_producto.id_tipo_producto;
+
+
+--
+-- TOC entry 3294 (class 2604 OID 25322)
+-- Name: orden id_orden; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orden ALTER COLUMN id_orden SET DEFAULT nextval('public.orden_id_orden_seq'::regclass);
+
+
+--
+-- TOC entry 3299 (class 2604 OID 25374)
+-- Name: pago id_pago; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago ALTER COLUMN id_pago SET DEFAULT nextval('public.pago_id_pago_seq'::regclass);
+
+
+--
+-- TOC entry 3302 (class 2604 OID 25390)
+-- Name: pago_detalle id_pago_detalle; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago_detalle ALTER COLUMN id_pago_detalle SET DEFAULT nextval('public.pago_detalle_id_pago_detalle_seq'::regclass);
+
+
+--
+-- TOC entry 3289 (class 2604 OID 25281)
+-- Name: producto id_producto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto ALTER COLUMN id_producto SET DEFAULT nextval('public.producto_id_producto_seq'::regclass);
+
+
+--
+-- TOC entry 3292 (class 2604 OID 25309)
+-- Name: producto_precio id_producto_precio; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_precio ALTER COLUMN id_producto_precio SET DEFAULT nextval('public.producto_precio_id_producto_precio_seq'::regclass);
+
+
+--
+-- TOC entry 3287 (class 2604 OID 25271)
+-- Name: tipo_producto id_tipo_producto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tipo_producto ALTER COLUMN id_tipo_producto SET DEFAULT nextval('public.tipo_producto_id_tipo_producto_seq'::regclass);
+
+
+--
+-- TOC entry 3486 (class 0 OID 25327)
+-- Dependencies: 224
+-- Data for Name: combo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3487 (class 0 OID 25334)
+-- Dependencies: 225
+-- Data for Name: combo_detalle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3485 (class 0 OID 25319)
+-- Dependencies: 223
+-- Data for Name: orden; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3488 (class 0 OID 25352)
+-- Dependencies: 226
+-- Data for Name: orden_detalle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3490 (class 0 OID 25371)
+-- Dependencies: 228
+-- Data for Name: pago; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3492 (class 0 OID 25387)
+-- Dependencies: 230
+-- Data for Name: pago_detalle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3480 (class 0 OID 25278)
+-- Dependencies: 218
+-- Data for Name: producto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3481 (class 0 OID 25287)
+-- Dependencies: 219
+-- Data for Name: producto_detalle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3483 (class 0 OID 25306)
+-- Dependencies: 221
+-- Data for Name: producto_precio; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3478 (class 0 OID 25268)
+-- Dependencies: 216
+-- Data for Name: tipo_producto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, "creado en SCRIPT");
+INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, "creado en SCRIPT");
+INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, "creado en SCRIPT");
+
+INSERT INTO public.producto VALUES (1001, "horchanta" ,true,"creado en SCRIPT";
+INSERT INTO public.producto VALUES (1002, "tamarindo" ,true,"creado en SCRIPT";
+INSERT INTO public.producto VALUES (1003, "pupusas" ,true,"creado en SCRIPT";
+
+INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
+INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);
+INSERT INTO public.orden VALUES (12347, '2025-03-05', 'SS', true);
+
+
+--
+-- TOC entry 3508 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: orden_id_orden_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orden_id_orden_seq', 1, false);
+
+
+--
+-- TOC entry 3509 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: pago_detalle_id_pago_detalle_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.pago_detalle_id_pago_detalle_seq', 1, false);
+
+
+--
+-- TOC entry 3510 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: pago_id_pago_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.pago_id_pago_seq', 1, false);
+
+
+--
+-- TOC entry 3511 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: producto_id_producto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.producto_id_producto_seq', 1, false);
+
+
+--
+-- TOC entry 3512 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: producto_precio_id_producto_precio_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.producto_precio_id_producto_precio_seq', 1, false);
+
+
+--
+-- TOC entry 3513 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: tipo_producto_id_tipo_producto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tipo_producto_id_tipo_producto_seq', 3, true);
+
+
+--
+-- TOC entry 3314 (class 2606 OID 25333)
+-- Name: combo pk_combo; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.combo
+    ADD CONSTRAINT pk_combo PRIMARY KEY (id_combo);
+
+
+--
+-- TOC entry 3318 (class 2606 OID 25339)
+-- Name: combo_detalle pk_combo_detalle; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.combo_detalle
+    ADD CONSTRAINT pk_combo_detalle PRIMARY KEY (id_combo, id_producto);
+
+
+--
+-- TOC entry 3312 (class 2606 OID 25326)
+-- Name: orden pk_orden; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orden
+    ADD CONSTRAINT pk_orden PRIMARY KEY (id_orden);
+
+
+--
+-- TOC entry 3320 (class 2606 OID 25359)
+-- Name: orden_detalle pk_orden_detalle; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orden_detalle
+    ADD CONSTRAINT pk_orden_detalle PRIMARY KEY (id_orden, id_producto_precio);
+
+
+--
+-- TOC entry 3322 (class 2606 OID 25380)
+-- Name: pago pk_pago; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago
+    ADD CONSTRAINT pk_pago PRIMARY KEY (id_pago);
+
+
+--
+-- TOC entry 3324 (class 2606 OID 25394)
+-- Name: pago_detalle pk_pago_detalle; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago_detalle
+    ADD CONSTRAINT pk_pago_detalle PRIMARY KEY (id_pago_detalle);
+
+
+--
+-- TOC entry 3306 (class 2606 OID 25286)
+-- Name: producto pk_producto; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto
+    ADD CONSTRAINT pk_producto PRIMARY KEY (id_producto);
+
+
+--
+-- TOC entry 3308 (class 2606 OID 25294)
+-- Name: producto_detalle pk_producto_detalle; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_detalle
+    ADD CONSTRAINT pk_producto_detalle PRIMARY KEY (id_tipo_producto, id_producto);
+
+
+--
+-- TOC entry 3310 (class 2606 OID 25312)
+-- Name: producto_precio pk_producto_precio; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_precio
+    ADD CONSTRAINT pk_producto_precio PRIMARY KEY (id_producto_precio);
+
+
+--
+-- TOC entry 3304 (class 2606 OID 25276)
+-- Name: tipo_producto pk_tipo_producto; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tipo_producto
+    ADD CONSTRAINT pk_tipo_producto PRIMARY KEY (id_tipo_producto);
+
+
+--
+-- TOC entry 3315 (class 1259 OID 25345)
+-- Name: fki_combo_detalle_combo; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX fki_combo_detalle_combo ON public.combo_detalle USING btree (id_combo);
+
+
+--
+-- TOC entry 3316 (class 1259 OID 25351)
+-- Name: fki_fk_combo_detalle_producto; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX fki_fk_combo_detalle_producto ON public.combo_detalle USING btree (id_producto);
+
+
+--
+-- TOC entry 3328 (class 2606 OID 25340)
+-- Name: combo_detalle fk_combo_detalle_combo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.combo_detalle
+    ADD CONSTRAINT fk_combo_detalle_combo FOREIGN KEY (id_combo) REFERENCES public.combo(id_combo) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3329 (class 2606 OID 25346)
+-- Name: combo_detalle fk_combo_detalle_producto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.combo_detalle
+    ADD CONSTRAINT fk_combo_detalle_producto FOREIGN KEY (id_producto) REFERENCES public.producto(id_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3330 (class 2606 OID 25360)
+-- Name: orden_detalle fk_orden_detalle_orden; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orden_detalle
+    ADD CONSTRAINT fk_orden_detalle_orden FOREIGN KEY (id_orden) REFERENCES public.orden(id_orden) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3331 (class 2606 OID 25365)
+-- Name: orden_detalle fk_orden_detalle_producto_precio; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orden_detalle
+    ADD CONSTRAINT fk_orden_detalle_producto_precio FOREIGN KEY (id_producto_precio) REFERENCES public.producto_precio(id_producto_precio) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3332 (class 2606 OID 25381)
+-- Name: pago fk_pago_orden; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago
+    ADD CONSTRAINT fk_pago_orden FOREIGN KEY (id_orden) REFERENCES public.orden(id_orden);
+
+
+--
+-- TOC entry 3325 (class 2606 OID 25295)
+-- Name: producto_detalle fk_producto_detalle_producto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_detalle
+    ADD CONSTRAINT fk_producto_detalle_producto FOREIGN KEY (id_producto) REFERENCES public.producto(id_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3326 (class 2606 OID 25300)
+-- Name: producto_detalle fk_producto_detalle_tipo_producto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_detalle
+    ADD CONSTRAINT fk_producto_detalle_tipo_producto FOREIGN KEY (id_tipo_producto) REFERENCES public.tipo_producto(id_tipo_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3327 (class 2606 OID 25313)
+-- Name: producto_precio fk_producto_precio_producto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto_precio
+    ADD CONSTRAINT fk_producto_precio_producto FOREIGN KEY (id_producto) REFERENCES public.producto(id_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3333 (class 2606 OID 25395)
+-- Name: pago_detalle id_pago_detalle_pago; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.pago_detalle
+    ADD CONSTRAINT id_pago_detalle_pago FOREIGN KEY (id_pago) REFERENCES public.pago(id_pago) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+]
+	at org.testcontainers.ext.ScriptUtils.executeDatabaseScript(ScriptUtils.java:319)
+	at org.testcontainers.ext.ScriptUtils.executeDatabaseScript(ScriptUtils.java:225)
+	at org.testcontainers.ext.ScriptUtils.runInitScript(ScriptUtils.java:213)
+	at org.testcontainers.containers.JdbcDatabaseContainer.lambda$runInitScriptIfRequired$0(JdbcDatabaseContainer.java:368)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.testcontainers.containers.JdbcDatabaseContainer.runInitScriptIfRequired(JdbcDatabaseContainer.java:368)
+	at org.testcontainers.containers.JdbcDatabaseContainer.containerIsStarted(JdbcDatabaseContainer.java:221)
+	at org.testcontainers.containers.GenericContainer.containerIsStarted(GenericContainer.java:721)
+	at org.testcontainers.containers.GenericContainer.tryStart(GenericContainer.java:534)
+	... 12 more
+Caused by: org.testcontainers.ext.ScriptUtils$ScriptStatementFailedException: Script execution failed (tipicos_tpi135_2025.sql:48): INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, "creado en SCRIPT")
+	at org.testcontainers.jdbc.JdbcDatabaseDelegate.execute(JdbcDatabaseDelegate.java:59)
+	at org.testcontainers.delegate.AbstractDatabaseDelegate.execute(AbstractDatabaseDelegate.java:38)
+	at org.testcontainers.ext.ScriptUtils.executeDatabaseScript(ScriptUtils.java:307)
+	... 28 more
+Caused by: org.postgresql.util.PSQLException: ERROR: column "creado en SCRIPT" does not exist
+  Position: 64
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:341)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:326)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:302)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:297)
+	at org.testcontainers.jdbc.JdbcDatabaseDelegate.execute(JdbcDatabaseDelegate.java:46)
+	... 30 more
+]]></error>
     <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
 ]]></system-err>
-  </testcase>
-  <testcase name="findRange" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.018">
-    <system-out><![CDATA[testIT findRange
-]]></system-out>
-  </testcase>
-  <testcase name="findAll" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.004">
-    <system-out><![CDATA[testIT fiand all
-]]></system-out>
-  </testcase>
-  <testcase name="findById" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.004">
-    <system-out><![CDATA[testIT fiandById
-]]></system-out>
-  </testcase>
-  <testcase name="create" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.016">
-    <system-out><![CDATA[testIT create
-]]></system-out>
-  </testcase>
-  <testcase name="update" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.005">
-    <system-out><![CDATA[testIT update
-]]></system-out>
-  </testcase>
-  <testcase name="delete" classname="sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBeanIT" time="0.005">
-    <system-out><![CDATA[testIT delete
-]]></system-out>
   </testcase>
 </testsuite>

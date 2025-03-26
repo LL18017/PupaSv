@@ -234,8 +234,10 @@ public abstract class AbstractDataAccess<T> {
      */
     public void delete(Object id) {
         T registro = findById(id);
+        if (registro == null) {
+            throw new IllegalArgumentException("id no valido");
+        }
         try {
-
             if (registro != null) {
                 EntityManager em = null;
                 em = getEntityManager();
@@ -253,7 +255,6 @@ public abstract class AbstractDataAccess<T> {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("Error al acceder al repositorio", e);
         }
-        throw new IllegalArgumentException();
     }
 
 }

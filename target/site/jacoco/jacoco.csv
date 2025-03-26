@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources,JakartaEE10Resource,2,3,0,0,1,1,1,1,1,1
 PupaSv-1.0-SNAPSHOT,default,ConstantesGlobales,21,0,0,0,6,0,3,0,3,0
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,AbstractDataAccess,26,350,3,23,6,93,3,18,0,8
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,AbstractDataAccess,23,357,3,25,6,95,3,19,0,8
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoDetalleBean,0,165,5,13,0,39,5,11,0,7
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboDetallePKBean,9,0,0,0,4,0,3,0,3,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,OrdenBean,0,9,0,0,0,4,0,3,0,3
@@ -13,12 +13,12 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoPrecio
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoBean,59,0,0,0,14,0,5,0,5,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboBean,9,0,0,0,4,0,3,0,3,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboDetalleBean,179,0,0,0,45,0,10,0,10,0
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoBean,0,140,3,9,0,35,3,9,0,6
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoBean,5,244,8,18,1,59,8,14,0,9
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,OrdenDetalleBean,85,0,0,0,25,0,6,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,ProductoPrecioResource,255,0,24,0,49,0,18,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,OrdenResource,11,0,0,0,4,0,4,0,4,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,OrdenDetalleResource,286,0,32,0,50,0,22,0,6,0
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,ProductoResource,260,0,24,0,50,0,18,0,6,0
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,ProductoResource,292,0,34,0,56,0,24,0,7,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,PagoDetalleResource,313,0,32,0,60,0,23,0,7,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,GeneralResources,160,0,12,0,32,0,10,0,4,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,TipoProductoResource,267,0,28,0,51,0,20,0,6,0
@@ -31,7 +31,7 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.res
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,CORSFilter,43,0,2,0,13,0,3,0,2,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,AbstracDataResource,261,0,24,0,51,0,18,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.rest,JakartaRestConfiguration,3,0,0,0,1,0,1,0,1,0
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoDetallePK,31,41,1,5,10,15,5,7,4,5
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoDetallePK,25,47,1,5,9,16,4,8,3,6
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Pago,94,3,12,0,31,2,22,1,16,1
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Orden,11,86,6,6,3,30,6,17,1,16
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,OrdenDetallePK,71,3,6,0,23,2,11,1,8,1
@@ -43,4 +43,4 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ComboDetalle,98
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoPrecio,94,3,12,0,31,2,22,1,16,1
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,TipoProducto,21,78,5,7,8,26,7,15,3,13
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ComboDetallePK,71,3,6,0,23,2,11,1,8,1
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoDetalle,77,24,12,0,23,10,17,5,11,5
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoDetalle,72,29,12,0,22,11,16,6,10,6
