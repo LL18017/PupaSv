@@ -21,11 +21,10 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 /**
- *
  * @author mjlopez
  */
 @Path(&quot;tipoProducto&quot;)
-<span class="nc" id="L28">public class TipoProductoResource implements Serializable {</span>
+<span class="nc" id="L27">public class TipoProductoResource implements Serializable {</span>
 
     @Inject
     TipoProductoBean tpBean;
@@ -35,7 +34,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
      * metodo que devueleve una rango de datos de tipo TipoProducto
      *
      * @param first la pocicion del primer dat
-     * @param max la cantidad de datos que se desea obtener
+     * @param max   la cantidad de datos que se desea obtener
      * @return una lista de tipo T si no definel los parametros entonces
      * devuelve los primeros 20 registros
      */
@@ -43,31 +42,29 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @GET
     @Path(&quot;&quot;)
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange( @QueryParam(&quot;first&quot;)
-                                   @DefaultValue(&quot;0&quot;) Integer first,
-                               @QueryParam(&quot;max&quot;)
-                                   @DefaultValue(&quot;20&quot;) Integer max){
+    public Response findRange(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) Integer first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) Integer max) {
         try {
-<span class="nc" id="L51">            System.out.println(&quot;First: &quot; + first + &quot;, Max: &quot; + max);</span>
-<span class="nc bnc" id="L52" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
-<span class="nc" id="L53">                List&lt;TipoProducto&gt; encontrados = tpBean.findRange(first, max);</span>
+<span class="nc" id="L47">            System.out.println(&quot;First: &quot; + first + &quot;, Max: &quot; + max);</span>
+<span class="nc bnc" id="L48" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+<span class="nc" id="L49">                List&lt;TipoProducto&gt; encontrados = tpBean.findRange(first, max);</span>
 
-<span class="nc" id="L55">                long total = tpBean.count();</span>
-<span class="nc" id="L56">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L57">                        header(Headers.TOTAL_RECORD, total).</span>
-<span class="nc" id="L58">                        type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L59">                return builder.build();</span>
+<span class="nc" id="L51">                long total = tpBean.count();</span>
+<span class="nc" id="L52">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L53">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L54">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L55">                return builder.build();</span>
             } else {
-<span class="nc" id="L61">                return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;first:&quot;+ first + &quot;,max: &quot; + max).build();</span>
+<span class="nc" id="L57">                return Response.status(400).header(Headers.WRONG_PARAMETER, &quot;first:&quot; + first + &quot;,max: &quot; + max).build();</span>
             }
-<span class="nc" id="L63">        } catch (Exception e) {</span>
-<span class="nc" id="L64">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L65">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L59">        } catch (Exception e) {</span>
+<span class="nc" id="L60">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L61">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
     }
 
     /**
      * Metodo para encontrar un registro especifico de producto dado su id
+     *
      * @param id del registro a buscar
      * @return un esatatus 200 si se logro encontrar la entidad junto con dicha entidad
      * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
@@ -79,56 +76,57 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam(&quot;id&quot;) Integer id) {
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (id &gt;0) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (id &gt; 0) {</span>
             try {
-<span class="nc" id="L84">                TipoProducto encontrado = tpBean.findById(id);</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">                if (encontrado != null) {</span>
-<span class="nc" id="L86">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
-<span class="nc" id="L87">                    return builder.build();</span>
+<span class="nc" id="L81">                TipoProducto encontrado = tpBean.findById(id);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L83">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L84">                    return builder.build();</span>
                 }
-<span class="nc" id="L89">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
-<span class="nc" id="L90">            } catch (Exception e) {</span>
-<span class="nc" id="L91">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L92">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L86">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L87">            } catch (Exception e) {</span>
+<span class="nc" id="L88">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L89">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
         }
-<span class="nc" id="L95">        return Response.status(400).header(Headers.WRONG_PARAMETER ,&quot;id: &quot;+ id).build();</span>
+<span class="nc" id="L92">        return Response.status(400).header(Headers.WRONG_PARAMETER, &quot;id: &quot; + id).build();</span>
     }
 
     /**
      * Registra una entidad TipoProducto
+     *
      * @param uriInfo informacion de URl donde se encuantra la peticion
      * @return un estatus 201 si la entidad es creada junto con la url donde se
      * puede encontra dicha entidad 422 en dado caso falle la creacion de la
      * entidad y 500 si por fall el servidor
-     * */
+     */
 
     @Path(&quot;&quot;)
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(TipoProducto registro,
-                           @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L112" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getIdTipoProducto() == null) {</span>
+    public Response create(TipoProducto registro, @Context UriInfo uriInfo) {
+<span class="nc bnc" id="L109" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getIdTipoProducto() == null) {</span>
             try {
-<span class="nc" id="L114">                tpBean.create(registro);</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">                if (registro.getIdTipoProducto() != null) {</span>
-<span class="nc" id="L116">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L117">                    uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));</span>
-<span class="nc" id="L118">                    return Response.created(uriBuilder.build()).build();</span>
+<span class="nc" id="L111">                tpBean.create(registro);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (registro.getIdTipoProducto() != null) {</span>
+<span class="nc" id="L113">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L114">                    uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));</span>
+<span class="nc" id="L115">                    return Response.created(uriBuilder.build()).build();</span>
                 }
-<span class="nc" id="L120">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
-<span class="nc" id="L121">            } catch (Exception e) {</span>
-<span class="nc" id="L122">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L123">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L117">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
+<span class="nc" id="L118">            } catch (Exception e) {</span>
+<span class="nc" id="L119">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L120">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
         }
-<span class="nc" id="L126">        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();</span>
+<span class="nc" id="L123">        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
 
     /**
      * Borra un registro de tipo TipoProducto Especifico
-     * @param id id del TipoProducto a eliminar
+     *
+     * @param id      id del TipoProducto a eliminar
      * @param uriInfo info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
@@ -138,22 +136,27 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(&quot;/{id}&quot;)
     public Response delete(@PathParam(&quot;id&quot;) Integer id, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L141" title="All 4 branches missed.">        if (id != null &amp;&amp; id &gt; 0) {</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">        if (id != null &amp;&amp; id &gt; 0) {</span>
             try {
-<span class="nc" id="L143">                tpBean.delete(id);</span>
-<span class="nc" id="L144">                return Response.status(200).build();</span>
-<span class="nc" id="L145">            } catch (Exception e) {</span>
-<span class="nc" id="L146">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L147">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
-            }
+<span class="nc" id="L141">                TipoProducto existe = tpBean.findById(id);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (existe != null) {</span>
+<span class="nc" id="L143">                    tpBean.delete(id);</span>
+<span class="nc" id="L144">                    return Response.status(200).build();</span>
+                }
+<span class="nc" id="L146">            } catch (Exception e) {</span>
+<span class="nc" id="L147">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L148">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
+<span class="nc" id="L149">            }</span>
+<span class="nc" id="L150">            return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
         }
-<span class="nc" id="L150">        return Response.status(500).header(Headers.WRONG_PARAMETER, &quot;id: &quot;+id).build();</span>
+<span class="nc" id="L152">        return Response.status(500).header(Headers.WRONG_PARAMETER, &quot;id: &quot; + id).build();</span>
     }
 
     /**
      * Actualiza una entidad de base de datos
+     *
      * @param registro entidda a ser actualizada
-     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @param uriInfo  info de url de donde se esta realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
@@ -162,22 +165,24 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(TipoProducto registro, @Context UriInfo uriInfo
-    , @PathParam(&quot;id&quot;) Integer id) {
-<span class="nc bnc" id="L166" title="All 6 branches missed.">        if (registro != null &amp;&amp; id != null &amp;&amp; id&gt;0) {</span>
+            , @PathParam(&quot;id&quot;) Integer id) {
+<span class="nc bnc" id="L169" title="All 6 branches missed.">        if (registro != null &amp;&amp; id != null &amp;&amp; id &gt; 0) {</span>
             try {
-<span class="nc" id="L168">                registro.setIdTipoProducto(id);</span>
-<span class="nc" id="L169">                tpBean.update(registro);</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">                if (registro.getIdTipoProducto() != null) {</span>
-
-<span class="nc" id="L172">                    return Response.status(200).build();</span>
+<span class="nc" id="L171">                TipoProducto existe = tpBean.findById(id);</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">                if (existe != null) {</span>
+<span class="nc" id="L173">                    registro.setIdTipoProducto(id);</span>
+<span class="nc" id="L174">                    tpBean.update(registro);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                    if (registro.getIdTipoProducto() != null) {</span>
+<span class="nc" id="L176">                        return Response.status(200).build();</span>
+                    }
                 }
-<span class="nc" id="L174">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
-<span class="nc" id="L175">            } catch (Exception e) {</span>
-<span class="nc" id="L176">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L177">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L179">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L180">            } catch (Exception e) {</span>
+<span class="nc" id="L181">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L182">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
         }
-<span class="nc" id="L180">        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();</span>
+<span class="nc" id="L185">        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
 
 

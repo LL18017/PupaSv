@@ -7,6 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.Serializable;
@@ -29,81 +30,79 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
     EntityManager em;
 
     public ProductoDetalleBean() {
-<span class="fc" id="L32">        super(ProductoDetalle.class);</span>
-<span class="fc" id="L33">    }</span>
+<span class="fc" id="L33">        super(ProductoDetalle.class);</span>
+<span class="fc" id="L34">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="fc" id="L37">        return em;</span>
+<span class="fc" id="L38">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="fc" id="L42">        return &quot;idProductoDetalle&quot;;</span>
+<span class="fc" id="L43">        return &quot;idProductoDetalle&quot;;</span>
     }
 
-    public List&lt;ProductoDetalle&gt; findByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto, Integer first, Integer max) {
-<span class="pc bpc" id="L46" title="3 of 8 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null &amp;&amp; first != null &amp;&amp; max != null) {</span>
-            try {
-<span class="fc" id="L48">                return em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
-<span class="fc" id="L49">                        .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
-<span class="fc" id="L50">                        .setParameter(&quot;idProducto&quot;, idProducto)</span>
-<span class="fc" id="L51">                        .setFirstResult(first)</span>
-<span class="fc" id="L52">                        .setMaxResults(max)</span>
-<span class="fc" id="L53">                        .getResultList();</span>
-<span class="fc" id="L54">            } catch (Exception e) {</span>
 
-<span class="fc" id="L56">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="fc" id="L57">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+    public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
+            try {
+<span class="fc" id="L50">                return em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
+<span class="fc" id="L51">                        .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
+<span class="fc" id="L52">                        .setParameter(&quot;idProducto&quot;, idProducto)</span>
+<span class="fc" id="L53">                        .getSingleResult();</span>
+<span class="fc" id="L54">            }  catch (Exception e) {</span>
+<span class="fc" id="L55">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="fc" id="L56">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L60">        throw new IllegalArgumentException(&quot;idTipoProducto , idProducto,first y max no pueden ser nulos&quot;);</span>
+<span class="fc" id="L59">        throw new IllegalArgumentException(&quot;idTipoProducto , idProducto,first y max no pueden ser nulos&quot;);</span>
     }
 
     public Long countByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto) {
-<span class="pc bpc" id="L64" title="1 of 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
             try {
-<span class="fc" id="L66">                return em.createNamedQuery(&quot;ProductoDetalle.countByIdTipoProductoAndIdProducto&quot;, Long.class)</span>
-<span class="fc" id="L67">                        .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
-<span class="fc" id="L68">                        .setParameter(&quot;idProducto&quot;, idProducto)</span>
-<span class="fc" id="L69">                        .getSingleResult();</span>
-<span class="fc" id="L70">            } catch (Exception e) {</span>
-<span class="fc" id="L71">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="fc" id="L72">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+<span class="nc" id="L65">                return em.createNamedQuery(&quot;ProductoDetalle.countByIdTipoProductoAndIdProducto&quot;, Long.class)</span>
+<span class="nc" id="L66">                        .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
+<span class="nc" id="L67">                        .setParameter(&quot;idProducto&quot;, idProducto)</span>
+<span class="nc" id="L68">                        .getSingleResult();</span>
+<span class="nc" id="L69">            } catch (Exception e) {</span>
+<span class="nc" id="L70">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L71">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
 
             }
         }
 
-<span class="fc" id="L77">        throw new IllegalArgumentException(&quot;idTipoProducto , idProducto no pueden ser nulos&quot;);</span>
+<span class="nc" id="L76">        throw new IllegalArgumentException(&quot;idTipoProducto , idProducto no pueden ser nulos&quot;);</span>
     }
 
 
     public void deleteByPk(ProductoDetallePK pk) {
-<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (pk != null) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (pk != null) {</span>
             try {
-<span class="fc" id="L84">                em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, pk.getIdProducto()).setParameter(&quot;idTipoProducto&quot;, pk.getIdTipoProducto()).executeUpdate();</span>
-<span class="fc" id="L85">                return;</span>
-<span class="fc" id="L86">            } catch (Exception e) {</span>
-<span class="fc" id="L87">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="fc" id="L88">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+<span class="fc" id="L83">                em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, pk.getIdProducto()).setParameter(&quot;idTipoProducto&quot;, pk.getIdTipoProducto()).executeUpdate();</span>
+<span class="fc" id="L84">                return;</span>
+<span class="fc" id="L85">            } catch (Exception e) {</span>
+<span class="fc" id="L86">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="fc" id="L87">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L91">        throw new IllegalArgumentException(&quot;la llave no pueden ser null&quot;);</span>
+<span class="fc" id="L90">        throw new IllegalArgumentException(&quot;la llave no pueden ser null&quot;);</span>
     }
 
 
     public List&lt;ProductoDetalle&gt; findAll(Integer first, Integer max) {
-<span class="pc bpc" id="L96" title="1 of 4 branches missed.">        if (first != null &amp;&amp; max != null) {</span>
+<span class="pc bpc" id="L95" title="1 of 4 branches missed.">        if (first != null &amp;&amp; max != null) {</span>
             try {
-<span class="fc" id="L98">                 return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
-<span class="fc" id="L99">                         .setFirstResult(first)</span>
-<span class="fc" id="L100">                         .setMaxResults(max)</span>
-<span class="fc" id="L101">                         .getResultList();</span>
-<span class="fc" id="L102">            } catch (Exception e) {</span>
-<span class="fc" id="L103">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+<span class="fc" id="L97">                return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
+<span class="fc" id="L98">                        .setFirstResult(first)</span>
+<span class="fc" id="L99">                        .setMaxResults(max)</span>
+<span class="fc" id="L100">                        .getResultList();</span>
+<span class="fc" id="L101">            } catch (Exception e) {</span>
+<span class="fc" id="L102">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L106">        throw new IllegalArgumentException(&quot;first y max no pueden ser nulos&quot;);</span>
+<span class="fc" id="L105">        throw new IllegalArgumentException(&quot;first y max no pueden ser nulos&quot;);</span>
     }
 
 }

@@ -7,6 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.Serializable;
@@ -42,17 +43,15 @@ public class ProductoDetalleBean extends AbstractDataAccess<ProductoDetalle> imp
         return "idProductoDetalle";
     }
 
-    public List<ProductoDetalle> findByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto, Integer first, Integer max) {
-        if (idTipoProducto != null && idProducto != null && first != null && max != null) {
+
+    public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
+        if (idTipoProducto != null && idProducto != null) {
             try {
                 return em.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto", ProductoDetalle.class)
                         .setParameter("idTipoProducto", idTipoProducto)
                         .setParameter("idProducto", idProducto)
-                        .setFirstResult(first)
-                        .setMaxResults(max)
-                        .getResultList();
-            } catch (Exception e) {
-
+                        .getSingleResult();
+            }  catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 throw new IllegalStateException("error al aceder al repositorio", e);
             }
@@ -95,10 +94,10 @@ public class ProductoDetalleBean extends AbstractDataAccess<ProductoDetalle> imp
     public List<ProductoDetalle> findAll(Integer first, Integer max) {
         if (first != null && max != null) {
             try {
-                 return em.createNamedQuery("ProductoDetalle.findAll", ProductoDetalle.class)
-                         .setFirstResult(first)
-                         .setMaxResults(max)
-                         .getResultList();
+                return em.createNamedQuery("ProductoDetalle.findAll", ProductoDetalle.class)
+                        .setFirstResult(first)
+                        .setMaxResults(max)
+                        .getResultList();
             } catch (Exception e) {
                 throw new IllegalStateException("error al aceder al repositorio", e);
             }

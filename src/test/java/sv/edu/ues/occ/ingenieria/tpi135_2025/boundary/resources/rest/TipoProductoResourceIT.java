@@ -116,8 +116,6 @@ class TipoProductoResourceIT {
         Assertions.assertEquals(400, respuesta.getStatus());
 //        Assertions.fail("fallo exitosamente");
     }
-
-
     @Order(3)
     @Test
     public void testUpdate() {
@@ -143,8 +141,8 @@ class TipoProductoResourceIT {
         //error de argumentos
 
         //fallo de argumentos
-        respuesta = target.path(String.format("tipoProducto/%d", 0)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
-        Assertions.assertEquals(400, respuesta.getStatus());
+        respuesta = target.path(String.format("tipoProducto/%d", 12345)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
+        Assertions.assertEquals(404, respuesta.getStatus());
 
 
     }
@@ -194,7 +192,7 @@ class TipoProductoResourceIT {
 
         respuestaPeticion = target.path(String.format("tipoProducto/%d", 1000))
                 .request(MediaType.APPLICATION_JSON).delete();
-        Assertions.assertEquals(422, respuestaPeticion.getStatus());
+        Assertions.assertEquals(404, respuestaPeticion.getStatus());
 
 
 //        Assertions.fail("fallo exitosamente");

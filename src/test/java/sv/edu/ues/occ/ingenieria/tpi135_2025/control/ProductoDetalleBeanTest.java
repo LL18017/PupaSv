@@ -69,18 +69,18 @@ class ProductoDetalleBeanTest {
 //        fail("fallo exitosamente");
     }
     @Test
-    void findByIdProductoAndIdProducto() {
+    void findById() {
         System.out.println("test findByIdProductoAndIdProductoDetalle");
         Integer idTipoProducto = 1;
         Long idProducto = 1L;
         Integer first = 1;
         Integer max = 2;
-        List<ProductoDetalle> resultadoEsperado = LIST_ProductoDetalle_TEST.stream().filter(pd ->pd.getProductoDetallePK().equals(new ProductoDetallePK(idTipoProducto,idProducto))).toList();
 
-        List<ProductoDetalle> resultados;
+        ProductoDetalle resultadoEsperado=new ProductoDetalle(idTipoProducto,idProducto);
+        ProductoDetalle respuesta;
         cut.em = mockEm;
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.findByIdProductoAndIdProducto(null,null,null,null);
+            cut.findById(null,null);
         });
 
         // Configurar el comportamiento de EntityManager y TypedQuery
@@ -88,56 +88,54 @@ class ProductoDetalleBeanTest {
                 .thenReturn(mockTp);
         Mockito.when(mockTp.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTp);
         Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
-        Mockito.when(mockTp.setFirstResult(first)).thenReturn(mockTp);
-        Mockito.when(mockTp.setMaxResults(max)).thenReturn(mockTp);
-        Mockito.when(mockTp.getResultList()).thenReturn(resultadoEsperado);
+        Mockito.when(mockTp.getSingleResult()).thenReturn(resultadoEsperado);
 
         // Ejecutar el método a probar
-        List<ProductoDetalle> resultado = cut.findByIdProductoAndIdProducto(idTipoProducto, idProducto, first, max);
+        ProductoDetalle resultado = cut.findById(idTipoProducto, idProducto);
         Assertions.assertNotNull(resultado);
-        Assertions.assertEquals(resultadoEsperado.size(), resultado.size());
+        Assertions.assertEquals(resultadoEsperado, resultado);
 
         // Forzar fallo al acceder al EntityManager
         Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findByIdProductoAndIdProducto(idTipoProducto, idProducto,first, max));
+        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findById(idTipoProducto, idProducto));
 
 
 //        Assertions.fail("fallo exitosamente");
     }
 
-    @Test
-    void countByIdProductoAndIdProducto() {
-        System.out.println("test countByIdProductoAndIdProductoDetalle");
-        Integer idTipoProducto = 1;
-        Long idProducto = 1L;
-
-        Long resultadoEsperado = 2L;
-
-        cut.em= mockEm;
-        //prueba fallo de argumentos
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.countByIdProductoAndIdProducto(null,null);
-        });
-
-        // Configurar el comportamiento de EntityManager y TypedQuery
-        Mockito.when(mockEm.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto", Long.class))
-                .thenReturn(mockTp);
-        Mockito.when(mockTp.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTp);
-        Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
-        Mockito.when(mockTp.getSingleResult()).thenReturn(resultadoEsperado);
-
-
-        //prueba normal
-        Long resultado = cut.countByIdProductoAndIdProducto(idTipoProducto, idProducto);
-        Assertions.assertNotNull(resultado);
-        Assertions.assertEquals(resultado,resultadoEsperado);
-
-        // Forzar fallo al acceder al EntityManager
-        Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.countByIdProductoAndIdProducto(idTipoProducto, idProducto));
-
-//        Assertions.fail("fallo exitosamente contar");
-    }
+//    @Test
+//    void countByIdProductoAndIdProducto() {
+//        System.out.println("test countByIdProductoAndIdProductoDetalle");
+//        Integer idTipoProducto = 1;
+//        Long idProducto = 1L;
+//
+//        Long resultadoEsperado = 2L;
+//
+//        cut.em= mockEm;
+//        //prueba fallo de argumentos
+//        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+//            cut.countByIdProductoAndIdProducto(null,null);
+//        });
+//
+//        // Configurar el comportamiento de EntityManager y TypedQuery
+//        Mockito.when(mockEm.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto", Long.class))
+//                .thenReturn(mockTp);
+//        Mockito.when(mockTp.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTp);
+//        Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
+//        Mockito.when(mockTp.getSingleResult()).thenReturn(resultadoEsperado);
+//
+//
+//        //prueba normal
+//        Long resultado = cut.countByIdProductoAndIdProducto(idTipoProducto, idProducto);
+//        Assertions.assertNotNull(resultado);
+//        Assertions.assertEquals(resultado,resultadoEsperado);
+//
+//        // Forzar fallo al acceder al EntityManager
+//        Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
+//        Assertions.assertThrows(IllegalStateException.class, () -> cut2.countByIdProductoAndIdProducto(idTipoProducto, idProducto));
+//
+////        Assertions.fail("fallo exitosamente contar");
+//    }
 
     @Test
     void deleteByPk() {

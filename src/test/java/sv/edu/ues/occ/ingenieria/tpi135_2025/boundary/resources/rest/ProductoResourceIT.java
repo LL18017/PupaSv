@@ -8,6 +8,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.xml.bind.SchemaOutputResolver;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
@@ -80,6 +81,8 @@ public class ProductoResourceIT {
         Integer idTipoProducto=1003;//este id no es usado
         String formatoPath=String.format("tipoProducto/%d/producto",idTipoProducto);
 
+
+        //flujo bueno
         Response respuesta = target.path(formatoPath)
                 .request(MediaType.APPLICATION_JSON).
                 post(Entity.entity(registro, MediaType.APPLICATION_JSON));
@@ -89,17 +92,28 @@ public class ProductoResourceIT {
 
         System.out.println("el recurso se encuentra en : " + respuesta.getLocation());
 
-        //probar error de argumento
+        //probar error de argumento malo
         respuesta = target.path(formatoPath).request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_JSON));
         Assertions.assertEquals(500, respuesta.getStatus());
+
+        //probar error de argumento idTipoProducto malo
+        formatoPath=String.format("tipoProducto/%d/producto",-90);
+        respuesta = target.path(formatoPath).request(MediaType.APPLICATION_JSON).post(Entity.entity(registro, MediaType.APPLICATION_JSON));
+        Assertions.assertEquals(400, respuesta.getStatus());
+
+
+        //probar error de argumento idTipoProducto inexistenete
+        formatoPath=String.format("tipoProducto/%d/producto",12345);
+        respuesta = target.path(formatoPath).request(MediaType.APPLICATION_JSON).post(Entity.entity(registro, MediaType.APPLICATION_JSON));
+        Assertions.assertEquals(404, respuesta.getStatus());
 
 
 //        Assertions.fail("fallo exitosamente");
     }
     @Order(2)
     @Test
-    public void testGetBean() {
-        System.out.println("Producto  testSI getBean");
+    public void testGetRange() {
+        System.out.println("Producto  testSI getRange");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
         Integer idTipoProducto=1001;//dos registros en db
         Integer cantidadEsperadas=2;
@@ -118,19 +132,22 @@ public class ProductoResourceIT {
 
         //flujo para buscar activos
         formatoPath=String.format("tipoProducto/%d/producto",idTipoProducto);
-        respuesta=target.path(formatoPath).queryParam("first",1).queryParam("max",5).queryParam("activo",true).request(MediaType.APPLICATION_JSON).get();
+        respuesta=target.path(formatoPath).queryParam("first",0).queryParam("max",5).queryParam("activo",true).request(MediaType.APPLICATION_JSON).get();
         registros = respuesta.readEntity(new GenericType<List<Producto>>() {
         });
         Assertions.assertEquals(cantidadEsperadasActicos, registros.size());
 
 
-        //fallo de argumentos
+        //fallo de argumentos first max
         respuesta=target.path(formatoPath).queryParam("first",3).queryParam("max",90).request(MediaType.APPLICATION_JSON).get();
         Assertions.assertEquals(400, respuesta.getStatus());
+
+        //fallo de argumentos id Inexistente
+        formatoPath=String.format("tipoProducto/%d/producto",123456);
+        respuesta=target.path(formatoPath).request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(404, respuesta.getStatus());
 //        Assertions.fail("fallo exitosamente");
     }
-
-
     @Order(3)
     @Test
     public void testUpdate() {
@@ -155,19 +172,34 @@ public class ProductoResourceIT {
         Assertions.assertEquals(id, rpp.getIdProducto());
 
         //error de argumentos
-        respuesta = target.path(String.format("tipoProducto/%d/producto/%d", idTipoProducto,0)).request(MediaType.APPLICATION_JSON)
+        respuesta = target.path(String.format("tipoProducto/%d/producto/%d", idTipoProducto,12345)).request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(registro, MediaType.APPLICATION_JSON));
-        Assertions.assertEquals(400, respuesta.getStatus());
+        Assertions.assertEquals(404, respuesta.getStatus());
 
+        //fallo de argumentos id inexistentes
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProducto, 12345))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(404, respuestaPeticion.getStatus());
+        //fallo de argumentos  idProducto menor a 0
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProducto, -89))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuestaPeticion.getStatus());
 
+        //fallo de argumentos  idTipoProducto menor a 0
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",-89, idTipoProducto))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuestaPeticion.getStatus());
     }
 
     @Order(4)
     @Test
-    public void testGetId() {
+    public void testGetById() {
         System.out.println("Producto  testSI getById");
         Long idBuscado = 1001L;//ya existe en el scrip de db
-        Integer idTipoProdcuto = 1;//ya existe en el scrip de db
+        Integer idTipoProdcuto = 1001;//ya existe en el scrip de db
         String formato=String.format("tipoProducto/%d/producto/%d",idTipoProdcuto,idBuscado);
 
         Response respuesta = target.path(formato)  // Agrega %d para el número
@@ -176,16 +208,26 @@ public class ProductoResourceIT {
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(idBuscado, respuesta.readEntity(Producto.class).getIdProducto());
 
-        //fallo de argumentos
-        respuesta = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProdcuto, 0))  // Agrega %d para el número
+        //fallo de argumentos id inexistentes
+        respuesta = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProdcuto, 12345))  // Agrega %d para el número
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         Assertions.assertEquals(404, respuesta.getStatus());
+        //fallo de argumentos  idProducto menor a 0
+        respuesta = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProdcuto, -89))  // Agrega %d para el número
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuesta.getStatus());
+
+        //fallo de argumentos  idTipoProducto menor a 0
+        respuesta = target.path(String.format("tipoProducto/%d/producto/%d",-89, idBuscado))  // Agrega %d para el número
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuesta.getStatus());
 
 //        Assertions.fail("fallo exitosamente");
 
     }
-
 
     @Order(5)
     @Test
@@ -208,15 +250,22 @@ public class ProductoResourceIT {
         Assertions.assertEquals(404, comprobacion.getStatus());
 
 
-        //fallo de argumentos
+        //fallo de argumentos id inexistentes
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProducto, 12345))  // Agrega %d para el número
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(404, respuestaPeticion.getStatus());
+        //fallo de argumentos  idProducto menor a 0
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",idTipoProducto, -89))  // Agrega %d para el número
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuestaPeticion.getStatus());
 
-
-        //no existe registro con id  1456
-        formato=String.format("tipoProducto/%d/producto/%d",idTipoProducto,1456);
-        respuestaPeticion = target.path(formato)
-                .request(MediaType.APPLICATION_JSON).delete();
-        Assertions.assertEquals(422, respuestaPeticion.getStatus());
-
+        //fallo de argumentos  idTipoProducto menor a 0
+        respuestaPeticion = target.path(String.format("tipoProducto/%d/producto/%d",-89, idTipoProducto))  // Agrega %d para el número
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        Assertions.assertEquals(400, respuestaPeticion.getStatus());
 
 //        Assertions.fail("fallo exitosamente");
 

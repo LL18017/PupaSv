@@ -25,7 +25,7 @@ import jakarta.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = &quot;ProductoDetalle.findAll&quot;, query = &quot;SELECT p FROM ProductoDetalle p&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProducto&quot;, query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto&quot;),
-    @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;,query = &quot;SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
+    @NamedQuery(name = &quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;,query = &quot;SELECT distinct p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.countByIdTipoProductoAndIdProducto&quot;,query = &quot;SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;,query = &quot;DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto&quot;),
     @NamedQuery(name = &quot;ProductoDetalle.deleteByIdProducto&quot;,query = &quot;DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto=:idProducto&quot;),
@@ -110,19 +110,19 @@ public class ProductoDetalle implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (!(object instanceof ProductoDetalle)) {</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (!(object instanceof ProductoDetalle)) {</span>
 <span class="nc" id="L114">            return false;</span>
         }
-<span class="nc" id="L116">        ProductoDetalle other = (ProductoDetalle) object;</span>
-<span class="nc bnc" id="L117" title="All 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
+<span class="fc" id="L116">        ProductoDetalle other = (ProductoDetalle) object;</span>
+<span class="pc bpc" id="L117" title="5 of 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
 <span class="nc" id="L118">            return false;</span>
         }
-<span class="nc" id="L120">        return true;</span>
+<span class="fc" id="L120">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="fc" id="L125">        return &quot;com.mycompany.extreciondeentities.entities.ProductoDetalle[ productoDetallePK=&quot; + productoDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L125">        return &quot;com.mycompany.extreciondeentities.entities.ProductoDetalle[ productoDetallePK=&quot; + productoDetallePK + &quot; ]&quot;;</span>
     }
     
 }

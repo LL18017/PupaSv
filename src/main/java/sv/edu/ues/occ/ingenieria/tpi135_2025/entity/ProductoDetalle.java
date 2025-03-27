@@ -25,7 +25,7 @@ import jakarta.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "ProductoDetalle.findAll", query = "SELECT p FROM ProductoDetalle p"),
     @NamedQuery(name = "ProductoDetalle.findByIdTipoProducto", query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto"),
-    @NamedQuery(name = "ProductoDetalle.findByIdTipoProductoAndIdProducto",query = "SELECT p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
+    @NamedQuery(name = "ProductoDetalle.findByIdTipoProductoAndIdProducto",query = "SELECT distinct p FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.countByIdTipoProductoAndIdProducto",query = "SELECT count(p) FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.deleteByIdProductoAndIdProducto",query = "DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idTipoProducto = :idTipoProducto and p.productoDetallePK.idProducto=:idProducto"),
     @NamedQuery(name = "ProductoDetalle.deleteByIdProducto",query = "DELETE  FROM ProductoDetalle p WHERE p.productoDetallePK.idProducto=:idProducto"),

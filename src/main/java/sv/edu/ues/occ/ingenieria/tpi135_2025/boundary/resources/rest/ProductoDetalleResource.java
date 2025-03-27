@@ -2,6 +2,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -23,7 +24,7 @@ public class ProductoDetalleResource implements Serializable {
 
 
     /**
-     * metodo que devueleve una rango de datos de tipo ProductoDetalle dados sus ids
+     * metodo que devueleve una registro de tipo ProductoDetalle dados sus ids
      *
      * @param idTipoProducto id de tipo TipoProducto Relacionado al detalle
      * @param idProducto     id de tipo Producto Relacionado al detalle
@@ -34,31 +35,24 @@ public class ProductoDetalleResource implements Serializable {
     @Path("")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(
-            @PathParam("idTipoProducto") Integer idTipoProducto,
-            @PathParam("idProducto") Long idProducto,
-            @QueryParam("first")
-            @DefaultValue("0") int first,
-            @QueryParam("max")
-            @DefaultValue("20") int max
-
-    ) {
-        try {
-            if (idTipoProducto != null && idProducto != null) {
-
-                List<ProductoDetalle> encontrados = pdBean.findByIdProductoAndIdProducto(idTipoProducto, idProducto, first, max);
-                long total = pdBean.countByIdProductoAndIdProducto(idTipoProducto, idProducto);
-                Response.ResponseBuilder builder = Response.ok(encontrados).
-                        header(Headers.TOTAL_RECORD, total).
-                        type(MediaType.APPLICATION_JSON);
-                return builder.build();
-            } else {
-                return Response.status(400).header("wrong parameter, first:", first + ",max: " + max).header("wrong parameter : max", "s").build();
+    public Response findByIDs(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto) {
+        if (idTipoProducto != null && idProducto != null) {
+            try {
+                ProductoDetalle encontrados = pdBean.findById(idTipoProducto, idProducto);
+                if (encontrados != null) {
+                    Response.ResponseBuilder builder = Response.ok(encontrados).
+                            type(MediaType.APPLICATION_JSON);
+                    return builder.build();
+                }
+            }catch (NoResultException ex) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+                return Response.status(404).entity(ex.getMessage()).build();
+            }catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
+                return Response.status(500).entity(e.getMessage()).build();
             }
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
         }
+        return Response.status(400).header(Headers.WRONG_PARAMETER, "idTipoProducto:" + idProducto + ",idProducto: " + idProducto).build();
     }
 
 
@@ -76,12 +70,8 @@ public class ProductoDetalleResource implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
 
-    public Response create(
-                            ProductoDetalle registro,
-                           @PathParam("idTipoProducto") Integer idTipoProducto,
-                           @PathParam("idProducto") Long idProducto,
-                           @Context UriInfo uriInfo) {
-        if (idProducto != null && idTipoProducto!= null) {
+    public Response create(ProductoDetalle registro, @PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo) {
+        if (idProducto != null && idTipoProducto != null) {
             registro.setProductoDetallePK(new ProductoDetallePK(idTipoProducto, idProducto));
             try {
                 pdBean.create(registro);
@@ -111,12 +101,8 @@ public class ProductoDetalleResource implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("")
-    public Response delete(
-            @PathParam("idTipoProducto") Integer idTipoProducto,
-            @PathParam("idProducto") Long idProducto,
-            @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo) {
         if (idTipoProducto != null && idProducto != null) {
-
             ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
             try {
                 pdBean.deleteByPk(pk);
@@ -131,6 +117,7 @@ public class ProductoDetalleResource implements Serializable {
 
     /**
      * actualiza una entidad de base de datos
+     *
      * @param registro entidda a ser actualizada
      * @param uriInfo  info de url de donde se esta realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
@@ -140,20 +127,17 @@ public class ProductoDetalleResource implements Serializable {
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(ProductoDetalle registro,
-                           @PathParam("idProducto") Long idProducto,
-                           @PathParam("idTipoProducto") Integer idTipoProducto,
-                           @Context UriInfo uriInfo) {
+    public Response update(ProductoDetalle registro, @PathParam("idProducto") Long idProducto, @PathParam("idTipoProducto") Integer idTipoProducto, @Context UriInfo uriInfo) {
         if (registro != null && idTipoProducto != null && idProducto != null) {
             ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
             try {
                 registro.setProductoDetallePK(pk);
                 pdBean.update(registro);
                 UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                return Response.created(uriBuilder.build()).build();
+                return Response.ok(uriBuilder.build()).build();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
+                return Response.status(400).entity(e.getMessage()).build();
             }
         }
         return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();

@@ -238,19 +238,17 @@ public abstract class AbstractDataAccess<T> {
             throw new IllegalArgumentException("id no valido");
         }
         try {
-            if (registro != null) {
-                EntityManager em = null;
-                em = getEntityManager();
-                if (em == null) {
-                    throw new IllegalStateException("Error al acceder al repositorio");
-                }
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaDelete<T> cd = cb.createCriteriaDelete(this.tipoDato);
-                Root<T> raiz = cd.from(this.tipoDato);
-                cd.where(cb.equal(raiz, registro));
-                em.createQuery(cd).executeUpdate();
-                return;
+            EntityManager em = null;
+            em = getEntityManager();
+            if (em == null) {
+                throw new IllegalStateException("Error al acceder al repositorio");
             }
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaDelete<T> cd = cb.createCriteriaDelete(this.tipoDato);
+            Root<T> raiz = cd.from(this.tipoDato);
+            cd.where(cb.equal(raiz, registro));
+            em.createQuery(cd).executeUpdate();
+            return;
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("Error al acceder al repositorio", e);

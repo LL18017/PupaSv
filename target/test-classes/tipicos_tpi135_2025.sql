@@ -455,9 +455,8 @@ INSERT INTO public.producto VALUES (1003, 'pupusas', false, NULL);
 INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
 
 INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
-INSERT INTO public.producto_detalle VALUES (1001,1002 ,false,  NULL);
+INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
-INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);

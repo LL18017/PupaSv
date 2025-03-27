@@ -3,11 +3,11 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/GenericControlIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GenericResourceForTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanTest.class
-sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/TipoProductoBeanIT.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResourceIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/resources/JakartaEE10ResourceTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResourceIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResourceIT$1.class
-sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractDataAccessTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResourceIT$1.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractDataAccessTest.class

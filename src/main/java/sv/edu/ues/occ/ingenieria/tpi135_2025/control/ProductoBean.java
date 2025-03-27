@@ -94,7 +94,7 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         }
     }
 
-    public List<Producto> findRangeProductoActivos(Integer idTipoProducto ,Integer first, Integer max) {
+    public List<Producto> findRangeProductoActivosByIdTipoProducto(Integer idTipoProducto ,Integer first, Integer max) {
         if (first == null || max == null || first <0 ||max < 0 || idTipoProducto==null) {
             throw new IllegalArgumentException("first , max no pueden ser nulos o menores que cero");
         }

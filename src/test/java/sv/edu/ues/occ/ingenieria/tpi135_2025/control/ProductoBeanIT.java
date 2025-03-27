@@ -239,14 +239,14 @@ public class ProductoBeanIT extends GenericControlIT{
     }
 
     @Test
-    void findRangeProductoActivos() {
+    void findRangeProductoActivosByIdTipoProducto() {
         System.out.println("Producto testIT findRangeProductoActivos");
         EntityManager em = emf.createEntityManager();
         Integer first=0;
         Integer max=2;
         Integer idTipoProducto=1001;
         cut.em = em;
-        List<Producto> respuesta = cut.findRangeProductoActivos(idTipoProducto,first, max);
+        List<Producto> respuesta = cut.findRangeProductoActivosByIdTipoProducto(idTipoProducto,first, max);
         //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
         respuesta.forEach(p-> System.out.println(p.toString()));
         Assertions.assertNotNull(respuesta);
@@ -256,7 +256,7 @@ public class ProductoBeanIT extends GenericControlIT{
 
     }
     @Test
-    void countRangeProductoActivos() {
+    void countRangeProductoActivosByIdTipoProducto() {
         System.out.println("Producto testIT countRangeProductoActivos");
         EntityManager em = emf.createEntityManager();
         Integer idTipoProducto=1001;

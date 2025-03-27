@@ -236,7 +236,7 @@ class ProductoBeanTest {
 
         //FALLO DE ARGUMENTOS
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.findRangeProductoActivos(idTipoProducto,null,null);
+            cut.findRangeProductoActivosByIdTipoProducto(idTipoProducto,null,null);
         });
 
         //flujo normal
@@ -247,7 +247,7 @@ class ProductoBeanTest {
         Mockito.when(mockTp.setParameter("idTipoProducto",idTipoProducto)).thenReturn(mockTp);
         Mockito.when(mockTp.getResultList()).thenReturn(esperado);
 
-        List<Producto> resultado = cut.findRangeProductoActivos(idTipoProducto,first,max);
+        List<Producto> resultado = cut.findRangeProductoActivosByIdTipoProducto(idTipoProducto,first,max);
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(esperado.size(), resultado.size());
 
@@ -258,7 +258,7 @@ class ProductoBeanTest {
         cut2.em = mockEm;
         Mockito.when(mockEm.createNamedQuery("Producto.findActivosAndIdTipoProducto",Producto.class)).thenReturn(mockTp2);
         Mockito.doThrow(IllegalStateException.class).when(mockTp2).setParameter("idTipoProducto",idTipoProducto);
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findRangeProductoActivos(idTipoProducto,first,max));
+        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findRangeProductoActivosByIdTipoProducto(idTipoProducto,first,max));
 
 //        fail("fallo exitosamente");
 
@@ -272,7 +272,7 @@ class ProductoBeanTest {
 
         //FALLO DE ARGUMENTOS
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.findRangeProductoActivos(idTipoProducto,null,null);
+            cut.findRangeProductoActivosByIdTipoProducto(idTipoProducto,null,null);
         });
 
         //flujo normal

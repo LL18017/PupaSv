@@ -94,7 +94,7 @@ public class ProductoBean extends AbstractDataAccess&lt;Producto&gt; implements 
 <span class="fc" id="L94">        }</span>
 <span class="fc" id="L95">    }</span>
 
-    public List&lt;Producto&gt; findRangeProductoActivos(Integer idTipoProducto ,Integer first, Integer max) {
+    public List&lt;Producto&gt; findRangeProductoActivosByIdTipoProducto(Integer idTipoProducto ,Integer first, Integer max) {
 <span class="pc bpc" id="L98" title="4 of 10 branches missed.">        if (first == null || max == null || first &lt;0 ||max &lt; 0 || idTipoProducto==null) {</span>
 <span class="fc" id="L99">            throw new IllegalArgumentException(&quot;first , max no pueden ser nulos o menores que cero&quot;);</span>
         }
