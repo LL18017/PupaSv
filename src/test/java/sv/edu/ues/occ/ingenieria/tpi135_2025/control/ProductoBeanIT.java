@@ -239,32 +239,68 @@ public class ProductoBeanIT extends GenericControlIT{
     }
 
     @Test
-    void findRangeProductoActivosByIdTipoProducto() {
-        System.out.println("Producto testIT findRangeProductoActivos");
+    void findRangeByIdTipoProductosAndActivo() {
+        System.out.println("Producto testIT findRangeByIdTipoProductosAndActivo");
         EntityManager em = emf.createEntityManager();
         Integer first=0;
-        Integer max=2;
+        Integer max=10;
         Integer idTipoProducto=1001;
+        boolean activo=true;
+        Long cantiddaESperada=2L;
+
         cut.em = em;
-        List<Producto> respuesta = cut.findRangeProductoActivosByIdTipoProducto(idTipoProducto,first, max);
+        List<Producto> respuesta = cut.findRangeByIdTipoProductosAndActivo(idTipoProducto,activo,first, max);
         //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
         respuesta.forEach(p-> System.out.println(p.toString()));
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(1, respuesta.size());
+        Assertions.assertEquals(cantiddaESperada, respuesta.size());
         Assertions.assertTrue(respuesta.get(0).getActivo());
 //        Assertions.fail("fallo exitosamente");
 
     }
     @Test
-    void countRangeProductoActivosByIdTipoProducto() {
-        System.out.println("Producto testIT countRangeProductoActivos");
+    void countByIdTipoProductosAndActivo() {
+        System.out.println("Producto testIT countByIdTipoProductosAndActivo");
         EntityManager em = emf.createEntityManager();
         Integer idTipoProducto=1001;
         cut.em = em;
-        Long respuesta = cut.countProductoActivosByIdTipoProducto(idTipoProducto);
+        Long cantiddaESperada=2L;
+        boolean activo=true;
+        Long respuesta = cut.countByIdTipoProductosAndActivo(idTipoProducto,activo);
         //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(1, respuesta);
+        Assertions.assertEquals(cantiddaESperada, respuesta);
+//        Assertions.fail("fallo exitosamente");
+
+    }
+
+
+    @Test
+    void findRangeProductoActivos() {
+        System.out.println("Producto testIT findRangeProductoActivos");
+        EntityManager em = emf.createEntityManager();
+        Integer first=0;
+        Integer max=10;
+        Long cantiddaEsperada=3L;//segun script db
+        boolean activo=true;
+        cut.em = em;
+        List<Producto> respuesta = cut.findRangeProductoActivos(first,max,activo);
+        respuesta.forEach(p-> System.out.println(p.toString()));
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(cantiddaEsperada, respuesta.size());
+//        Assertions.fail("fallo exitosamente");
+
+    }
+    @Test
+    void countProductoActivos() {
+        System.out.println("Producto testIT countProductoActivos");
+        EntityManager em = emf.createEntityManager();
+        boolean activo=true;
+        Long cantiddaEsperada=3L;//segun script db
+        cut.em = em;
+        Long respuesta = cut.countProductoActivos(activo);
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(cantiddaEsperada, respuesta);
 //        Assertions.fail("fallo exitosamente");
 
     }

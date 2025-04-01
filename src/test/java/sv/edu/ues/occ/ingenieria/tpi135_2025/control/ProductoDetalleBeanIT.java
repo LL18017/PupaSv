@@ -112,19 +112,21 @@ class ProductoDetalleBeanIT {
 
     @Order(3)
     @Test
-    public void findAll() {
+    public void findRange() {
         System.out.println("ProductoDetalle testIT fiand all");
         EntityManager em = emf.createEntityManager();
+        Integer first = 0;
+        Integer max = 10;
         Integer cantidad_esperada = 4;//3 en script + el creado en createProductoDetalle
         cut.em = em;
 
         try {
             cut.em.getTransaction().begin();
-            List<ProductoDetalle> respuesta = cut.findAll(0, cantidad_esperada);
+            List<ProductoDetalle> respuesta = cut.findRange(first, max);
             cut.em.getTransaction().commit();
             Assertions.assertNotNull(respuesta);
-//            Assertions.assertEquals(cantidad_esperada, respuesta.size());
-//            Assertions.assertTrue(respuesta.contains(registro));
+            Assertions.assertEquals(cantidad_esperada, respuesta.size());
+            Assertions.assertTrue(respuesta.contains(registro));
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback(); // Rollback en caso de error
@@ -187,55 +189,10 @@ class ProductoDetalleBeanIT {
         em.getTransaction().commit();
 
         em.getTransaction().begin();
-        Assertions.assertThrows(IllegalStateException.class,()-> cut.findById(idTipoProducto,idProducto));
+        ProductoDetalle existe = cut.findById(idTipoProducto, idProducto);
         em.getTransaction().commit();
+        Assertions.assertNull(existe);
 //        Assertions.fail("fallo exitosamente");
     }
 
-//    @Test
-//    void findRangeProductoDetalleActivos() {
-//        System.out.println("ProductoDetalle testIT findRangeProductoDetalleActivos");
-//        EntityManager em = emf.createEntityManager();
-//        Integer first=0;
-//        Integer max=2;
-//        Integer idTipoProductoDetalle=1001;
-//        cut.em = em;
-//        List<ProductoDetalle> respuesta = cut.findRangeProductoDetalleActivos(idTipoProductoDetalle,first, max);
-//        //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
-//        respuesta.forEach(p-> System.out.println(p.toString()));
-//        Assertions.assertNotNull(respuesta);
-//        Assertions.assertEquals(1, respuesta.size());
-//        Assertions.assertTrue(respuesta.get(0).getActivo());
-////        Assertions.fail("fallo exitosamente");
-//
-//    }
-//    @Test
-//    void countRangeProductoDetalleActivos() {
-//        System.out.println("ProductoDetalle testIT countRangeProductoDetalleActivos");
-//        EntityManager em = emf.createEntityManager();
-//        Integer idTipoProductoDetalle=1001;
-//        cut.em = em;
-//        Long respuesta = cut.countProductoDetalleActivosByIdTipoProductoDetalle(idTipoProductoDetalle);
-//        //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
-//        Assertions.assertNotNull(respuesta);
-//        Assertions.assertEquals(1, respuesta);
-////        Assertions.fail("fallo exitosamente");
-//
-//    }
-//
-//    @Test
-//    void findByIdProductoDetalleAndIdProductoDetalle() {
-//    }
-//
-//    @Test
-//    void countByIdProductoDetalleAndIdProductoDetalle() {
-//    }
-//
-//    @Test
-//    void deleteByPk() {
-//    }
-//
-//    @Test
-//    void findAll() {
-//    }
 }

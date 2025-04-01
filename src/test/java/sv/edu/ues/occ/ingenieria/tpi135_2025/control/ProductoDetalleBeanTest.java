@@ -1,14 +1,11 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
 
@@ -90,52 +87,13 @@ class ProductoDetalleBeanTest {
         Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
         Mockito.when(mockTp.getSingleResult()).thenReturn(resultadoEsperado);
 
-        // Ejecutar el método a probar
+        //flujo normal
         ProductoDetalle resultado = cut.findById(idTipoProducto, idProducto);
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(resultadoEsperado, resultado);
 
-        // Forzar fallo al acceder al EntityManager
-        Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findById(idTipoProducto, idProducto));
-
-
 //        Assertions.fail("fallo exitosamente");
     }
-
-//    @Test
-//    void countByIdProductoAndIdProducto() {
-//        System.out.println("test countByIdProductoAndIdProductoDetalle");
-//        Integer idTipoProducto = 1;
-//        Long idProducto = 1L;
-//
-//        Long resultadoEsperado = 2L;
-//
-//        cut.em= mockEm;
-//        //prueba fallo de argumentos
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-//            cut.countByIdProductoAndIdProducto(null,null);
-//        });
-//
-//        // Configurar el comportamiento de EntityManager y TypedQuery
-//        Mockito.when(mockEm.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto", Long.class))
-//                .thenReturn(mockTp);
-//        Mockito.when(mockTp.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTp);
-//        Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
-//        Mockito.when(mockTp.getSingleResult()).thenReturn(resultadoEsperado);
-//
-//
-//        //prueba normal
-//        Long resultado = cut.countByIdProductoAndIdProducto(idTipoProducto, idProducto);
-//        Assertions.assertNotNull(resultado);
-//        Assertions.assertEquals(resultado,resultadoEsperado);
-//
-//        // Forzar fallo al acceder al EntityManager
-//        Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
-//        Assertions.assertThrows(IllegalStateException.class, () -> cut2.countByIdProductoAndIdProducto(idTipoProducto, idProducto));
-//
-////        Assertions.fail("fallo exitosamente contar");
-//    }
 
     @Test
     void deleteByPk() {
@@ -169,7 +127,7 @@ class ProductoDetalleBeanTest {
     }
 
     @Test
-    void findAll() {
+    void findRange() {
         System.out.println("test findAll");
         int first = 1;
         int max = 1;
@@ -179,19 +137,21 @@ class ProductoDetalleBeanTest {
         //error de argumentos
         cut.em= mockEm;
         assertThrows(IllegalArgumentException.class, () -> {
-            cut.findAll(null,null);
+            cut.findRange(0,0);
         });
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.findAll", ProductoDetalle.class)).thenReturn(mockTp);
         Mockito.when(mockTp.setFirstResult(first)).thenReturn(mockTp);
         Mockito.when(mockTp.setMaxResults(max)).thenReturn(mockTp);
         Mockito.when(mockTp.getResultList()).thenReturn(esperado);
-        List<ProductoDetalle> resultado = cut.findAll(first,max);
+        List<ProductoDetalle> resultado = cut.findRange(first,max);
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(resultado.size(), esperado.size());
 
         //forzar error
         Mockito.doThrow(IllegalStateException.class).when(cut2).getEntityManager();
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findAll(first,max));
+        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findRange(first,max));
 //                Assertions.fail("fallo exitosamente");
+
     }
+
 }

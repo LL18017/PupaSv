@@ -73,7 +73,7 @@ import java.util.logging.Logger;
     ) {
         try {
 
-<span class="nc" id="L76">            List&lt;ProductoDetalle&gt; encontrados = pdBean.findAll(first,max);</span>
+<span class="nc" id="L76">            List&lt;ProductoDetalle&gt; encontrados = pdBean.findRange(first,max);</span>
 <span class="nc" id="L77">            long total = pdBean.count();</span>
 <span class="nc" id="L78">            Response.ResponseBuilder builder = Response.ok(encontrados).</span>
 <span class="nc" id="L79">                    header(Headers.TOTAL_RECORD, total).</span>

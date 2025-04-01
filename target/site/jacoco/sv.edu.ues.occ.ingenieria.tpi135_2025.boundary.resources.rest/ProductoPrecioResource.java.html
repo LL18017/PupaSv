@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoPrecioResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">ProductoPrecioResource.java</span></div><h1>ProductoPrecioResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.transaction.UserTransaction;
 import jakarta.ws.rs.*;
@@ -17,162 +16,176 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path(&quot;tipoProducto/producto/{idTipoProducto}/precio&quot;)
-<span class="nc" id="L21">public class ProductoPrecioResource implements Serializable {</span>
+@Path(&quot;productoPrecio&quot;)
+<span class="nc" id="L20">public class ProductoPrecioResource extends Resource implements Serializable {</span>
 
     @Inject
     ProductoPrecioBean ppBean;
-
+    @Inject
+    ProductoBean pBean;
 
 
     /**
      * metodo que devueleve una rango de datos de tipo Producto
+     *
      * @param first la pocicion del primer dat
-     * @param max la cantidad de datos que se desea obtener
-      * @return una lista de tipo T si no definel los parametros entonces
+     * @param max   la cantidad de datos que se desea obtener
+     * @return una lista de tipo T si no definel los parametros entonces
      * devuelve los primeros 20 registros
      */
 
-    @Path(&quot;{idProducto}/precio&quot;)
+    @Path(&quot;&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(
-            @QueryParam(&quot;first&quot;)
-            @DefaultValue(&quot;0&quot;) int first,
-            @QueryParam(&quot;max&quot;)
-            @DefaultValue(&quot;20&quot;) int max,
-            @PathParam(&quot;idProducto&quot;) String idProducto
-    ) {
+    public Response findRange(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) int first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) int max, @QueryParam(&quot;idProducto&quot;) @DefaultValue(&quot;0&quot;) Long idProducto) {
         try {
-<span class="nc bnc" id="L47" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50 ) {</span>
-<span class="nc" id="L48">                List&lt;ProductoPrecio&gt; encontrados = ppBean.findByIdProducto(Integer.parseInt(idProducto),first, max);</span>
-<span class="nc" id="L49">                long total = ppBean.countByIdProducto(Integer.parseInt(idProducto));</span>
-<span class="nc" id="L50">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L51">                        header(Headers.TOTAL_RECORD, total).</span>
-<span class="nc" id="L52">                        type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L53">                return builder.build();</span>
-            } else {
-<span class="nc" id="L55">                return Response.status(400).header(&quot;wrong parameter, first:&quot;, first + &quot;,max: &quot; + max).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+
+<span class="nc" id="L43">            Response verificarMaxAndFist = veririficarMaxAndFirst(first, max);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">            if (verificarMaxAndFist.getStatus() != 200) return verificarMaxAndFist;</span>
+<span class="nc bnc" id="L45" title="All 4 branches missed.">            if (idProducto != null &amp;&amp; idProducto == 0) {</span>
+<span class="nc" id="L46">                List&lt;ProductoPrecio&gt; encontrados = ppBean.findRange(first, max);</span>
+<span class="nc" id="L47">                long total = ppBean.countByIdProducto((idProducto));</span>
+<span class="nc" id="L48">                return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
             }
-<span class="nc" id="L57">        } catch (Exception e) {</span>
-<span class="nc" id="L58">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L59">            return Response.status(500).entity(e.getMessage()).build();</span>
+
+<span class="nc" id="L51">            Response verificarIdProduto = verificarId(idProducto, &quot;idProdcuto&quot;);</span>
+<span class="nc" id="L52">            Response existeP = verificarProductoExiste(idProducto);</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            if (verificarIdProduto.getStatus() != 200) return verificarIdProduto;</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if (existeP.getStatus() != 200) return existeP;</span>
+
+<span class="nc" id="L57">            List&lt;ProductoPrecio&gt; encontrados = ppBean.findByIdProducto(idProducto, first, max);</span>
+<span class="nc" id="L58">            long total = ppBean.countByIdProducto((idProducto));</span>
+<span class="nc" id="L59">            Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L60">                    header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L61">                    type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L62">            return builder.build();</span>
+
+<span class="nc" id="L64">        } catch (Exception e) {</span>
+<span class="nc" id="L65">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L66">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
     }
 
     /**
      * Metodo para encontrar un registro especifico de producto dado su id
-     * @param id del registro a buscar
+     *
+     * @param idProductoPrecio del registro a buscar
      * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
      * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
      * encuentra ningun registro con el id especificado 400 si se envia mal una
      * parametro
      */
 
-    @Path(&quot;{id}&quot;)
+    @Path(&quot;{idProductoPrecio}&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findById(@PathParam(&quot;id&quot;) Long id) {
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (id != null) {</span>
-            try {
-<span class="nc" id="L78">                ProductoPrecio encontrado = ppBean.findById(id);</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (encontrado != null) {</span>
-<span class="nc" id="L80">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
-<span class="nc" id="L81">                    return builder.build();</span>
-                }
-<span class="nc" id="L83">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
-<span class="nc" id="L84">            } catch (Exception e) {</span>
-<span class="nc" id="L85">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L86">                return Response.status(500).entity(e.getMessage()).build();</span>
+    public Response findById(@PathParam(&quot;idProductoPrecio&quot;) Long idProductoPrecio) {
+        try {
+<span class="nc" id="L85">            Response verificarIdPrecio = verificarId(idProductoPrecio, &quot;idPrecio&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (verificarIdPrecio.getStatus() != 200) return verificarIdPrecio;</span>
+
+<span class="nc" id="L88">            ProductoPrecio encontrado = ppBean.findById(idProductoPrecio);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (encontrado != null) {</span>
+<span class="nc" id="L90">                Response.ResponseBuilder builder = Response.ok(encontrado).type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L91">                return builder.build();</span>
             }
+<span class="nc" id="L93">            return Response.status(404).header(Headers.NOT_FOUND_ID, idProductoPrecio).build();</span>
+<span class="nc" id="L94">        } catch (Exception e) {</span>
+<span class="nc" id="L95">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L96">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L89">        return Response.status(400).header(&quot;wrong-parameter : id&quot;, id).build();</span>
     }
 
     /**
      * Registra una entidad ProductoPrecio
+     *
      * @param uriInfo informacion de URl donde se encuantra la peticion
      * @return un estatus 201 si la entidad es creada junto con la url donde se
      * puede encontra dicha entidad 422 en dado caso falle la creacion de la
      * entidad y 500 si por fall el servidor
-     * */
+     */
 
-    @Path(&quot;&quot;)
+    @Path(&quot;{idProducto}&quot;)
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(ProductoPrecio registro,
-                           @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L106" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getIdProducto() == null) {</span>
-            try {
-<span class="nc" id="L108">                ppBean.create(registro);</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">                if (registro.getIdProductoPrecio() != null) {</span>
-<span class="nc" id="L110">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L111">                    uriBuilder.path(String.valueOf(registro.getIdProductoPrecio()));</span>
-<span class="nc" id="L112">                    return Response.created(uriBuilder.build()).build();</span>
-                }
-<span class="nc" id="L114">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
-<span class="nc" id="L115">            } catch (Exception e) {</span>
-<span class="nc" id="L116">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L117">                return Response.status(500).entity(e.getMessage()).build();</span>
-            }
+    public Response create(ProductoPrecio registro, @Context UriInfo uriInfo, @PathParam(&quot;idProducto&quot;) Long idProducto) {
+
+        try {
+<span class="nc" id="L116">            Response verificarIdProducto = verificarId(idProducto, &quot;idProducto&quot;);</span>
+<span class="nc" id="L117">            Response existeP = verificarProductoExiste(idProducto);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (verificarIdProducto.getStatus() != 200) return verificarIdProducto;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            if (existeP.getStatus() != 200) return existeP;</span>
+
+<span class="nc" id="L121">            registro.setIdProducto(new Producto(idProducto));</span>
+<span class="nc" id="L122">            ppBean.create(registro);</span>
+<span class="nc" id="L123">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L124">            uriBuilder.path(String.valueOf(registro.getIdProductoPrecio()));</span>
+<span class="nc" id="L125">            return Response.created(uriBuilder.build()).build();</span>
+<span class="nc" id="L126">        } catch (Exception e) {</span>
+<span class="nc" id="L127">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L128">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L120">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
 
     /**
      * Borra un registro de tipo ProductoPrecio Especifico
-     * @param id id del TipoProducto a eliminar
-     * @param uriInfo info de url de donde se esta realizado la peticion
+     *
+     * @param idProductoPrecio id del TipoProducto a eliminar
+     * @param uriInfo          info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
      */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(&quot;{id}&quot;)
-    public Response delete(@PathParam(&quot;id&quot;) Integer id, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (id != null) {</span>
-            try {
-<span class="nc" id="L137">                ppBean.delete(id);</span>
-<span class="nc" id="L138">                return Response.status(200).build();</span>
-<span class="nc" id="L139">            } catch (Exception e) {</span>
-<span class="nc" id="L140">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L141">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
-            }
+    @Path(&quot;{idProdcutoPrecio}&quot;)
+    public Response delete(@PathParam(&quot;idProdcutoPrecio&quot;) Long idProductoPrecio, @Context UriInfo uriInfo) {
+        try {
+<span class="nc" id="L146">            Response verificarIdProdutoPrecio = verificarId(idProductoPrecio, &quot;idProductoPrecio&quot;);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (verificarIdProdutoPrecio.getStatus() != 200) return verificarIdProdutoPrecio;</span>
+
+<span class="nc" id="L149">            Response existePp = verificarProductoPrecioExiste(idProductoPrecio);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (existePp.getStatus() != 200) return existePp;</span>
+
+<span class="nc" id="L152">            ppBean.delete(idProductoPrecio);</span>
+<span class="nc" id="L153">            return Response.status(200).build();</span>
+<span class="nc" id="L154">        } catch (Exception e) {</span>
+<span class="nc" id="L155">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L156">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
         }
-<span class="nc" id="L144">        return Response.status(500).header(Headers.WRONG_PARAMETER, id).build();</span>
     }
 
     /**
      * Actualiza una entidad de base de datos
+     *
      * @param registro entidda a ser actualizada
-     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @param uriInfo  info de url de donde se esta realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
 
-    @Path(&quot;{id}&quot;)
+    @Path(&quot;{idProductoPrecio}&quot;)
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(ProductoPrecio registro, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L160" title="All 4 branches missed.">        if (registro != null &amp;&amp; registro.getIdProductoPrecio() != null) {</span>
-            try {
-<span class="nc" id="L162">                ppBean.update(registro);</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">                if (registro.getIdProductoPrecio() != null) {</span>
+    public Response update(ProductoPrecio registro, @Context UriInfo uriInfo, @PathParam(&quot;idProductoPrecio&quot;) Long idProductoPrecio) {
+        try {
+<span class="nc" id="L175">            Response verificarIdProdutoPrecio = verificarId(idProductoPrecio, &quot;idProductoPrecio&quot;);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (verificarIdProdutoPrecio.getStatus() != 200) return verificarIdProdutoPrecio;</span>
 
-<span class="nc" id="L165">                    return Response.status(200).build();</span>
-                }
-<span class="nc" id="L167">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
-<span class="nc" id="L168">            } catch (Exception e) {</span>
-<span class="nc" id="L169">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L170">                return Response.status(500).entity(e.getMessage()).build();</span>
-            }
+<span class="nc" id="L178">            Response existePp = verificarProductoPrecioExiste(idProductoPrecio);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            if (existePp.getStatus() != 200) return existePp;</span>
+<span class="nc" id="L180">            registro.setIdProductoPrecio(idProductoPrecio);</span>
+<span class="nc" id="L181">            ppBean.update(registro);</span>
+<span class="nc" id="L182">            return Response.status(200).build();</span>
+
+<span class="nc" id="L184">        } catch (Exception e) {</span>
+<span class="nc" id="L185">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L186">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L173">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
-
 
 
 }

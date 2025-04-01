@@ -450,13 +450,17 @@ INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, NULL);
 
 INSERT INTO public.producto VALUES (1001, 'coca', true, NULL);
-INSERT INTO public.producto VALUES (1002, 'pepsi', false, NULL);
-INSERT INTO public.producto VALUES (1003, 'pupusas', false, NULL);
+INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL);
+INSERT INTO public.producto VALUES (1003, 'pupusas', true, NULL);
 INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
 
 INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
 INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
+
+INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',0.80);
+INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31',1.00);
 
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);

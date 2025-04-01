@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">Resource.java</span></div><h1>Resource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+<span class="fc" id="L18">public class Resource {</span>
+
+    @Inject
+    ProductoBean pBean;
+    @Inject
+    TipoProductoBean tpBean;
+    @Inject
+    ProductoPrecioBean ppBean;
+    /**
+     * Verifica que el ID del producto sea válido.
+     *
+     * @param id ID a ser analizado
+     * @return un status 200 si se envió correctamente, 400 si el ID es inválido, y 500 si ocurre un error en el servidor.
+     */
+    public Response verificarId(Number id,String tipoId) {
+        try {
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">            if (id == null || id.longValue() &lt;= 0) {</span>
+<span class="fc" id="L35">                return Response.status(400)</span>
+<span class="fc" id="L36">                        .header(Headers.WRONG_PARAMETER, tipoId+&quot; inválido: &quot; + id)</span>
+<span class="fc" id="L37">                        .build();</span>
+            }
+<span class="nc" id="L39">        } catch (Exception e) {</span>
+<span class="nc" id="L40">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="fc" id="L41">        }</span>
+<span class="fc" id="L42">        return Response.status(200).build();</span>
+    }
+
+
+    /**
+     * Verifica que los paramentros first y max sean correctos
+     *
+     * @param first inicio
+     * @param max   cantidda maxima
+     * @return un status 200 si se envvio correctamente en caso contrario retorna un 400
+     * problema y 500 si falla el servidor
+     */
+    public Response veririficarMaxAndFirst(Integer first, Integer max) {
+        try {
+<span class="pc bpc" id="L56" title="2 of 6 branches missed.">            if (first &lt; 0 || max &lt;= 0 || max &gt; 50) {</span>
+<span class="fc" id="L57">                return Response.status(400)</span>
+<span class="fc" id="L58">                        .header(Headers.WRONG_PARAMETER, &quot;first: &quot; + first + &quot;, max: &quot; + max)</span>
+<span class="fc" id="L59">                        .build();</span>
+            }
+<span class="fc" id="L61">        } catch (Exception e) {</span>
+<span class="fc" id="L62">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="fc" id="L63">        }</span>
+<span class="fc" id="L64">        return Response.status(200).build();</span>
+    }
+    /**
+     * Verifica la existencia de un tipoProducto
+     *
+     * @param idTipoProducto id a ser veridicado
+     * @return un status 200 si se envvio correctamente en caso contrario retorna un 404
+     * problema y 500 si falla el servidor
+     */
+    public Response verificarTipoProductoExiste(Integer idTipoProducto) {
+        try {
+<span class="nc" id="L75">            TipoProducto encontrado = tpBean.findById(idTipoProducto);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L77">                return Response.status(404).header(Headers.NOT_FOUND_ID, idTipoProducto).build();</span>
+            }
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">        return Response.status(200).build();</span>
+    }
+    /**
+     * Verifica la existencia de un tipoProducto
+     *
+     * @param idProducto id a ser veridicado
+     * @return un status 200 si se envvio correctamente en caso contrario retorna un 404
+     * problema y 500 si falla el servidor
+     */
+    public Response verificarProductoExiste(Long idProducto) {
+        try {
+<span class="nc" id="L93">            Producto encontrado = pBean.findById(idProducto);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L95">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProducto).build();</span>
+            }
+<span class="nc" id="L97">        } catch (Exception e) {</span>
+<span class="nc" id="L98">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L99">        }</span>
+<span class="nc" id="L100">        return Response.status(200).build();</span>
+    }
+    /**
+     * Verifica la existencia de un productoPrecio
+     *
+     * @param idProductoPrecio id a ser veridicado
+     * @return un status 200 si se envvio correctamente en caso contrario retorna un 404
+     * problema y 500 si falla el servidor
+     */
+    public Response verificarProductoPrecioExiste(Long idProductoPrecio) {
+        try {
+<span class="nc" id="L111">            ProductoPrecio encontrado = ppBean.findById(idProductoPrecio);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L113">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProductoPrecio).build();</span>
+            }
+<span class="nc" id="L115">        } catch (Exception e) {</span>
+<span class="nc" id="L116">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L117">        }</span>
+<span class="nc" id="L118">        return Response.status(200).build();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,6 +1,5 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
@@ -8,26 +7,30 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path("tipoProducto/{idTipoProducto}/producto/{idProducto}/detalle")
-public class ProductoDetalleResource implements Serializable {
+@Path("productoDetalle")
+public class ProductoDetalleResource extends Resource implements Serializable {
     @Inject
     ProductoDetalleBean pdBean;
+    @Inject
+    TipoProductoBean tpBean;
+    @Inject
+    ProductoBean pBean;
 
 
     /**
-     * metodo que devueleve una registro de tipo ProductoDetalle dados sus ids
+     * metodo que devueleve una registro de tipo ProductoDetalle
      *
-     * @param idTipoProducto id de tipo TipoProducto Relacionado al detalle
-     * @param idProducto     id de tipo Producto Relacionado al detalle
      * @return una lista de tipo T si no definel los parametros entonces
      * devuelve los primeros 20 registros
      */
@@ -35,26 +38,37 @@ public class ProductoDetalleResource implements Serializable {
     @Path("")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findByIDs(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto) {
-        if (idTipoProducto != null && idProducto != null) {
-            try {
-                ProductoDetalle encontrados = pdBean.findById(idTipoProducto, idProducto);
-                if (encontrados != null) {
-                    Response.ResponseBuilder builder = Response.ok(encontrados).
-                            type(MediaType.APPLICATION_JSON);
-                    return builder.build();
-                }
-            }catch (NoResultException ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                return Response.status(404).entity(ex.getMessage()).build();
-            }catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-                return Response.status(500).entity(e.getMessage()).build();
-            }
+    public Response find(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max) {
+        try {
+            List<ProductoDetalle> resultado = pdBean.findRange(first, max);
+            Long total = pdBean.count();
+            return Response.ok(resultado).header(Headers.TOTAL_RECORD, total).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
+            return Response.status(500).entity(e.getMessage()).build();
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER, "idTipoProducto:" + idProducto + ",idProducto: " + idProducto).build();
     }
 
+    @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findByIDs(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto) {
+        try {
+            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return comprobacion;
+            Response existe = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return existe;
+
+            ProductoDetalle registro = pdBean.findById(idTipoProducto, idProducto);
+            if (registro == null)
+                return Response.status(404).header(Headers.NOT_FOUND_ID, "registro no encontrado ").build();
+            return Response.ok((registro)).build();
+
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
+            return Response.status(500).entity(e.getMessage()).build();
+        }
+    }
 
     /**
      * registra una entidad ProductoDetalle ademas de establecer la relacion producto detalle
@@ -65,27 +79,31 @@ public class ProductoDetalleResource implements Serializable {
      * puede encontra dicha entidad 422 en dado caso falle la creacion de la
      * entidad y 500 si por fall el servidor
      */
-    @Path("")
+    @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-
     public Response create(ProductoDetalle registro, @PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo) {
-        if (idProducto != null && idTipoProducto != null) {
+        try {
+            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return comprobacion;
+            Response existeTp = verificarTipoProductoExiste(idTipoProducto);
+            Response existeP = verificarProductoExiste(idProducto);
+
+            if (existeP.getStatus() != 200) return existeP;
+            if (existeTp.getStatus() != 200) return existeTp;
+
             registro.setProductoDetallePK(new ProductoDetallePK(idTipoProducto, idProducto));
-            try {
-                pdBean.create(registro);
-                if (registro.getProductoDetallePK() != null) {
-                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                    return Response.created(uriBuilder.build()).build();
-                }
-                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, "Record couldnt be created").build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
+            pdBean.create(registro);
+            if (registro.getProductoDetallePK() != null) {
+                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+                return Response.created(uriBuilder.build()).build();
             }
+            return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, "Record couldnt be created").build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            return Response.status(500).entity(e.getMessage()).build();
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
     }
 
     /**
@@ -100,19 +118,21 @@ public class ProductoDetalleResource implements Serializable {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path("")
+    @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
     public Response delete(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo) {
-        if (idTipoProducto != null && idProducto != null) {
+        try {
+            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return comprobacion;
+            Response existe = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return existe;
+
             ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
-            try {
-                pdBean.deleteByPk(pk);
-                return Response.status(200).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
-            }
+            pdBean.deleteByPk(pk);
+            return Response.status(200).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            return Response.status(5000).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, idProducto).build();
     }
 
     /**
@@ -123,23 +143,71 @@ public class ProductoDetalleResource implements Serializable {
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
-    @Path("")
+    @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(ProductoDetalle registro, @PathParam("idProducto") Long idProducto, @PathParam("idTipoProducto") Integer idTipoProducto, @Context UriInfo uriInfo) {
-        if (registro != null && idTipoProducto != null && idProducto != null) {
+        try {
+            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return comprobacion;
+            Response existe = verificarPathParams(idTipoProducto, idProducto);
+            if (comprobacion.getStatus() != 200) return existe;
+
             ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
-            try {
-                registro.setProductoDetallePK(pk);
-                pdBean.update(registro);
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                return Response.ok(uriBuilder.build()).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(400).entity(e.getMessage()).build();
-            }
+            registro.setProductoDetallePK(pk);
+            pdBean.update(registro);
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+            return Response.ok(uriBuilder.build()).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            return Response.status(500).entity(e.getMessage()).build();
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
     }
+
+
+    /**
+     * verifica la existencia y el correcto asignacion de valores d
+     *
+     * @param idProducto idProducto del productoDetalle
+     * @param idTipoProducto idProducto del productoDetalle
+     * @return un status 200 si tod esta bien
+     */
+    public Response verificarPathParams(Integer idTipoProducto, Long idProducto) {
+        try {
+            Response verificarIdTipoProducto = verificarId(idTipoProducto, "idTipoProdcuto");
+            Response verificarIdProducto = verificarId(idProducto, "idProdcuto");
+
+            if (verificarIdTipoProducto.getStatus() != 200) return verificarIdTipoProducto;
+            if (verificarIdProducto.getStatus() != 200) return verificarIdProducto;
+
+            Response existeTp = verificarTipoProductoExiste(idTipoProducto);
+            Response existep = verificarProductoExiste(idProducto);
+
+            if (existeTp.getStatus() != 200) return existeTp;
+            if (existep.getStatus() != 200) return existep;
+
+            return Response.status(200).build();
+        } catch (Exception e) {
+            return Response.status(500).build();
+        }
+    }
+
+    /**
+     * verifica la existencia de productoDetalle
+     * @param idProducto idProducto del productoDetalle
+     * @param idTipoProducto idProducto del productoDetalle
+     * @return un status 200 si tod esta bien
+     */
+    public Response verificarExistencia(Integer idTipoProducto, Long idProducto) {
+        try {
+            ProductoDetalle existePd = pdBean.findById(idTipoProducto, idProducto);
+            if (existePd == null)
+                return Response.status(404).header(Headers.NOT_FOUND_ID, "NO EXISTE DETALLE CON ESA CLAVE").build();
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(500).build();
+        }
+    }
+
 }

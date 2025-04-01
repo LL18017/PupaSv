@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
 
@@ -45,35 +44,21 @@ public class ProductoDetalleBean extends AbstractDataAccess<ProductoDetalle> imp
 
 
     public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
-        if (idTipoProducto != null && idProducto != null) {
-            try {
-                return em.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto", ProductoDetalle.class)
-                        .setParameter("idTipoProducto", idTipoProducto)
-                        .setParameter("idProducto", idProducto)
-                        .getSingleResult();
-            }  catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                throw new IllegalStateException("error al aceder al repositorio", e);
-            }
+        if (idTipoProducto == null || idTipoProducto < 0)
+            throw new IllegalArgumentException("idTipoProducto no pueden ser nulos o menor a cero");
+        if (idProducto == null || idProducto < 0)
+            throw new IllegalArgumentException("idTipoProducto no pueden ser nulos o menor a cero");
+
+        try {
+
+            return em.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto", ProductoDetalle.class)
+                    .setParameter("idTipoProducto", idTipoProducto)
+                    .setParameter("idProducto", idProducto)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            Logger.getLogger(ProductoDetalleBean.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        throw new IllegalArgumentException("idTipoProducto , idProducto,first y max no pueden ser nulos");
-    }
-
-    public Long countByIdProductoAndIdProducto(Integer idTipoProducto, Long idProducto) {
-        if (idTipoProducto != null && idProducto != null) {
-            try {
-                return em.createNamedQuery("ProductoDetalle.countByIdTipoProductoAndIdProducto", Long.class)
-                        .setParameter("idTipoProducto", idTipoProducto)
-                        .setParameter("idProducto", idProducto)
-                        .getSingleResult();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                throw new IllegalStateException("error al aceder al repositorio", e);
-
-            }
-        }
-
-        throw new IllegalArgumentException("idTipoProducto , idProducto no pueden ser nulos");
     }
 
 
@@ -91,8 +76,9 @@ public class ProductoDetalleBean extends AbstractDataAccess<ProductoDetalle> imp
     }
 
 
-    public List<ProductoDetalle> findAll(Integer first, Integer max) {
-        if (first != null && max != null) {
+    @Override
+    public List<ProductoDetalle> findRange(int first, int max) {
+        if (first >=0 && max >0) {
             try {
                 return em.createNamedQuery("ProductoDetalle.findAll", ProductoDetalle.class)
                         .setFirstResult(first)

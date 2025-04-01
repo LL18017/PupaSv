@@ -44,11 +44,12 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
 
-    public List<Producto> findRangeByIdTipoProductos(Integer idTipoProducto, Integer first, Integer max) {
+    public List<Producto> findRangeByIdTipoProductosAndActivo(Integer idTipoProducto, boolean activo, Integer first, Integer max) {
         if (first != null && max != null && idTipoProducto != null) {
             try {
-                return em.createNamedQuery("Producto.findByIdTipoProducto", Producto.class)
+                return em.createNamedQuery("Producto.findActivosAndIdTipoProducto", Producto.class)
                         .setParameter("idTipoProducto", idTipoProducto)
+                        .setParameter("activo", activo)
                         .setFirstResult(first)
                         .setMaxResults(max)
                         .getResultList();
@@ -60,12 +61,13 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         throw new IllegalArgumentException("first , idTipoProducto y max no pueden ser null");
     }
 
-    public Long countByIdTipoProductos(Integer idTipoProducto) {
+    public Long countByIdTipoProductosAndActivo(Integer idTipoProducto, boolean activo) {
 
         if (idTipoProducto != null) {
             try {
-                return em.createNamedQuery("Producto.countByidTipoProducto", Long.class)
+                return em.createNamedQuery("Producto.countActivosAndIdTipoProducto", Long.class)
                         .setParameter("idTipoProducto", idTipoProducto)
+                        .setParameter("activo", activo)
                         .getSingleResult();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -94,29 +96,28 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         }
     }
 
-    public List<Producto> findRangeProductoActivosByIdTipoProducto(Integer idTipoProducto ,Integer first, Integer max) {
-        if (first == null || max == null || first <0 ||max < 0 || idTipoProducto==null) {
+    public List<Producto> findRangeProductoActivos(Integer first, Integer max ,Boolean activo) {
+        if (first == null || max == null || first < 0 || max < 0) {
             throw new IllegalArgumentException("first , max no pueden ser nulos o menores que cero");
         }
         try {
-         return em.createNamedQuery("Producto.findActivosAndIdTipoProducto",Producto.class)
-                 .setParameter("idTipoProducto", idTipoProducto)
+            return em.createNamedQuery("Producto.findByAnyActivo", Producto.class)
+                    .setParameter("activo", activo)
                     .setFirstResult(first)
-                    .setMaxResults(max).
-                    getResultList();
+                    .setMaxResults(max)
+                    .getResultList();
         } catch (IllegalStateException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("error al aceder al repositorio", e);
         }
     }
-    public Long countProductoActivosByIdTipoProducto(Integer idTipoProducto) {
-        if (idTipoProducto==null) {
-            throw new IllegalArgumentException("idTipoProducto ,  ser nulos o menores que cero");
-        }
+
+    public Long countProductoActivos(Boolean activo) {
+
         try {
-         return em.createNamedQuery("Producto.countActivosAndIdTipoProducto",Long.class)
-                 .setParameter("idTipoProducto", idTipoProducto).
-                    getSingleResult();
+            return em.createNamedQuery("Producto.countByAnyActivo", Long.class)
+                    .setParameter("activo", activo)
+                    .getSingleResult();
         } catch (IllegalStateException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("error al aceder al repositorio", e);

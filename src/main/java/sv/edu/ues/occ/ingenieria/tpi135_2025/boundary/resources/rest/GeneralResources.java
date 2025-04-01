@@ -73,7 +73,7 @@ public class GeneralResources implements Serializable {
     ) {
         try {
 
-            List<ProductoDetalle> encontrados = pdBean.findAll(first,max);
+            List<ProductoDetalle> encontrados = pdBean.findRange(first,max);
             long total = pdBean.count();
             Response.ResponseBuilder builder = Response.ok(encontrados).
                     header(Headers.TOTAL_RECORD, total).

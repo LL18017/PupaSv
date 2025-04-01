@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoDetalleResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PupaSv-1.0-SNAPSHOT</a> &gt; <a href="index.source.html" class="el_package">sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest</a> &gt; <span class="el_source">ProductoDetalleResource.java</span></div><h1>ProductoDetalleResource.java</h1><pre class="source lang-java linenums">package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
@@ -8,26 +7,30 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path(&quot;tipoProducto/{idTipoProducto}/producto/{idProducto}/detalle&quot;)
-<span class="nc" id="L21">public class ProductoDetalleResource implements Serializable {</span>
+@Path(&quot;productoDetalle&quot;)
+<span class="nc" id="L22">public class ProductoDetalleResource extends Resource implements Serializable {</span>
     @Inject
     ProductoDetalleBean pdBean;
+    @Inject
+    TipoProductoBean tpBean;
+    @Inject
+    ProductoBean pBean;
 
 
     /**
-     * metodo que devueleve una registro de tipo ProductoDetalle dados sus ids
+     * metodo que devueleve una registro de tipo ProductoDetalle
      *
-     * @param idTipoProducto id de tipo TipoProducto Relacionado al detalle
-     * @param idProducto     id de tipo Producto Relacionado al detalle
      * @return una lista de tipo T si no definel los parametros entonces
      * devuelve los primeros 20 registros
      */
@@ -35,26 +38,37 @@ import java.util.logging.Logger;
     @Path(&quot;&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findByIDs(@PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto, @PathParam(&quot;idProducto&quot;) Long idProducto) {
-<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
-            try {
-<span class="nc" id="L41">                ProductoDetalle encontrados = pdBean.findById(idTipoProducto, idProducto);</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">                if (encontrados != null) {</span>
-<span class="nc" id="L43">                    Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L44">                            type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L45">                    return builder.build();</span>
-                }
-<span class="nc" id="L47">            }catch (NoResultException ex) {</span>
-<span class="nc" id="L48">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());</span>
-<span class="nc" id="L49">                return Response.status(404).entity(ex.getMessage()).build();</span>
-<span class="nc" id="L50">            }catch (Exception e) {</span>
-<span class="nc" id="L51">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L52">                return Response.status(500).entity(e.getMessage()).build();</span>
-<span class="nc" id="L53">            }</span>
+    public Response find(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) Integer first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) Integer max) {
+        try {
+<span class="nc" id="L43">            List&lt;ProductoDetalle&gt; resultado = pdBean.findRange(first, max);</span>
+<span class="nc" id="L44">            Long total = pdBean.count();</span>
+<span class="nc" id="L45">            return Response.ok(resultado).header(Headers.TOTAL_RECORD, total).build();</span>
+<span class="nc" id="L46">        } catch (Exception e) {</span>
+<span class="nc" id="L47">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L48">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L55">        return Response.status(400).header(Headers.WRONG_PARAMETER, &quot;idTipoProducto:&quot; + idProducto + &quot;,idProducto: &quot; + idProducto).build();</span>
     }
 
+    @Path(&quot;tipoProducto/{idTipoProducto}/producto/{idProducto}&quot;)
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findByIDs(@PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto, @PathParam(&quot;idProducto&quot;) Long idProducto) {
+        try {
+<span class="nc" id="L57">            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return comprobacion;</span>
+<span class="nc" id="L59">            Response existe = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return existe;</span>
+
+<span class="nc" id="L62">            ProductoDetalle registro = pdBean.findById(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            if (registro == null)</span>
+<span class="nc" id="L64">                return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;registro no encontrado &quot;).build();</span>
+<span class="nc" id="L65">            return Response.ok((registro)).build();</span>
+
+<span class="nc" id="L67">        } catch (Exception e) {</span>
+<span class="nc" id="L68">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L69">            return Response.status(500).entity(e.getMessage()).build();</span>
+        }
+    }
 
     /**
      * registra una entidad ProductoDetalle ademas de establecer la relacion producto detalle
@@ -65,27 +79,31 @@ import java.util.logging.Logger;
      * puede encontra dicha entidad 422 en dado caso falle la creacion de la
      * entidad y 500 si por fall el servidor
      */
-    @Path(&quot;&quot;)
+    @Path(&quot;tipoProducto/{idTipoProducto}/producto/{idProducto}&quot;)
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-
     public Response create(ProductoDetalle registro, @PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto, @PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L74" title="All 4 branches missed.">        if (idProducto != null &amp;&amp; idTipoProducto != null) {</span>
-<span class="nc" id="L75">            registro.setProductoDetallePK(new ProductoDetallePK(idTipoProducto, idProducto));</span>
-            try {
-<span class="nc" id="L77">                pdBean.create(registro);</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (registro.getProductoDetallePK() != null) {</span>
-<span class="nc" id="L79">                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L80">                    return Response.created(uriBuilder.build()).build();</span>
-                }
-<span class="nc" id="L82">                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
-<span class="nc" id="L83">            } catch (Exception e) {</span>
-<span class="nc" id="L84">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L85">                return Response.status(500).entity(e.getMessage()).build();</span>
+        try {
+<span class="nc" id="L88">            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return comprobacion;</span>
+<span class="nc" id="L90">            Response existeTp = verificarTipoProductoExiste(idTipoProducto);</span>
+<span class="nc" id="L91">            Response existeP = verificarProductoExiste(idProducto);</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (existeP.getStatus() != 200) return existeP;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (existeTp.getStatus() != 200) return existeTp;</span>
+
+<span class="nc" id="L96">            registro.setProductoDetallePK(new ProductoDetallePK(idTipoProducto, idProducto));</span>
+<span class="nc" id="L97">            pdBean.create(registro);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (registro.getProductoDetallePK() != null) {</span>
+<span class="nc" id="L99">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L100">                return Response.created(uriBuilder.build()).build();</span>
             }
+<span class="nc" id="L102">            return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, &quot;Record couldnt be created&quot;).build();</span>
+<span class="nc" id="L103">        } catch (Exception e) {</span>
+<span class="nc" id="L104">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L105">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L88">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
 
     /**
@@ -100,19 +118,21 @@ import java.util.logging.Logger;
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(&quot;&quot;)
+    @Path(&quot;tipoProducto/{idTipoProducto}/producto/{idProducto}&quot;)
     public Response delete(@PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto, @PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L105" title="All 4 branches missed.">        if (idTipoProducto != null &amp;&amp; idProducto != null) {</span>
-<span class="nc" id="L106">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
-            try {
-<span class="nc" id="L108">                pdBean.deleteByPk(pk);</span>
-<span class="nc" id="L109">                return Response.status(200).build();</span>
-<span class="nc" id="L110">            } catch (Exception e) {</span>
-<span class="nc" id="L111">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L112">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
-            }
+        try {
+<span class="nc" id="L124">            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return comprobacion;</span>
+<span class="nc" id="L126">            Response existe = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return existe;</span>
+
+<span class="nc" id="L129">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
+<span class="nc" id="L130">            pdBean.deleteByPk(pk);</span>
+<span class="nc" id="L131">            return Response.status(200).build();</span>
+<span class="nc" id="L132">        } catch (Exception e) {</span>
+<span class="nc" id="L133">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L134">            return Response.status(5000).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
         }
-<span class="nc" id="L115">        return Response.status(500).header(Headers.WRONG_PARAMETER, idProducto).build();</span>
     }
 
     /**
@@ -123,24 +143,72 @@ import java.util.logging.Logger;
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
-    @Path(&quot;&quot;)
+    @Path(&quot;tipoProducto/{idTipoProducto}/producto/{idProducto}&quot;)
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(ProductoDetalle registro, @PathParam(&quot;idProducto&quot;) Long idProducto, @PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto, @Context UriInfo uriInfo) {
-<span class="nc bnc" id="L131" title="All 6 branches missed.">        if (registro != null &amp;&amp; idTipoProducto != null &amp;&amp; idProducto != null) {</span>
-<span class="nc" id="L132">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
-            try {
-<span class="nc" id="L134">                registro.setProductoDetallePK(pk);</span>
-<span class="nc" id="L135">                pdBean.update(registro);</span>
-<span class="nc" id="L136">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L137">                return Response.ok(uriBuilder.build()).build();</span>
-<span class="nc" id="L138">            } catch (Exception e) {</span>
-<span class="nc" id="L139">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L140">                return Response.status(400).entity(e.getMessage()).build();</span>
-            }
+        try {
+<span class="nc" id="L152">            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return comprobacion;</span>
+<span class="nc" id="L154">            Response existe = verificarPathParams(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (comprobacion.getStatus() != 200) return existe;</span>
+
+<span class="nc" id="L157">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
+<span class="nc" id="L158">            registro.setProductoDetallePK(pk);</span>
+<span class="nc" id="L159">            pdBean.update(registro);</span>
+<span class="nc" id="L160">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L161">            return Response.ok(uriBuilder.build()).build();</span>
+<span class="nc" id="L162">        } catch (Exception e) {</span>
+<span class="nc" id="L163">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L164">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
-<span class="nc" id="L143">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
     }
+
+
+    /**
+     * verifica la existencia y el correcto asignacion de valores d
+     *
+     * @param idProducto idProducto del productoDetalle
+     * @param idTipoProducto idProducto del productoDetalle
+     * @return un status 200 si tod esta bien
+     */
+    public Response verificarPathParams(Integer idTipoProducto, Long idProducto) {
+        try {
+<span class="nc" id="L178">            Response verificarIdTipoProducto = verificarId(idTipoProducto, &quot;idTipoProdcuto&quot;);</span>
+<span class="nc" id="L179">            Response verificarIdProducto = verificarId(idProducto, &quot;idProdcuto&quot;);</span>
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">            if (verificarIdTipoProducto.getStatus() != 200) return verificarIdTipoProducto;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">            if (verificarIdProducto.getStatus() != 200) return verificarIdProducto;</span>
+
+<span class="nc" id="L184">            Response existeTp = verificarTipoProductoExiste(idTipoProducto);</span>
+<span class="nc" id="L185">            Response existep = verificarProductoExiste(idProducto);</span>
+
+<span class="nc bnc" id="L187" title="All 2 branches missed.">            if (existeTp.getStatus() != 200) return existeTp;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            if (existep.getStatus() != 200) return existep;</span>
+
+<span class="nc" id="L190">            return Response.status(200).build();</span>
+<span class="nc" id="L191">        } catch (Exception e) {</span>
+<span class="nc" id="L192">            return Response.status(500).build();</span>
+        }
+    }
+
+    /**
+     * verifica la existencia de productoDetalle
+     * @param idProducto idProducto del productoDetalle
+     * @param idTipoProducto idProducto del productoDetalle
+     * @return un status 200 si tod esta bien
+     */
+    public Response verificarExistencia(Integer idTipoProducto, Long idProducto) {
+        try {
+<span class="nc" id="L204">            ProductoDetalle existePd = pdBean.findById(idTipoProducto, idProducto);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (existePd == null)</span>
+<span class="nc" id="L206">                return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;NO EXISTE DETALLE CON ESA CLAVE&quot;).build();</span>
+<span class="nc" id="L207">            return Response.ok().build();</span>
+<span class="nc" id="L208">        } catch (Exception e) {</span>
+<span class="nc" id="L209">            return Response.status(500).build();</span>
+        }
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -28,13 +28,15 @@ import jakarta.persistence.Table;
 @Table(name = "producto")
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
-    @NamedQuery(name = "Producto.findActivosAndIdTipoProducto", query = "SELECT p FROM ProductoDetalle pd JOIN pd.producto p WHERE p.activo=true AND pd.productoDetallePK.idTipoProducto=:idTipoProducto"),
-    @NamedQuery(name = "Producto.countActivosAndIdTipoProducto", query = "SELECT DISTINCT COUNT(p) FROM ProductoDetalle pd JOIN pd.producto p WHERE p.activo=true AND pd.productoDetallePK.idTipoProducto=:idTipoProducto"),
+    @NamedQuery(name = "Producto.findActivosAndIdTipoProducto", query = "SELECT p FROM ProductoDetalle pd JOIN pd.producto p WHERE p.activo=:activo AND pd.productoDetallePK.idTipoProducto=:idTipoProducto"),
+    @NamedQuery(name = "Producto.countActivosAndIdTipoProducto", query = "SELECT DISTINCT COUNT(p) FROM ProductoDetalle pd JOIN pd.producto p WHERE p.activo=:activo AND pd.productoDetallePK.idTipoProducto=:idTipoProducto"),
     @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
     @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
-    @NamedQuery(name = "Producto.findByActivo", query = "SELECT p FROM Producto p WHERE p.activo = :activo"),
+    @NamedQuery(name = "Producto.findByAnyActivo", query = "SELECT p FROM Producto p WHERE p.activo = :activo"),
+    @NamedQuery(name = "Producto.countByAnyActivo", query = "SELECT COUNT(p) FROM Producto p WHERE p.activo = :activo"),
     @NamedQuery(name = "Producto.findByObservaciones", query = "SELECT p FROM Producto p WHERE p.observaciones = :observaciones"),
-    @NamedQuery(name = "Producto.findByIdTipoProducto", query = "SELECT DISTINCT p FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto"),
+    @NamedQuery(name = "Producto.findByIdTipoProductoAndActivo", query = "SELECT DISTINCT p FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto AND p.activo=:activo"),
+    @NamedQuery(name = "Producto.findByidTipoProducto", query = "SELECT DISTINCT (p) FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto"),
     @NamedQuery(name = "Producto.countByidTipoProducto", query = "SELECT DISTINCT count (p) FROM ProductoDetalle pd JOIN pd.producto p WHERE pd.tipoProducto.idTipoProducto = :idTipoProducto"),
 
 
@@ -59,6 +61,7 @@ public class Producto implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
     @JsonbTransient
     private List<ProductoDetalle> productoDetalleList;
+    @JsonbTransient
     @OneToMany(mappedBy = "idProducto")
     private List<ProductoPrecio> productoPrecioList;
 
