@@ -66,19 +66,19 @@ public class Orden implements Serializable {
     }
 
     public void setIdOrden(Long idOrden) {
-<span class="nc" id="L69">        this.idOrden = idOrden;</span>
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L69">        this.idOrden = idOrden;</span>
+<span class="fc" id="L70">    }</span>
 
     public Date getFecha() {
-<span class="nc" id="L73">        return fecha;</span>
+<span class="fc" id="L73">        return fecha;</span>
     }
 
     public void setFecha(Date fecha) {
-<span class="nc" id="L77">        this.fecha = fecha;</span>
-<span class="nc" id="L78">    }</span>
+<span class="fc" id="L77">        this.fecha = fecha;</span>
+<span class="fc" id="L78">    }</span>
 
     public String getSucursal() {
-<span class="nc" id="L81">        return sucursal;</span>
+<span class="fc" id="L81">        return sucursal;</span>
     }
 
     public void setSucursal(String sucursal) {
@@ -86,34 +86,34 @@ public class Orden implements Serializable {
 <span class="fc" id="L86">    }</span>
 
     public Boolean getAnulada() {
-<span class="nc" id="L89">        return anulada;</span>
+<span class="fc" id="L89">        return anulada;</span>
     }
 
     public void setAnulada(Boolean anulada) {
-<span class="nc" id="L93">        this.anulada = anulada;</span>
-<span class="nc" id="L94">    }</span>
+<span class="fc" id="L93">        this.anulada = anulada;</span>
+<span class="fc" id="L94">    }</span>
 
     public List&lt;OrdenDetalle&gt; getOrdenDetalleList() {
-<span class="nc" id="L97">        return ordenDetalleList;</span>
+<span class="fc" id="L97">        return ordenDetalleList;</span>
     }
 
     public void setOrdenDetalleList(List&lt;OrdenDetalle&gt; ordenDetalleList) {
-<span class="nc" id="L101">        this.ordenDetalleList = ordenDetalleList;</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L101">        this.ordenDetalleList = ordenDetalleList;</span>
+<span class="fc" id="L102">    }</span>
 
     public List&lt;Pago&gt; getPagoList() {
-<span class="nc" id="L105">        return pagoList;</span>
+<span class="fc" id="L105">        return pagoList;</span>
     }
 
     public void setPagoList(List&lt;Pago&gt; pagoList) {
-<span class="nc" id="L109">        this.pagoList = pagoList;</span>
-<span class="nc" id="L110">    }</span>
+<span class="fc" id="L109">        this.pagoList = pagoList;</span>
+<span class="fc" id="L110">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L114">        int hash = 0;</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">        hash += (idOrden != null ? idOrden.hashCode() : 0);</span>
-<span class="nc" id="L116">        return hash;</span>
+<span class="fc" id="L114">        int hash = 0;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        hash += (idOrden != null ? idOrden.hashCode() : 0);</span>
+<span class="fc" id="L116">        return hash;</span>
     }
 
     @Override

@@ -89,16 +89,16 @@ public class ProductoDetalle implements Serializable {
     }
 
     public void setProducto(Producto producto) {
-<span class="nc" id="L92">        this.producto = producto;</span>
-<span class="nc" id="L93">    }</span>
+<span class="fc" id="L92">        this.producto = producto;</span>
+<span class="fc" id="L93">    }</span>
 
     public TipoProducto getTipoProducto() {
 <span class="fc" id="L96">        return tipoProducto;</span>
     }
 
     public void setTipoProducto(TipoProducto tipoProducto) {
-<span class="nc" id="L100">        this.tipoProducto = tipoProducto;</span>
-<span class="nc" id="L101">    }</span>
+<span class="fc" id="L100">        this.tipoProducto = tipoProducto;</span>
+<span class="fc" id="L101">    }</span>
 
     @Override
     public int hashCode() {
@@ -114,8 +114,8 @@ public class ProductoDetalle implements Serializable {
 <span class="nc" id="L114">            return false;</span>
         }
 <span class="fc" id="L116">        ProductoDetalle other = (ProductoDetalle) object;</span>
-<span class="pc bpc" id="L117" title="5 of 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
-<span class="nc" id="L118">            return false;</span>
+<span class="pc bpc" id="L117" title="4 of 8 branches missed.">        if ((this.productoDetallePK == null &amp;&amp; other.productoDetallePK != null) || (this.productoDetallePK != null &amp;&amp; !this.productoDetallePK.equals(other.productoDetallePK))) {</span>
+<span class="fc" id="L118">            return false;</span>
         }
 <span class="fc" id="L120">        return true;</span>
     }

@@ -23,7 +23,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
  *
  * @author mjlopez
  */
-@Path("orden")
+@Path("ordenDetalle")
 public class OrdenDetalleResource implements Serializable {
 
     @Inject

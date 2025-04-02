@@ -13,7 +13,7 @@
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 //
-//@Path("orden")
+//@Path("pago")
 //public class PagoResouce implements Serializable {
 //    @Inject
 //    PagoBean pBean;

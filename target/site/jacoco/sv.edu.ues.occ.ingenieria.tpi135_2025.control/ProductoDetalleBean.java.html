@@ -55,9 +55,9 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
 <span class="fc" id="L55">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
 <span class="fc" id="L56">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
 <span class="fc" id="L57">                    .getSingleResult();</span>
-<span class="nc" id="L58">        } catch (NoResultException ex) {</span>
-<span class="nc" id="L59">            Logger.getLogger(ProductoDetalleBean.class.getName()).log(Level.SEVERE, null, ex);</span>
-<span class="nc" id="L60">            return null;</span>
+<span class="fc" id="L58">        } catch (NoResultException ex) {</span>
+<span class="fc" id="L59">            Logger.getLogger(ProductoDetalleBean.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L60">            return null;</span>
         }
     }
 

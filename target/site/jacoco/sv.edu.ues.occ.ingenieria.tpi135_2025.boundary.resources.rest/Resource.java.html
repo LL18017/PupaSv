@@ -2,8 +2,10 @@
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
@@ -11,11 +13,15 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-<span class="fc" id="L18">public class Resource {</span>
+public abstract class Resource&lt;T&gt; {
+    final Class tipo;
+
+<span class="fc" id="L20">    public Resource(Class tipo) {</span>
+<span class="fc" id="L21">        this.tipo = tipo;</span>
+<span class="fc" id="L22">    }</span>
+
+    abstract AbstractDataAccess&lt;T&gt; getBean();
 
     @Inject
     ProductoBean pBean;
@@ -23,23 +29,24 @@ import java.util.logging.Logger;
     TipoProductoBean tpBean;
     @Inject
     ProductoPrecioBean ppBean;
+
     /**
      * Verifica que el ID del producto sea válido.
      *
      * @param id ID a ser analizado
      * @return un status 200 si se envió correctamente, 400 si el ID es inválido, y 500 si ocurre un error en el servidor.
      */
-    public Response verificarId(Number id,String tipoId) {
+    public Response verificarId(Number id, String tipoId) {
         try {
-<span class="pc bpc" id="L34" title="1 of 4 branches missed.">            if (id == null || id.longValue() &lt;= 0) {</span>
-<span class="fc" id="L35">                return Response.status(400)</span>
-<span class="fc" id="L36">                        .header(Headers.WRONG_PARAMETER, tipoId+&quot; inválido: &quot; + id)</span>
-<span class="fc" id="L37">                        .build();</span>
+<span class="pc bpc" id="L41" title="1 of 4 branches missed.">            if (id == null || id.longValue() &lt;= 0) {</span>
+<span class="fc" id="L42">                return Response.status(400)</span>
+<span class="fc" id="L43">                        .header(Headers.WRONG_PARAMETER, tipoId + &quot; inválido: &quot; + id)</span>
+<span class="fc" id="L44">                        .build();</span>
             }
-<span class="nc" id="L39">        } catch (Exception e) {</span>
-<span class="nc" id="L40">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
-<span class="fc" id="L41">        }</span>
-<span class="fc" id="L42">        return Response.status(200).build();</span>
+<span class="nc" id="L46">        } catch (Exception e) {</span>
+<span class="nc" id="L47">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="fc" id="L48">        }</span>
+<span class="fc" id="L49">        return Response.status(200).build();</span>
     }
 
 
@@ -53,16 +60,17 @@ import java.util.logging.Logger;
      */
     public Response veririficarMaxAndFirst(Integer first, Integer max) {
         try {
-<span class="pc bpc" id="L56" title="2 of 6 branches missed.">            if (first &lt; 0 || max &lt;= 0 || max &gt; 50) {</span>
-<span class="fc" id="L57">                return Response.status(400)</span>
-<span class="fc" id="L58">                        .header(Headers.WRONG_PARAMETER, &quot;first: &quot; + first + &quot;, max: &quot; + max)</span>
-<span class="fc" id="L59">                        .build();</span>
+<span class="pc bpc" id="L63" title="2 of 6 branches missed.">            if (first &lt; 0 || max &lt;= 0 || max &gt; 50) {</span>
+<span class="fc" id="L64">                return Response.status(400)</span>
+<span class="fc" id="L65">                        .header(Headers.WRONG_PARAMETER, &quot;first: &quot; + first + &quot;, max: &quot; + max)</span>
+<span class="fc" id="L66">                        .build();</span>
             }
-<span class="fc" id="L61">        } catch (Exception e) {</span>
-<span class="fc" id="L62">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
-<span class="fc" id="L63">        }</span>
-<span class="fc" id="L64">        return Response.status(200).build();</span>
+<span class="fc" id="L68">        } catch (Exception e) {</span>
+<span class="fc" id="L69">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="fc" id="L70">        }</span>
+<span class="fc" id="L71">        return Response.status(200).build();</span>
     }
+
     /**
      * Verifica la existencia de un tipoProducto
      *
@@ -72,15 +80,16 @@ import java.util.logging.Logger;
      */
     public Response verificarTipoProductoExiste(Integer idTipoProducto) {
         try {
-<span class="nc" id="L75">            TipoProducto encontrado = tpBean.findById(idTipoProducto);</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (encontrado == null) {</span>
-<span class="nc" id="L77">                return Response.status(404).header(Headers.NOT_FOUND_ID, idTipoProducto).build();</span>
+<span class="nc" id="L83">            TipoProducto encontrado = tpBean.findById(idTipoProducto);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L85">                return Response.status(404).header(Headers.NOT_FOUND_ID, idTipoProducto).build();</span>
             }
-<span class="nc" id="L79">        } catch (Exception e) {</span>
-<span class="nc" id="L80">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
-<span class="nc" id="L81">        }</span>
-<span class="nc" id="L82">        return Response.status(200).build();</span>
+<span class="nc" id="L87">        } catch (Exception e) {</span>
+<span class="nc" id="L88">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L89">        }</span>
+<span class="nc" id="L90">        return Response.status(200).build();</span>
     }
+
     /**
      * Verifica la existencia de un tipoProducto
      *
@@ -90,15 +99,16 @@ import java.util.logging.Logger;
      */
     public Response verificarProductoExiste(Long idProducto) {
         try {
-<span class="nc" id="L93">            Producto encontrado = pBean.findById(idProducto);</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (encontrado == null) {</span>
-<span class="nc" id="L95">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProducto).build();</span>
+<span class="nc" id="L102">            Producto encontrado = pBean.findById(idProducto);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L104">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProducto).build();</span>
             }
-<span class="nc" id="L97">        } catch (Exception e) {</span>
-<span class="nc" id="L98">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
-<span class="nc" id="L99">        }</span>
-<span class="nc" id="L100">        return Response.status(200).build();</span>
+<span class="nc" id="L106">        } catch (Exception e) {</span>
+<span class="nc" id="L107">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L108">        }</span>
+<span class="nc" id="L109">        return Response.status(200).build();</span>
     }
+
     /**
      * Verifica la existencia de un productoPrecio
      *
@@ -108,14 +118,32 @@ import java.util.logging.Logger;
      */
     public Response verificarProductoPrecioExiste(Long idProductoPrecio) {
         try {
-<span class="nc" id="L111">            ProductoPrecio encontrado = ppBean.findById(idProductoPrecio);</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (encontrado == null) {</span>
-<span class="nc" id="L113">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProductoPrecio).build();</span>
+<span class="nc" id="L121">            ProductoPrecio encontrado = ppBean.findById(idProductoPrecio);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L123">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProductoPrecio).build();</span>
             }
-<span class="nc" id="L115">        } catch (Exception e) {</span>
-<span class="nc" id="L116">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
-<span class="nc" id="L117">        }</span>
-<span class="nc" id="L118">        return Response.status(200).build();</span>
+<span class="nc" id="L125">        } catch (Exception e) {</span>
+<span class="nc" id="L126">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L127">        }</span>
+<span class="nc" id="L128">        return Response.status(200).build();</span>
+    }
+
+    public Response verificarExistencia(Number id) {
+        try {
+<span class="nc" id="L133">            T encontrado = getBean().findById(id);</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (encontrado == null) {</span>
+<span class="nc" id="L135">                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();</span>
+            }
+<span class="nc" id="L137">            return Response.ok(encontrado).build();</span>
+<span class="nc" id="L138">        } catch (Exception e) {</span>
+<span class="nc" id="L139">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+        }
+    }
+    public Response verificarEntity(T entity) {
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (entity == null) {</span>
+<span class="nc" id="L144">            return Response.status(400).header(Headers.WRONG_PARAMETER, entity).build();</span>
+        }
+<span class="nc" id="L146">        return Response.ok(entity).build();</span>
     }
 
 }

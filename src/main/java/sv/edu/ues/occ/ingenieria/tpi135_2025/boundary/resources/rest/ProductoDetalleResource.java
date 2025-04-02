@@ -5,6 +5,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
@@ -19,7 +20,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("productoDetalle")
-public class ProductoDetalleResource extends Resource implements Serializable {
+public class ProductoDetalleResource extends Resource<ProductoDetalle> implements Serializable {
+    public ProductoDetalleResource() {
+        super(ProductoDetalle.class);
+    }
+
+    @Override
+    AbstractDataAccess<ProductoDetalle> getBean() {
+        return pdBean;
+    }
+
     @Inject
     ProductoDetalleBean pdBean;
     @Inject

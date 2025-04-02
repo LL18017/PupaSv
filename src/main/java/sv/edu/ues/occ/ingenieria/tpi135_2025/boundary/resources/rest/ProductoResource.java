@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.*;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
@@ -23,7 +24,8 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  * @author mjlopez
  */
 @Path("producto")
-public class ProductoResource extends Resource implements Serializable {
+public class ProductoResource extends Resource<Producto> implements Serializable {
+
 
     @Inject
     ProductoBean pBean;
@@ -32,6 +34,13 @@ public class ProductoResource extends Resource implements Serializable {
     @Inject
     ProductoDetalleBean pdBean;
 
+    @Override
+    AbstractDataAccess<Producto> getBean() {
+        return pBean;
+    }
+    public ProductoResource() {
+        super(Producto.class);
+    }
 
     /**
      * metodo que devueleve una rango de datos de tipo Producto

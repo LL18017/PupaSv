@@ -26,7 +26,6 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioReso
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/TipoProducto.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboDetallePKBean.class
-sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GeneralResources.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/Orden.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/OrdenDetallePK.class

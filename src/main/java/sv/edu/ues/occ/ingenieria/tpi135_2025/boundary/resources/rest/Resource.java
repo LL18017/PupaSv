@@ -2,8 +2,10 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
@@ -11,11 +13,15 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Resource {
+public abstract class Resource<T> {
+    final Class tipo;
+
+    public Resource(Class tipo) {
+        this.tipo = tipo;
+    }
+
+    abstract AbstractDataAccess<T> getBean();
 
     @Inject
     ProductoBean pBean;
@@ -23,17 +29,18 @@ public class Resource {
     TipoProductoBean tpBean;
     @Inject
     ProductoPrecioBean ppBean;
+
     /**
      * Verifica que el ID del producto sea válido.
      *
      * @param id ID a ser analizado
      * @return un status 200 si se envió correctamente, 400 si el ID es inválido, y 500 si ocurre un error en el servidor.
      */
-    public Response verificarId(Number id,String tipoId) {
+    public Response verificarId(Number id, String tipoId) {
         try {
             if (id == null || id.longValue() <= 0) {
                 return Response.status(400)
-                        .header(Headers.WRONG_PARAMETER, tipoId+" inválido: " + id)
+                        .header(Headers.WRONG_PARAMETER, tipoId + " inválido: " + id)
                         .build();
             }
         } catch (Exception e) {
@@ -63,6 +70,7 @@ public class Resource {
         }
         return Response.status(200).build();
     }
+
     /**
      * Verifica la existencia de un tipoProducto
      *
@@ -81,6 +89,7 @@ public class Resource {
         }
         return Response.status(200).build();
     }
+
     /**
      * Verifica la existencia de un tipoProducto
      *
@@ -99,6 +108,7 @@ public class Resource {
         }
         return Response.status(200).build();
     }
+
     /**
      * Verifica la existencia de un productoPrecio
      *
@@ -116,6 +126,24 @@ public class Resource {
             return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
         }
         return Response.status(200).build();
+    }
+
+    public Response verificarExistencia(Number id) {
+        try {
+            T encontrado = getBean().findById(id);
+            if (encontrado == null) {
+                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();
+            }
+            return Response.ok(encontrado).build();
+        } catch (Exception e) {
+            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
+        }
+    }
+    public Response verificarEntity(T entity) {
+        if (entity == null) {
+            return Response.status(400).header(Headers.WRONG_PARAMETER, entity).build();
+        }
+        return Response.ok(entity).build();
     }
 
 }

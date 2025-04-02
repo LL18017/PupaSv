@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.UserTransaction;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
@@ -17,12 +18,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("productoPrecio")
-public class ProductoPrecioResource extends Resource implements Serializable {
+public class ProductoPrecioResource extends Resource<ProductoPrecio> implements Serializable {
 
     @Inject
     ProductoPrecioBean ppBean;
     @Inject
     ProductoBean pBean;
+
+    public ProductoPrecioResource() {
+        super(ProductoPrecio.class);
+    }
+
+    @Override
+    AbstractDataAccess<ProductoPrecio> getBean() {
+        return ppBean;
+    }
 
 
     /**

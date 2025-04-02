@@ -16,7 +16,7 @@ class ResourceTest {
         Integer idINT = 10;
         Long idLong = 10L;
         int esperado=200;
-        Resource cut=new Resource();
+        ProductoResource cut=new ProductoResource();
 
 
         //todo perfecto
@@ -40,7 +40,7 @@ class ResourceTest {
         Integer max = 10;
         Integer first = 0;
         int esperado=200;
-        Resource cut=new Resource();
+        ProductoResource cut=new ProductoResource();
 
 
         //todo perfecto

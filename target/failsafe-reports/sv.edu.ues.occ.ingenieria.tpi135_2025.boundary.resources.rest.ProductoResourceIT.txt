@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.ProductoResourceIT
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.07 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.ProductoResourceIT
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.14 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.ProductoResourceIT
