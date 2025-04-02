@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Inicio') {
             steps {
-                echo 'Nuevo cambio de git'  // Este comando imprime "Nuevo cambio" en la consola
+                echo 'Nuevo cambio de git definitivo'  // Este comando imprime "Nuevo cambio" en la consola
             }
         }
     }
