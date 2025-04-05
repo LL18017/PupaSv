@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -45,100 +47,102 @@ public class OrdenDetalle implements Serializable {
     private BigDecimal precio;
     @Column(name = &quot;observaciones&quot;)
     private String observaciones;
+    @JsonbTransient
     @JoinColumn(name = &quot;id_orden&quot;, referencedColumnName = &quot;id_orden&quot;, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Orden orden;
+    @JsonbTransient
     @JoinColumn(name = &quot;id_producto_precio&quot;, referencedColumnName = &quot;id_producto_precio&quot;, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private ProductoPrecio productoPrecio;
 
-<span class="fc" id="L55">    public OrdenDetalle() {</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L59">    public OrdenDetalle() {</span>
+<span class="fc" id="L60">    }</span>
 
-<span class="nc" id="L58">    public OrdenDetalle(OrdenDetallePK ordenDetallePK) {</span>
-<span class="nc" id="L59">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="nc" id="L60">    }</span>
-
-<span class="nc" id="L62">    public OrdenDetalle(OrdenDetallePK ordenDetallePK, int cantidad) {</span>
+<span class="nc" id="L62">    public OrdenDetalle(OrdenDetallePK ordenDetallePK) {</span>
 <span class="nc" id="L63">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="nc" id="L64">        this.cantidad = cantidad;</span>
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L64">    }</span>
 
-<span class="nc" id="L67">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
-<span class="nc" id="L68">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
+<span class="nc" id="L66">    public OrdenDetalle(OrdenDetallePK ordenDetallePK, int cantidad) {</span>
+<span class="nc" id="L67">        this.ordenDetallePK = ordenDetallePK;</span>
+<span class="nc" id="L68">        this.cantidad = cantidad;</span>
 <span class="nc" id="L69">    }</span>
 
+<span class="nc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
+<span class="nc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
+<span class="nc" id="L73">    }</span>
+
     public OrdenDetallePK getOrdenDetallePK() {
-<span class="nc" id="L72">        return ordenDetallePK;</span>
+<span class="nc" id="L76">        return ordenDetallePK;</span>
     }
 
     public void setOrdenDetallePK(OrdenDetallePK ordenDetallePK) {
-<span class="nc" id="L76">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="nc" id="L77">    }</span>
+<span class="fc" id="L80">        this.ordenDetallePK = ordenDetallePK;</span>
+<span class="fc" id="L81">    }</span>
 
     public int getCantidad() {
-<span class="nc" id="L80">        return cantidad;</span>
+<span class="nc" id="L84">        return cantidad;</span>
     }
 
     public void setCantidad(int cantidad) {
-<span class="nc" id="L84">        this.cantidad = cantidad;</span>
-<span class="nc" id="L85">    }</span>
+<span class="fc" id="L88">        this.cantidad = cantidad;</span>
+<span class="fc" id="L89">    }</span>
 
     public BigDecimal getPrecio() {
-<span class="nc" id="L88">        return precio;</span>
+<span class="nc" id="L92">        return precio;</span>
     }
 
     public void setPrecio(BigDecimal precio) {
-<span class="nc" id="L92">        this.precio = precio;</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L96">        this.precio = precio;</span>
+<span class="nc" id="L97">    }</span>
 
     public String getObservaciones() {
-<span class="nc" id="L96">        return observaciones;</span>
+<span class="nc" id="L100">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="nc" id="L100">        this.observaciones = observaciones;</span>
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L104">        this.observaciones = observaciones;</span>
+<span class="nc" id="L105">    }</span>
 
     public Orden getOrden() {
-<span class="nc" id="L104">        return orden;</span>
+<span class="nc" id="L108">        return orden;</span>
     }
 
     public void setOrden(Orden orden) {
-<span class="nc" id="L108">        this.orden = orden;</span>
-<span class="nc" id="L109">    }</span>
+<span class="nc" id="L112">        this.orden = orden;</span>
+<span class="nc" id="L113">    }</span>
 
     public ProductoPrecio getProductoPrecio() {
-<span class="nc" id="L112">        return productoPrecio;</span>
+<span class="nc" id="L116">        return productoPrecio;</span>
     }
 
     public void setProductoPrecio(ProductoPrecio productoPrecio) {
-<span class="nc" id="L116">        this.productoPrecio = productoPrecio;</span>
-<span class="nc" id="L117">    }</span>
+<span class="nc" id="L120">        this.productoPrecio = productoPrecio;</span>
+<span class="nc" id="L121">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L121">        int hash = 0;</span>
-<span class="nc bnc" id="L122" title="All 2 branches missed.">        hash += (ordenDetallePK != null ? ordenDetallePK.hashCode() : 0);</span>
-<span class="nc" id="L123">        return hash;</span>
+<span class="nc" id="L125">        int hash = 0;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        hash += (ordenDetallePK != null ? ordenDetallePK.hashCode() : 0);</span>
+<span class="nc" id="L127">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
-<span class="nc" id="L130">            return false;</span>
-        }
-<span class="nc" id="L132">        OrdenDetalle other = (OrdenDetalle) object;</span>
-<span class="nc bnc" id="L133" title="All 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
 <span class="nc" id="L134">            return false;</span>
         }
-<span class="nc" id="L136">        return true;</span>
+<span class="fc" id="L136">        OrdenDetalle other = (OrdenDetalle) object;</span>
+<span class="pc bpc" id="L137" title="5 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
+<span class="nc" id="L138">            return false;</span>
+        }
+<span class="fc" id="L140">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L141">        return &quot;com.mycompany.extreciondeentities.entities.OrdenDetalle[ ordenDetallePK=&quot; + ordenDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L145">        return &quot;com.mycompany.extreciondeentities.entities.OrdenDetalle[ ordenDetallePK=&quot; + ordenDetallePK + &quot; ]&quot;;</span>
     }
     
 }

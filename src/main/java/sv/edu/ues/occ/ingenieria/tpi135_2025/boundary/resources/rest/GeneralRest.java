@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
+import jakarta.json.bind.JsonbException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -45,6 +46,8 @@ public class GeneralRest{
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en el repositorio").build();
         } else if (causa instanceof PersistenceException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en la base  de datos").build();
+        }else if (causa instanceof JsonbException) {
+            return Response.status(500).header(Headers.PROCESS_ERROR, "error al serializar").entity(e).build();
         }
         return Response.status(500).header(Headers.PROCESS_ERROR, causa.toString()).entity(e).build();
 

@@ -61,7 +61,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
         ProductoDetalleBean cd = new ProductoDetalleBean();
         cd.em = emf.createEntityManager();
         ProductoDetalle detalle = cd.findById(idTipoProdcutoCreado, idCreadoEnPrueba);
-        System.out.println(detalle.toString());
 
         em.close();
 //        Assertions.fail("fallo exitosamente");
@@ -263,7 +262,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
         boolean activo = true;
         cut.em = em;
         List<Producto> respuesta = cut.findRangeProductoActivos(first, max, activo);
-        respuesta.forEach(p -> System.out.println(p.toString()));
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(cantidadEsperada, respuesta.size());
 

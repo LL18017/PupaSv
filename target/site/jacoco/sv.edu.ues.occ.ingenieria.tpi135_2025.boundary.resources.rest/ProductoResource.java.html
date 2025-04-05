@@ -17,6 +17,8 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoDetalleBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetallePK;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
@@ -24,7 +26,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  * @author mjlopez
  */
 @Path(&quot;producto&quot;)
-<span class="nc" id="L27">public class ProductoResource extends GeneralRest implements Serializable {</span>
+<span class="nc" id="L29">public class ProductoResource extends GeneralRest implements Serializable {</span>
 
 
     @Inject
@@ -53,29 +55,29 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     public Response findRange(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) Integer first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) Integer max, @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto, @QueryParam(&quot;activo&quot;) Boolean activo) {
         try {
 
-            //FINDrANGE NORMAL
-<span class="nc bnc" id="L57" title="All 4 branches missed.">            if (activo == null &amp;&amp; idTipoProducto == 0) {</span>
-<span class="nc" id="L58">                List&lt;Producto&gt; registros = pBean.findRange(first, max);</span>
-<span class="nc" id="L59">                long totalRegistros = pBean.count();</span>
-<span class="nc" id="L60">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
+            //findRange NORMAL
+<span class="nc bnc" id="L59" title="All 4 branches missed.">            if (activo == null &amp;&amp; idTipoProducto == 0) {</span>
+<span class="nc" id="L60">                List&lt;Producto&gt; registros = pBean.findRange(first, max);</span>
+<span class="nc" id="L61">                long totalRegistros = pBean.count();</span>
+<span class="nc" id="L62">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
             }
 //            find range activos
-<span class="nc bnc" id="L63" title="All 4 branches missed.">            if (activo != null &amp;&amp; idTipoProducto == 0) {</span>
-<span class="nc" id="L64">                List&lt;Producto&gt; registros = pBean.findRangeProductoActivos(first, max, activo);</span>
-<span class="nc" id="L65">                long totalRegistros = pBean.countProductoActivos(activo);</span>
-<span class="nc" id="L66">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">            if (activo != null &amp;&amp; idTipoProducto == 0) {</span>
+<span class="nc" id="L66">                List&lt;Producto&gt; registros = pBean.findRangeProductoActivos(first, max, activo);</span>
+<span class="nc" id="L67">                long totalRegistros = pBean.countProductoActivos(activo);</span>
+<span class="nc" id="L68">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
             }
 //
             //find range por idTipoProducto y cualquier valor de activo
-<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (activo == null ) {</span>
-<span class="nc" id="L71">                activo = Boolean.TRUE;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (activo == null ) {</span>
+<span class="nc" id="L73">                activo = Boolean.TRUE;</span>
             }
-<span class="nc" id="L73">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
-<span class="nc" id="L74">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
-<span class="nc" id="L75">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
+<span class="nc" id="L75">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
+<span class="nc" id="L76">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
+<span class="nc" id="L77">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
 
-<span class="nc" id="L77">        } catch (Exception e) {</span>
-<span class="nc" id="L78">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
         }
     }
 
@@ -95,11 +97,11 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam(&quot;idProducto&quot;) Long idProducto) {
         try {
-<span class="nc" id="L98">            Producto encontrado = pBean.findById(idProducto);</span>
-<span class="nc" id="L99">            Response.ResponseBuilder builder = Response.ok(encontrado);</span>
-<span class="nc" id="L100">            return builder.build();</span>
-<span class="nc" id="L101">        } catch (Exception e) {</span>
-<span class="nc" id="L102">            return responseExcepcions(e, idProducto);</span>
+<span class="nc" id="L100">            Producto encontrado = pBean.findById(idProducto);</span>
+<span class="nc" id="L101">            Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L102">            return builder.build();</span>
+<span class="nc" id="L103">        } catch (Exception e) {</span>
+<span class="nc" id="L104">            return responseExcepcions(e, idProducto);</span>
         }
     }
 
@@ -122,18 +124,18 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     public Response create(Producto registro, @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto, @Context UriInfo uriInfo) {
         try {
             //si no se agrega idTipoProducto
-<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
-<span class="nc" id="L126">                pBean.create(registro);</span>
-<span class="nc" id="L127">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L128">                uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
-<span class="nc" id="L129">                return Response.created(uriBuilder.build()).build();</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
+<span class="nc" id="L128">                pBean.create(registro);</span>
+<span class="nc" id="L129">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L130">                uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
+<span class="nc" id="L131">                return Response.created(uriBuilder.build()).build();</span>
             }
-<span class="nc" id="L131">            pBean.createProductoAndDetail(registro, idTipoProducto);</span>
-<span class="nc" id="L132">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L133">            uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
-<span class="nc" id="L134">            return Response.created(uriBuilder.build()).build();</span>
-<span class="nc" id="L135">        } catch (Exception e) {</span>
-<span class="nc" id="L136">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
+<span class="nc" id="L133">            pBean.createProductoAndDetail(registro, idTipoProducto);</span>
+<span class="nc" id="L134">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L135">            uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
+<span class="nc" id="L136">            return Response.created(uriBuilder.build()).build();</span>
+<span class="nc" id="L137">        } catch (Exception e) {</span>
+<span class="nc" id="L138">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
         }
     }
 
@@ -154,21 +156,20 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     public Response delete(@PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo
             , @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto) {
         try {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
-<span class="nc" id="L158">                pBean.delete(idProducto);</span>
-<span class="nc" id="L159">                return Response.status(200).build();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
+<span class="nc" id="L160">                pBean.delete(idProducto);</span>
+<span class="nc" id="L161">                return Response.status(200).build();</span>
             }
-<span class="nc" id="L161">            pBean.deleteProductoAndDetail(idProducto, idTipoProducto);</span>
-<span class="nc" id="L162">            return Response.status(200).build();</span>
-<span class="nc" id="L163">        } catch (Exception e) {</span>
-<span class="nc" id="L164">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L165">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L163">            pBean.deleteProductoAndDetail(idProducto, idTipoProducto);</span>
+<span class="nc" id="L164">            return Response.status(200).build();</span>
+<span class="nc" id="L165">        } catch (Exception e) {</span>
+<span class="nc" id="L166">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L167">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
         }
     }
 
     /**
      * Actualiza una entidad de base de datos
-     *
      * @param registro entidda a ser actualizada
      * @param uriInfo  info de url de donde se esta realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
@@ -180,11 +181,15 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(Producto registro, @PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
         try {
-<span class="nc" id="L183">            registro.setIdProducto(idProducto);</span>
-<span class="nc" id="L184">            pBean.update(registro, idProducto);</span>
-<span class="nc" id="L185">            return Response.status(200).build();</span>
-<span class="nc" id="L186">        } catch (Exception e) {</span>
-<span class="nc" id="L187">            return responseExcepcions(e, idProducto);</span>
+<span class="nc" id="L184">            registro.setIdProducto(idProducto);</span>
+<span class="nc" id="L185">            pBean.update(registro, idProducto);</span>
+<span class="nc" id="L186">            return Response.status(200).build();</span>
+<span class="nc" id="L187">        } catch (Exception e) {</span>
+<span class="nc" id="L188">            ComboDetalle regitrosdsd=new ComboDetalle(1L, 3L);</span>
+
+<span class="nc" id="L190">            ComboDetallePK PK=new ComboDetallePK(1L,2l);</span>
+<span class="nc" id="L191">            ComboDetalle regitrosdsd2=new ComboDetalle(PK);</span>
+<span class="nc" id="L192">            return responseExcepcions(e, idProducto);</span>
         }
     }
 
@@ -202,13 +207,13 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
     public Response buscarPorTipoProductosAndActivo(Integer idTipoProducto, boolean activo, int first, int max) {
         try {
-<span class="nc" id="L205">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
-<span class="nc" id="L206">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
-<span class="nc" id="L207">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
+<span class="nc" id="L210">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
+<span class="nc" id="L211">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
+<span class="nc" id="L212">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
 
-<span class="nc" id="L209">        } catch (Exception e) {</span>
-<span class="nc" id="L210">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L211">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L214">        } catch (Exception e) {</span>
+<span class="nc" id="L215">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L216">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
         }
     }
 

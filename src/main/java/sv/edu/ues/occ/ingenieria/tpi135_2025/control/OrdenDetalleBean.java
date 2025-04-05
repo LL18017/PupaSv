@@ -39,7 +39,8 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     public String orderParameterQuery() {
         return "idOrdenDetalle";
     }
-    
+
+
     public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
         try {
             return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden",OrdenDetalle.class)

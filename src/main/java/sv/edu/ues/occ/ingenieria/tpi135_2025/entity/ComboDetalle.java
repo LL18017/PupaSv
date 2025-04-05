@@ -5,6 +5,11 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.json.bind.annotation.JsonbVisibility;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -40,9 +45,13 @@ public class ComboDetalle implements Serializable {
     private Integer cantidad;
     @Column(name = "activo")
     private Boolean activo;
+
+    @JsonbTransient
     @JoinColumn(name = "id_combo", referencedColumnName = "id_combo", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Combo combo;
+
+    @JsonbTransient
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Producto producto;

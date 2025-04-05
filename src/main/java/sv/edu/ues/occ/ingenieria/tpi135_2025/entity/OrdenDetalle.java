@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -45,9 +47,11 @@ public class OrdenDetalle implements Serializable {
     private BigDecimal precio;
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @JoinColumn(name = "id_orden", referencedColumnName = "id_orden", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Orden orden;
+    @JsonbTransient
     @JoinColumn(name = "id_producto_precio", referencedColumnName = "id_producto_precio", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private ProductoPrecio productoPrecio;

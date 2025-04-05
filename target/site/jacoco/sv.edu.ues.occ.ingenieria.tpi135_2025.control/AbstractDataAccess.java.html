@@ -9,11 +9,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.SystemException;
 import jakarta.validation.ConstraintViolationException;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,9 +30,9 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      *
      * @param t Clase del tipo de entidad que se maneja.
      */
-<span class="fc" id="L36">    public AbstractDataAccess(Class t) {</span>
-<span class="fc" id="L37">        this.tipoDato = t;</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L33">    public AbstractDataAccess(Class t) {</span>
+<span class="fc" id="L34">        this.tipoDato = t;</span>
+<span class="fc" id="L35">    }</span>
 
     /**
      * Método abstracto que debe ser implementado por la clase hija para
@@ -64,22 +61,22 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws PersistenceException  si hubo un error relacionado a la base de datos.
      */
     public List&lt;T&gt; findAll() {
-<span class="fc" id="L67">        EntityManager em = null;</span>
-<span class="fc" id="L68">        List&lt;T&gt; resultados = null;</span>
-<span class="fc" id="L69">        em = getEntityManager();</span>
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L71">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
+<span class="fc" id="L64">        EntityManager em = null;</span>
+<span class="fc" id="L65">        List&lt;T&gt; resultados = null;</span>
+<span class="fc" id="L66">        em = getEntityManager();</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L68">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
         }
         try {
-<span class="fc" id="L74">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
-<span class="fc" id="L75">            CriteriaQuery cq = cb.createQuery(tipoDato);</span>
-<span class="fc" id="L76">            Root&lt;T&gt; r = cq.from(tipoDato);</span>
-<span class="fc" id="L77">            cq.select(r).orderBy(cb.asc(r.get(orderParameterQuery())));</span>
-<span class="fc" id="L78">            TypedQuery&lt;T&gt; q = em.createQuery(cq);</span>
-<span class="fc" id="L79">            resultados = q.getResultList();</span>
-<span class="fc" id="L80">            return resultados;</span>
-<span class="fc" id="L81">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L82">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
+<span class="fc" id="L71">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
+<span class="fc" id="L72">            CriteriaQuery cq = cb.createQuery(tipoDato);</span>
+<span class="fc" id="L73">            Root&lt;T&gt; r = cq.from(tipoDato);</span>
+<span class="fc" id="L74">            cq.select(r).orderBy(cb.asc(r.get(orderParameterQuery())));</span>
+<span class="fc" id="L75">            TypedQuery&lt;T&gt; q = em.createQuery(cq);</span>
+<span class="fc" id="L76">            resultados = q.getResultList();</span>
+<span class="fc" id="L77">            return resultados;</span>
+<span class="fc" id="L78">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L79">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
         }
     }
 
@@ -95,27 +92,27 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws PersistenceException     si hay un error general con el repositorio.
      */
     public T findById(Object id) throws IllegalStateException {
-<span class="fc" id="L98">        EntityManager em = null;</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (id == null) {</span>
-<span class="fc" id="L100">            throw new IllegalArgumentException(&quot;parametro no valido&quot;);</span>
+<span class="fc" id="L95">        EntityManager em = null;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (id == null) {</span>
+<span class="fc" id="L97">            throw new IllegalArgumentException(&quot;parametro no valido&quot;);</span>
         }
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (Long.parseLong(id.toString()) &lt;= 0) {</span>
-<span class="fc" id="L103">            throw new IllegalArgumentException(&quot;parametro no puede ser menor a cero&quot;);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc" id="L100">            throw new IllegalArgumentException(&quot;parametro no puede ser menor a cero&quot;);</span>
         }
-<span class="fc" id="L105">        em = getEntityManager();</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L107">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
+<span class="fc" id="L102">        em = getEntityManager();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L104">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
         }
         try {
-<span class="fc" id="L110">            Object entidad = em.find(this.tipoDato, id);</span>
-<span class="fc bfc" id="L111" title="All 2 branches covered.">            if (entidad != null) {</span>
-<span class="fc" id="L112">                return (T) entidad;</span>
+<span class="fc" id="L107">            Object entidad = em.find(this.tipoDato, id);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            if (entidad != null) {</span>
+<span class="fc" id="L109">                return (T) entidad;</span>
             }
-<span class="fc" id="L114">            throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
-<span class="fc" id="L115">        } catch (EntityNotFoundException e) {</span>
-<span class="fc" id="L116">            throw e;</span>
-<span class="fc" id="L117">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L118">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
+<span class="fc" id="L111">            throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
+<span class="fc" id="L112">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L113">            throw e;</span>
+<span class="fc" id="L114">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L115">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
         }
     }
 
@@ -129,28 +126,31 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws IllegalStateException Si no se puede acceder al repositorio.
      */
     public List&lt;T&gt; findRange(Integer first, Integer max) throws IllegalStateException, IllegalArgumentException {
-<span class="fc" id="L132">        EntityManager em = null;</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (!verificarnull(first, max))</span>
-<span class="fc" id="L134">            throw new IllegalArgumentException(&quot;parametro no valido first y max no puede ser null&quot;);</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (!verificarMayor(first, max))</span>
-<span class="fc" id="L136">            throw new IllegalArgumentException(&quot;parametro no valido first y max no puede ser menores de cero&quot;);</span>
+<span class="fc" id="L129">        EntityManager em = null;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (!verificarnull(first, max))</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(&quot;parametro no valido first y max no puede ser null&quot;);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (!verificarMayor(first, max))</span>
+<span class="fc" id="L133">            throw new IllegalArgumentException(&quot;parametro no valido first y max no puede ser menores de cero&quot;);</span>
 
-<span class="fc" id="L138">        em = getEntityManager();</span>
-<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L140">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
+<span class="fc" id="L135">        em = getEntityManager();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L137">            throw new IllegalStateException(&quot;error al aceder al repositorio&quot;);</span>
         }
         try {
             // Construir consultas de criterios
-<span class="fc" id="L144">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
-<span class="fc" id="L145">            CriteriaQuery&lt;T&gt; cq = cb.createQuery(this.tipoDato);</span>
-<span class="fc" id="L146">            Root&lt;T&gt; raiz = cq.from(this.tipoDato);</span>
-<span class="fc" id="L147">            cq.select(raiz).orderBy(cb.asc(raiz.get(orderParameterQuery())));</span>
-<span class="fc" id="L148">            TypedQuery&lt;T&gt; query = em.createQuery(cq);</span>
-<span class="fc" id="L149">            query.setFirstResult(first);</span>
-<span class="fc" id="L150">            query.setMaxResults(max);</span>
-<span class="fc" id="L151">            return query.getResultList();</span>
-<span class="fc" id="L152">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L153">            throw new PersistenceException(&quot;error al aceder al la base de datos&quot;, e);</span>
+<span class="fc" id="L141">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
+<span class="fc" id="L142">            CriteriaQuery&lt;T&gt; cq = cb.createQuery(this.tipoDato);</span>
+<span class="fc" id="L143">            Root&lt;T&gt; raiz = cq.from(this.tipoDato);</span>
+<span class="fc" id="L144">            cq.select(raiz).orderBy(cb.asc(raiz.get(orderParameterQuery())));</span>
+<span class="fc" id="L145">            TypedQuery&lt;T&gt; query = em.createQuery(cq);</span>
+<span class="fc" id="L146">            query.setFirstResult(first);</span>
+<span class="fc" id="L147">            query.setMaxResults(max);</span>
+<span class="fc" id="L148">            return query.getResultList();</span>
+<span class="fc" id="L149">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L150">            throw new PersistenceException(&quot;error al aceder al la base de datos&quot;, e);</span>
+<span class="nc" id="L151">        } catch (Exception e) {</span>
+<span class="nc" id="L152">            Logger.getLogger(AbstractDataAccess.class.getName()).log(Level.SEVERE, null, e);</span>
+<span class="nc" id="L153">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
         }
     }
 

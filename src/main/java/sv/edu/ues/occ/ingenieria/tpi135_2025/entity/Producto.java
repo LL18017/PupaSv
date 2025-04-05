@@ -7,18 +7,10 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.json.bind.annotation.JsonbTransient;
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 /**
  *
@@ -55,12 +47,15 @@ public class Producto implements Serializable {
     private Boolean activo;
     @Column(name = "observaciones")
     private String observaciones;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto", fetch = FetchType.EAGER)
+    @JsonbTransient
     private List<ComboDetalle> comboDetalleList;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
     @JsonbTransient
     private List<ProductoDetalle> productoDetalleList;
+
+
     @JsonbTransient
     @OneToMany(mappedBy = "idProducto")
     private List<ProductoPrecio> productoPrecioList;
@@ -111,7 +106,6 @@ public class Producto implements Serializable {
     public void setComboDetalleList(List<ComboDetalle> comboDetalleList) {
         this.comboDetalleList = comboDetalleList;
     }
-
     public List<ProductoDetalle> getProductoDetalleList() {
         return productoDetalleList;
     }

@@ -9,22 +9,16 @@ import jakarta.ws.rs.*;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.*;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 /**
  * @author mjlopez
  */
 @Path(&quot;tipoProducto&quot;)
-<span class="nc" id="L27">public class TipoProductoResource extends GeneralRest implements Serializable {</span>
+<span class="nc" id="L21">public class TipoProductoResource extends GeneralRest implements Serializable {</span>
 
     @Inject
     TipoProductoBean tpBean;
@@ -44,14 +38,14 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) Integer first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) Integer max) {
         try {
-<span class="nc" id="L47">            List&lt;TipoProducto&gt; encontrados = tpBean.findRange(first, max);</span>
-<span class="nc" id="L48">            long total = tpBean.count();</span>
-<span class="nc" id="L49">            Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L50">                    header(Headers.TOTAL_RECORD, total).</span>
-<span class="nc" id="L51">                    type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L52">            return builder.build();</span>
-<span class="nc" id="L53">        } catch (Exception e) {</span>
-<span class="nc" id="L54">            return responseExcepcions(e, null);</span>
+<span class="nc" id="L41">            List&lt;TipoProducto&gt; encontrados = tpBean.findRange(first, max);</span>
+<span class="nc" id="L42">            long total = tpBean.count();</span>
+<span class="nc" id="L43">            Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L44">                    header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L45">                    type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L46">            return builder.build();</span>
+<span class="nc" id="L47">        } catch (Exception e) {</span>
+<span class="nc" id="L48">            return responseExcepcions(e, null);</span>
         }
     }
 
@@ -71,10 +65,10 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam(&quot;id&quot;) Integer id) {
         try {
-<span class="nc" id="L74">            TipoProducto encontrado = tpBean.findById(id);</span>
-<span class="nc" id="L75">            return Response.ok(encontrado).header(Headers.NOT_FOUND_ID, id).build();</span>
-<span class="nc" id="L76">        } catch (Exception e) {</span>
-<span class="nc" id="L77">            return responseExcepcions(e, Long.valueOf(id));</span>
+<span class="nc" id="L68">            TipoProducto encontrado = tpBean.findById(id);</span>
+<span class="nc" id="L69">            return Response.ok(encontrado).header(Headers.NOT_FOUND_ID, id).build();</span>
+<span class="nc" id="L70">        } catch (Exception e) {</span>
+<span class="nc" id="L71">            return responseExcepcions(e, Long.valueOf(id));</span>
         }
     }
 
@@ -94,12 +88,12 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(TipoProducto registro, @Context UriInfo uriInfo) {
         try {
-<span class="nc" id="L97">            tpBean.create(registro);</span>
-<span class="nc" id="L98">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L99">            uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));</span>
-<span class="nc" id="L100">            return Response.created(uriBuilder.build()).build();</span>
-<span class="nc" id="L101">        } catch (Exception e) {</span>
-<span class="nc" id="L102">            return responseExcepcions(e, null);</span>
+<span class="nc" id="L91">            tpBean.create(registro);</span>
+<span class="nc" id="L92">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L93">            uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));</span>
+<span class="nc" id="L94">            return Response.created(uriBuilder.build()).build();</span>
+<span class="nc" id="L95">        } catch (Exception e) {</span>
+<span class="nc" id="L96">            return responseExcepcions(e, null);</span>
         }
     }
 
@@ -119,10 +113,10 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     @Path(&quot;/{id}&quot;)
     public Response delete(@PathParam(&quot;id&quot;) Integer id, @Context UriInfo uriInfo) {
         try {
-<span class="nc" id="L122">            tpBean.delete(id);</span>
-<span class="nc" id="L123">            return Response.status(200).build();</span>
-<span class="nc" id="L124">        } catch (Exception e) {</span>
-<span class="nc" id="L125">            return responseExcepcions(e, Long.valueOf(id));</span>
+<span class="nc" id="L116">            tpBean.delete(id);</span>
+<span class="nc" id="L117">            return Response.status(200).build();</span>
+<span class="nc" id="L118">        } catch (Exception e) {</span>
+<span class="nc" id="L119">            return responseExcepcions(e, Long.valueOf(id));</span>
         }
     }
 
@@ -145,10 +139,10 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
     public Response update(TipoProducto registro, @Context UriInfo uriInfo
             , @PathParam(&quot;idTipoProducto&quot;) Integer idTipoProducto) {
         try {
-<span class="nc" id="L148">            tpBean.update(registro, idTipoProducto);</span>
-<span class="nc" id="L149">            return Response.status(200).build();</span>
-<span class="nc" id="L150">        } catch (Exception e) {</span>
-<span class="nc" id="L151">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
+<span class="nc" id="L142">            tpBean.update(registro, idTipoProducto);</span>
+<span class="nc" id="L143">            return Response.status(200).build();</span>
+<span class="nc" id="L144">        } catch (Exception e) {</span>
+<span class="nc" id="L145">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
         }
     }
 

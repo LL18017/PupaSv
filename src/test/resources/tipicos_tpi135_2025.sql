@@ -454,10 +454,6 @@ INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL);
 INSERT INTO public.producto VALUES (1003, 'pupusas', true, NULL);
 INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
 
-INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
-INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
-INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
-INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
 INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.00);
 INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',0.80);
@@ -466,6 +462,27 @@ INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);
 INSERT INTO public.orden VALUES (12347, '2025-03-05', 'SS', true);
+
+
+INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
+INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
+INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
+INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
+
+INSERT INTO public.combo VALUES (1001, 'amigos', true, '10 pupusas y 3 cocas');
+INSERT INTO public.combo VALUES (1002, 'familiar', true, '20 pupusas y 5 pepsis');
+INSERT INTO public.combo VALUES (1003, 'personal', true, '4 pupusas y 1 pepsis');
+
+INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
+INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);
+INSERT INTO public.combo_detalle VALUES (1002,1003,20,true);
+INSERT INTO public.combo_detalle VALUES (1002,1002,5,true);
+INSERT INTO public.combo_detalle VALUES (1003,1003,4,true);
+INSERT INTO public.combo_detalle VALUES (1003,1002,1,true);
+
+INSERT INTO public.orden_detalle VALUES (12345,1001,5,null,null);
+INSERT INTO public.orden_detalle VALUES (12346,1002,6,null,null);
+INSERT INTO public.orden_detalle VALUES (12347,1001,8,null,null);
 
 
 --

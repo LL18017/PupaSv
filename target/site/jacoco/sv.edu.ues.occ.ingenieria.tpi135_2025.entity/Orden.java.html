@@ -4,23 +4,13 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
+import jakarta.persistence.*;
 
 /**
  *
@@ -49,89 +39,91 @@ public class Orden implements Serializable {
     private String sucursal;
     @Column(name = &quot;anulada&quot;)
     private Boolean anulada;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;orden&quot;)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;orden&quot;,fetch = FetchType.EAGER )
+    @JsonbTransient
     private List&lt;OrdenDetalle&gt; ordenDetalleList;
     @OneToMany(mappedBy = &quot;idOrden&quot;)
+    @JsonbTransient
     private List&lt;Pago&gt; pagoList;
 
-<span class="fc" id="L57">    public Orden() {</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L49">    public Orden() {</span>
+<span class="fc" id="L50">    }</span>
 
-<span class="fc" id="L60">    public Orden(Long idOrden) {</span>
-<span class="fc" id="L61">        this.idOrden = idOrden;</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L52">    public Orden(Long idOrden) {</span>
+<span class="fc" id="L53">        this.idOrden = idOrden;</span>
+<span class="fc" id="L54">    }</span>
 
     public Long getIdOrden() {
-<span class="fc" id="L65">        return idOrden;</span>
+<span class="fc" id="L57">        return idOrden;</span>
     }
 
     public void setIdOrden(Long idOrden) {
-<span class="fc" id="L69">        this.idOrden = idOrden;</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L61">        this.idOrden = idOrden;</span>
+<span class="fc" id="L62">    }</span>
 
     public Date getFecha() {
-<span class="fc" id="L73">        return fecha;</span>
+<span class="fc" id="L65">        return fecha;</span>
     }
 
     public void setFecha(Date fecha) {
-<span class="fc" id="L77">        this.fecha = fecha;</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L69">        this.fecha = fecha;</span>
+<span class="fc" id="L70">    }</span>
 
     public String getSucursal() {
-<span class="fc" id="L81">        return sucursal;</span>
+<span class="fc" id="L73">        return sucursal;</span>
     }
 
     public void setSucursal(String sucursal) {
-<span class="fc" id="L85">        this.sucursal = sucursal;</span>
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L77">        this.sucursal = sucursal;</span>
+<span class="fc" id="L78">    }</span>
 
     public Boolean getAnulada() {
-<span class="fc" id="L89">        return anulada;</span>
+<span class="fc" id="L81">        return anulada;</span>
     }
 
     public void setAnulada(Boolean anulada) {
-<span class="fc" id="L93">        this.anulada = anulada;</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L85">        this.anulada = anulada;</span>
+<span class="fc" id="L86">    }</span>
 
     public List&lt;OrdenDetalle&gt; getOrdenDetalleList() {
-<span class="fc" id="L97">        return ordenDetalleList;</span>
+<span class="nc" id="L89">        return ordenDetalleList;</span>
     }
 
     public void setOrdenDetalleList(List&lt;OrdenDetalle&gt; ordenDetalleList) {
-<span class="fc" id="L101">        this.ordenDetalleList = ordenDetalleList;</span>
-<span class="fc" id="L102">    }</span>
+<span class="nc" id="L93">        this.ordenDetalleList = ordenDetalleList;</span>
+<span class="nc" id="L94">    }</span>
 
     public List&lt;Pago&gt; getPagoList() {
-<span class="fc" id="L105">        return pagoList;</span>
+<span class="nc" id="L97">        return pagoList;</span>
     }
 
     public void setPagoList(List&lt;Pago&gt; pagoList) {
-<span class="fc" id="L109">        this.pagoList = pagoList;</span>
-<span class="fc" id="L110">    }</span>
+<span class="nc" id="L101">        this.pagoList = pagoList;</span>
+<span class="nc" id="L102">    }</span>
 
     @Override
     public int hashCode() {
-<span class="fc" id="L114">        int hash = 0;</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        hash += (idOrden != null ? idOrden.hashCode() : 0);</span>
-<span class="fc" id="L116">        return hash;</span>
+<span class="fc" id="L106">        int hash = 0;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        hash += (idOrden != null ? idOrden.hashCode() : 0);</span>
+<span class="fc" id="L108">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (!(object instanceof Orden)) {</span>
-<span class="nc" id="L123">            return false;</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (!(object instanceof Orden)) {</span>
+<span class="nc" id="L115">            return false;</span>
         }
-<span class="fc" id="L125">        Orden other = (Orden) object;</span>
-<span class="pc bpc" id="L126" title="5 of 8 branches missed.">        if ((this.idOrden == null &amp;&amp; other.idOrden != null) || (this.idOrden != null &amp;&amp; !this.idOrden.equals(other.idOrden))) {</span>
-<span class="nc" id="L127">            return false;</span>
+<span class="fc" id="L117">        Orden other = (Orden) object;</span>
+<span class="pc bpc" id="L118" title="5 of 8 branches missed.">        if ((this.idOrden == null &amp;&amp; other.idOrden != null) || (this.idOrden != null &amp;&amp; !this.idOrden.equals(other.idOrden))) {</span>
+<span class="nc" id="L119">            return false;</span>
         }
-<span class="fc" id="L129">        return true;</span>
+<span class="fc" id="L121">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L134">        return &quot;com.mycompany.extreciondeentities.entities.Orden[ idOrden=&quot; + idOrden + &quot; ]&quot;;</span>
+<span class="nc" id="L126">        return &quot;com.mycompany.extreciondeentities.entities.Orden[ idOrden=&quot; + idOrden + &quot; ]&quot;;</span>
     }
     
 }

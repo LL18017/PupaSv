@@ -39,42 +39,43 @@ public class OrdenDetalleBean extends AbstractDataAccess&lt;OrdenDetalle&gt; imp
     public String orderParameterQuery() {
 <span class="nc" id="L40">        return &quot;idOrdenDetalle&quot;;</span>
     }
-    
+
+
     public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
         try {
-<span class="nc" id="L45">            return em.createNamedQuery(&quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,OrdenDetalle.class)</span>
-<span class="nc" id="L46">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L47">                    .setParameter(&quot;idProductoPrecio&quot;, idProductoPrecio)</span>
-<span class="nc" id="L48">                    .getSingleResult();</span>
-<span class="nc" id="L49">        } catch (Exception e) {</span>
-<span class="nc" id="L50">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L46">            return em.createNamedQuery(&quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="nc" id="L47">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L48">                    .setParameter(&quot;idProductoPrecio&quot;, idProductoPrecio)</span>
+<span class="nc" id="L49">                    .getSingleResult();</span>
+<span class="nc" id="L50">        } catch (Exception e) {</span>
+<span class="nc" id="L51">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
         
-<span class="nc" id="L53">        return null;</span>
+<span class="nc" id="L54">        return null;</span>
     }
     public List&lt;OrdenDetalle&gt; findRangeByIdOrden(Long idOrden,int first , int max) {
         try {
-<span class="nc" id="L57">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
-<span class="nc" id="L58">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L59">                    .setFirstResult(first)</span>
-<span class="nc" id="L60">                    .setMaxResults(max)</span>
-<span class="nc" id="L61">                    .getResultList();</span>
-<span class="nc" id="L62">        } catch (Exception e) {</span>
-<span class="nc" id="L63">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L58">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="nc" id="L59">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L60">                    .setFirstResult(first)</span>
+<span class="nc" id="L61">                    .setMaxResults(max)</span>
+<span class="nc" id="L62">                    .getResultList();</span>
+<span class="nc" id="L63">        } catch (Exception e) {</span>
+<span class="nc" id="L64">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
 
-<span class="nc" id="L66">        return List.of();</span>
+<span class="nc" id="L67">        return List.of();</span>
     }
     public Long countByIdOrden(Long idOrden) {
         try {
-<span class="nc" id="L70">            return em.createNamedQuery(&quot;OrdenDetalle.countByIdOrden&quot;,Long.class)</span>
-<span class="nc" id="L71">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L72">                    .getSingleResult();</span>
-<span class="nc" id="L73">        } catch (Exception e) {</span>
-<span class="nc" id="L74">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L71">            return em.createNamedQuery(&quot;OrdenDetalle.countByIdOrden&quot;,Long.class)</span>
+<span class="nc" id="L72">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="nc" id="L73">                    .getSingleResult();</span>
+<span class="nc" id="L74">        } catch (Exception e) {</span>
+<span class="nc" id="L75">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
 
-<span class="nc" id="L77">        return 0L;</span>
+<span class="nc" id="L78">        return 0L;</span>
     }
 
 

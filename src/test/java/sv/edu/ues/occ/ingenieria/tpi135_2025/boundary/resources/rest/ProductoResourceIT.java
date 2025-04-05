@@ -126,9 +126,6 @@ public class ProductoResourceIT extends AbstractContainerTest {
         Assertions.assertNotNull(respuesta);
         registros = respuesta.readEntity(new GenericType<List<Producto>>() {
         });
-        registros.forEach(registro -> {
-            System.out.println(registro.toString());
-        });
         Assertions.assertEquals(0, registros.size());
 
         //fallo de argumentos first max
@@ -147,7 +144,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
         System.out.println("Producto  testSI update");
         Long idProdcuto = 1L;
         Integer idTipoProducto = 1001;
-        String path = String.format("producto/%d", idProdcuto);
+        String path = String.format("producto/%d", idParaTest);
         String nombre = "producto de prueba test";
         String observeacion = "observacion de prueba test";
 
@@ -164,7 +161,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
         Assertions.assertNotNull(rpp);
         Assertions.assertEquals(nombre, rpp.getNombre());
         assertEquals(observeacion, rpp.getObservaciones());
-        Assertions.assertEquals(idProdcuto, rpp.getIdProducto());
+        Assertions.assertEquals(idParaTest , rpp.getIdProducto());
 
         //fallo de argumentos id inexistentes
         path = String.format("producto/%d", 12345);

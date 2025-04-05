@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
@@ -18,6 +20,8 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrdenResourceIT extends AbstractContainerTest {
 
+
+    private static final Logger log = LoggerFactory.getLogger(OrdenResourceIT.class);
 
     @BeforeAll
     public void inicializar() {
@@ -47,7 +51,6 @@ public class OrdenResourceIT extends AbstractContainerTest {
 
         //argumentos malos
         respuesta = target.path("orden").queryParam("first", first).queryParam("max", -80).request(MediaType.APPLICATION_JSON).get();
-        System.out.println(respuesta.getHeaders());
         Assertions.assertEquals(400, respuesta.getStatus());
 //        Assertions.fail("fallo exitosamente");
     }

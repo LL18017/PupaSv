@@ -8,21 +8,11 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
@@ -32,49 +22,33 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class OrdenBeanIT {
+public class OrdenBeanIT extends AbstractContainerTest {
 
-    String nombreDb = "TipicosSV";
-    String password = "abc123";
-    String username = "postgres";
-    int puerto = 9080;
+    OrdenBean cut;
+    EntityManager mockEm;
+    OrdenBean cut2;
 
-    List<Orden> LISTA_ORDEN = new ArrayList<>();
+    Long totalEnScript = 3l;//cantidad en el script
+    Long idDePrueba = 12345L;//ya se encuentra en el script
+    Long idCreadoEnPrueba=0L;//se cambiara luego
 
-    EntityManagerFactory emf;
-
-    public OrdenBeanIT() {
-    }
-
-    @Container
-    static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName("TipicoSV")
-            .withPassword("abc123")
-            .withUsername("postgres")
-            .withInitScript("tipicos_tpi135_2025.sql")
-            .withExposedPorts(5432)
-            .withNetworkAliases("db");
-
-    @BeforeAll
-    public void inicializar() {
-        System.out.println("Puerto Mapeado: " + postgres.getMappedPort(5432));
-        HashMap<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://localhost:%d/TipicoSV", postgres.getMappedPort(5432)));
-        emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
+    @BeforeEach
+    void setUp() {
+        cut = new OrdenBean();
+        mockEm = Mockito.mock(EntityManager.class);
+        cut2 = Mockito.spy(new OrdenBean());
     }
 
     @Order(1)
     @Test
     public void contar() {
         System.out.println("testIT Contar");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Long esperado = 3L;
         em.getTransaction().begin();
         Long respuesta = cut.count();
         em.getTransaction().commit();
-        Assertions.assertEquals(esperado, respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta);
 
 //        Assertions.fail("fallo exitosamente");
     }
@@ -83,18 +57,15 @@ public class OrdenBeanIT {
     @Test
     public void findRange() {
         System.out.println("testIT findRange");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        int first = 0;
-        int max = 10;
         //flujo normal
         em.getTransaction().begin();
         List<Orden> respuesta = cut.findRange(first, max);
         em.getTransaction().commit();
 
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(3, respuesta.size());
+        Assertions.assertEquals(totalEnScript, respuesta.size());
 
         //error de argumentos
         em.getTransaction().begin();
@@ -114,15 +85,13 @@ public class OrdenBeanIT {
     @Test
     public void findAll() {
         System.out.println("testIT fiand all");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
-        long esperado = 3L;
         cut.em = em;
         em.getTransaction().begin();
         List<Orden> respuesta = cut.findAll();
         em.getTransaction().commit();
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(esperado, respuesta.size());
+        Assertions.assertEquals(totalEnScript, respuesta.size());
 
 //        Assertions.fail("fallo exitosamente");
     }
@@ -131,17 +100,15 @@ public class OrdenBeanIT {
     @Test
     public void findById() {
         System.out.println("testIT fiandById");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         //datos esperados segun script
-        Long id = 12345L;
         LocalDate ld = LocalDate.parse("2025-03-03");
         Date date = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
         String sucursal = "Zarsa";
         boolean activo = true;
         em.getTransaction().begin();
-        Orden respuesta = cut.findById(12345L);//id primer elemento
+        Orden respuesta = cut.findById(idDePrueba);//id primer elemento
         em.getTransaction().commit();
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(date, respuesta.getFecha());
@@ -172,7 +139,6 @@ public class OrdenBeanIT {
     @Test
     public void create() {
         System.out.println("testIT create");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Orden creado = new Orden();
@@ -183,7 +149,9 @@ public class OrdenBeanIT {
         em.getTransaction().begin();
         cut.create(creado);
         em.getTransaction().commit();
-        Orden respuesta = cut.findAll().get(0);//obtenemos el ultimo
+        idCreadoEnPrueba=creado.getIdOrden();
+        totalEnScript++;
+        Orden respuesta = cut.findById(idCreadoEnPrueba);//obtenemos el ultimo
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(creado, respuesta);
 
@@ -201,20 +169,18 @@ public class OrdenBeanIT {
     @Test
     public void update() {
         System.out.println("testIT update");
-        OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Orden ordenPrimera = new Orden(12345L);
         ordenPrimera.setFecha(Date.from(LocalDate.parse("2025-03-03").atStartOfDay(ZoneId.systemDefault()).toInstant()));
         ordenPrimera.setSucursal("Zarsa");
         ordenPrimera.setAnulada(false);
-        Long IdModificar = 12345L;
 
         //flujo normal
         cut.em.getTransaction().begin();
-        Orden modificado = cut.update(ordenPrimera, IdModificar);
+        Orden modificado = cut.update(ordenPrimera, idDePrueba);
         cut.em.getTransaction().commit();
-        Orden respuesta = cut.findById(IdModificar);
+        Orden respuesta = cut.findById(idDePrueba);
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(modificado, respuesta);
 
@@ -228,7 +194,7 @@ public class OrdenBeanIT {
         //entidad nula
         em.getTransaction().begin();
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.update(null, IdModificar);
+            cut.update(null, idDePrueba);
         });
         em.getTransaction().commit();
 
@@ -249,15 +215,14 @@ public class OrdenBeanIT {
         OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Object idOrdenPrimera = 12345L;
 
         //flujo normal
         em.getTransaction().begin();
-        cut.delete(idOrdenPrimera);
+        cut.delete(idCreadoEnPrueba);
         em.getTransaction().commit();
 
         // Verificar que realmente se eliminó
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.delete(idOrdenPrimera);});
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.delete(idCreadoEnPrueba);});
 
         //idNullo
         em.getTransaction().begin();

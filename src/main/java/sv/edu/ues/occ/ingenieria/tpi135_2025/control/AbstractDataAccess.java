@@ -12,6 +12,8 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @param <T> Tipo de entidad manejada por la clase hija.
@@ -146,6 +148,9 @@ public abstract class AbstractDataAccess<T> {
             return query.getResultList();
         } catch (PersistenceException e) {
             throw new PersistenceException("error al aceder al la base de datos", e);
+        } catch (Exception e) {
+            Logger.getLogger(AbstractDataAccess.class.getName()).log(Level.SEVERE, null, e);
+            throw new PersistenceException("error al aceder a la base de datos", e);
         }
     }
 

@@ -23,7 +23,6 @@ class TipoProductoResourceIT extends AbstractContainerTest{
 
     @BeforeAll
     public void inicializar() {
-        System.out.println(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/tipoProducto", servidorDeAplicaion.getMappedPort(9080)));
         cliente = ClientBuilder.newClient();
         target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
 
@@ -63,7 +62,6 @@ class TipoProductoResourceIT extends AbstractContainerTest{
         Assertions.assertEquals(totalEnScript, registros.size());
         //argumentos malos
         respuesta = target.path("tipoProducto").queryParam("first", first).queryParam("max", -80).request(MediaType.APPLICATION_JSON).get();
-        System.out.println(respuesta.getHeaders());
         Assertions.assertEquals(400, respuesta.getStatus());
         //fallo de argumentos
         respuesta=target.path("tipoProducto").queryParam("first",-9).queryParam("max",max).request(MediaType.APPLICATION_JSON).get();
