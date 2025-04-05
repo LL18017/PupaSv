@@ -9,96 +9,77 @@ import jakarta.ws.rs.*;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.*;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 /**
  * @author mjlopez
  */
 @Path("tipoProducto")
-public class TipoProductoResource implements Serializable {
+public class TipoProductoResource extends GeneralRest implements Serializable {
 
     @Inject
     TipoProductoBean tpBean;
 
 
     /**
-     * metodo que devueleve una rango de datos de tipo TipoProducto
+     * metodo que devueleve una rango de datos de tipoProducto
      *
      * @param first la pocicion del primer dat
      * @param max   la cantidad de datos que se desea obtener
-     * @return una lista de tipo T si no definel los parametros entonces
-     * devuelve los primeros 20 registros
+     * @return una estatus 200 y una lista de tipo T si no definel los parametros entonces devuelve los primeros 20 registros
+     * @return 400 si los argumentos son erroneos
+     * 500 si existe problema con el entity, lsi al buscar la cantidad de datos devuelve mas de un resultado o existe problema con la base
      */
-
     @GET
     @Path("")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max) {
         try {
-            System.out.println("First: " + first + ", Max: " + max);
-            if (first >= 0 && max >= 0 && max <= 50) {
-                List<TipoProducto> encontrados = tpBean.findRange(first, max);
-
-                long total = tpBean.count();
-                Response.ResponseBuilder builder = Response.ok(encontrados).
-                        header(Headers.TOTAL_RECORD, total).
-                        type(MediaType.APPLICATION_JSON);
-                return builder.build();
-            } else {
-                return Response.status(400).header(Headers.WRONG_PARAMETER, "first:" + first + ",max: " + max).build();
-            }
+            List<TipoProducto> encontrados = tpBean.findRange(first, max);
+            long total = tpBean.count();
+            Response.ResponseBuilder builder = Response.ok(encontrados).
+                    header(Headers.TOTAL_RECORD, total).
+                    type(MediaType.APPLICATION_JSON);
+            return builder.build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
+            return responseExcepcions(e, null);
         }
     }
 
     /**
-     * Metodo para encontrar un registro especifico de producto dado su id
+     * Metodo para encontrar un registro especifico de TipoProducto dado su id
      *
      * @param id del registro a buscar
      * @return un esatatus 200 si se logro encontrar la entidad junto con dicha entidad
-     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
-     * encuentra ningun registro con el id especificado 400 si se envia mal una
-     * parametro
+     * 500 en dado caso falle el servidor o la base de datos
+     * 404 si no se encuentra la entidad
+     * 400 si hay problema con los parametros
      */
+
 
     @Path("/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam("id") Integer id) {
-        if (id > 0) {
-            try {
-                TipoProducto encontrado = tpBean.findById(id);
-                if (encontrado != null) {
-                    Response.ResponseBuilder builder = Response.ok(encontrado);
-                    return builder.build();
-                }
-                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
-            }
+        try {
+            TipoProducto encontrado = tpBean.findById(id);
+            return Response.ok(encontrado).header(Headers.NOT_FOUND_ID, id).build();
+        } catch (Exception e) {
+            return responseExcepcions(e, Long.valueOf(id));
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
     }
 
     /**
      * Registra una entidad TipoProducto
      *
      * @param uriInfo informacion de URl donde se encuantra la peticion
-     * @return un estatus 201 si la entidad es creada junto con la url donde se
-     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
-     * entidad y 500 si por fall el servidor
+     * @return un estatus 201 si la entidad es creada junto con la url donde se encuentra
+     * 400 si hay error con los argumentos
+     * 422 si la entidad ha sido creada previamente
+     * 500 si falla el servidor o la base
      */
 
     @Path("")
@@ -106,83 +87,63 @@ public class TipoProductoResource implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(TipoProducto registro, @Context UriInfo uriInfo) {
-        if (registro != null && registro.getIdTipoProducto() == null) {
-            try {
-                tpBean.create(registro);
-                if (registro.getIdTipoProducto() != null) {
-                    UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                    uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));
-                    return Response.created(uriBuilder.build()).build();
-                }
-                return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, "Record couldnt be created").build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
-            }
+        try {
+            tpBean.create(registro);
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+            uriBuilder.path(String.valueOf(registro.getIdTipoProducto()));
+            return Response.created(uriBuilder.build()).build();
+        } catch (Exception e) {
+            return responseExcepcions(e, null);
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();
     }
 
     /**
-     * Borra un registro de tipo TipoProducto Especifico
+     * Borra un registro de tipo Orden Especifico
      *
      * @param id      id del TipoProducto a eliminar
      * @param uriInfo info de url de donde se esta realizado la peticion
-     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
-     * y 500 si falla el servdor
+     * @return un status 200 si se borro la entidad
+     * 422 si hubo un problema con las reglas de integridad referencial
+     * 500 si falla el servdor o la base d e datos
+     * 400 si hubo error con los argumentos
      */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response delete(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
-        if (id != null && id > 0) {
-            try {
-                TipoProducto existe = tpBean.findById(id);
-                if (existe != null) {
-                    tpBean.delete(id);
-                    return Response.status(200).build();
-                }
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
-            }
-            return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();
+        try {
+            tpBean.delete(id);
+            return Response.status(200).build();
+        } catch (Exception e) {
+            return responseExcepcions(e, Long.valueOf(id));
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER, "id: " + id).build();
     }
 
     /**
      * Actualiza una entidad de base de datos
      *
-     * @param registro entidda a ser actualizada
-     * @param uriInfo  info de url de donde se esta realizado la peticion
-     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
-     * problema y 500 si falla el servidor
+     * @param registro       entidda a ser actualizada
+     * @param uriInfo        info de url de donde se esta realizado la peticion
+     * @param idTipoProducto id de la entidad a ser borrada
+     * @return un status 200 si se actualizo la entidad ,
+     * 400 si hubo un error con los argumentos
+     * problema y 500 si falla el servidor, la base de datos o,
+     * 422 si hubo error con las reglas de integridad referencial
+     * 404 si no existe dicha entidad
      */
-    @Path("/{id}")
+    @Path("/{idTipoProducto}")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(TipoProducto registro, @Context UriInfo uriInfo
-            , @PathParam("id") Integer id) {
-        if (registro != null && id != null && id > 0) {
-            try {
-                TipoProducto existe = tpBean.findById(id);
-                if (existe != null) {
-                    registro.setIdTipoProducto(id);
-                    tpBean.update(registro);
-                    if (registro.getIdTipoProducto() != null) {
-                        return Response.status(200).build();
-                    }
-                }
-                return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
-            }
+            , @PathParam("idTipoProducto") Integer idTipoProducto) {
+        try {
+            tpBean.update(registro, idTipoProducto);
+            return Response.status(200).build();
+        } catch (Exception e) {
+            return responseExcepcions(e, Long.valueOf(idTipoProducto));
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER, registro).build();
     }
 
 

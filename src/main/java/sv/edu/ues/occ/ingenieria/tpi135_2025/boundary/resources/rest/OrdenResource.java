@@ -1,40 +1,32 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityExistsException;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Path("orden")
-public class OrdenResource extends Resource<Orden> implements Serializable {
+public class OrdenResource extends GeneralRest implements Serializable {
 
     @Inject
     OrdenBean oBean;
 
-    public OrdenResource() {
-        super(Orden.class);
-    }
-
-    @Override
-    AbstractDataAccess<Orden> getBean() {
-        return oBean;
-    }
 
     /**
      * metodo que devueleve una rango de datos de tipo Orden
      *
      * @param first la pocicion del primer dat
      * @param max   la cantidad de datos que se desea obtener
-     * @return una lista de tipo T si no definel los parametros entonces
-     * devuelve los primeros 20 registros
+     * @return una estatus 200 y una lista de tipo T si no definel los parametros entonces devuelve los primeros 20 registros
+     * @return 400 si los argumentos son erroneos
+     * 500 si existe problema con el entity, lsi al buscar la cantidad de datos devuelve mas de un resultado o existe problema con la base
      */
 
     @GET
@@ -42,10 +34,6 @@ public class OrdenResource extends Resource<Orden> implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max) {
         try {
-            System.out.println("First: " + first + ", Max: " + max);
-            Response verificarMaxAndFirst = veririficarMaxAndFirst(first, max);
-            if (verificarMaxAndFirst.getStatus() != 200) return verificarMaxAndFirst;
-
             List<Orden> encontrados = oBean.findRange(first, max);
             long total = oBean.count();
             Response.ResponseBuilder builder = Response.ok(encontrados).
@@ -54,44 +42,38 @@ public class OrdenResource extends Resource<Orden> implements Serializable {
             return builder.build();
 
         } catch (Exception e) {
-            return Response.status(500).entity(e.getMessage()).build();
+            return responseExcepcions(e,null);
         }
     }
 
     /**
-     * Metodo para encontrar un registro especifico de producto dado su id
-     *
+     * Metodo para encontrar un registro especifico de Orden dado su id
      * @param id del registro a buscar
      * @return un esatatus 200 si se logro encontrar la entidad junto con dicha entidad
-     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
-     * encuentra ningun registro con el id especificado 400 si se envia mal una
-     * parametro
+     * 500 en dado caso falle el servidor o la base de datos
+     * 404 si no se encuentra la entidad
+     * 400 si hay problema con los parametros
      */
 
     @Path("{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam("id") Long id) {
-        if (id > 0) {
-            try {
-                Response verificarId = verificarId(id, "idOrden");
-                if (verificarId.getStatus() != 200) return verificarId;
-                return verificarExistencia(id);
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
-            }
+        try {
+            Orden registro = oBean.findById(id);
+            return Response.ok(registro).build();
+        } catch (Exception e) {
+            return responseExcepcions(e,id);
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
     }
 
     /**
      * Registra una entidad Orden
-     *
      * @param uriInfo informacion de URl donde se encuantra la peticion
-     * @return un estatus 201 si la entidad es creada junto con la url donde se
-     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
-     * entidad y 500 si por fall el servidor
+     * @return un estatus 201 si la entidad es creada junto con la url donde se encuentra
+     * 400 si hay error con los argumentos
+     * 422 si la entidad ha sido creada previamente
+     * 500 si por falla el sercidor o la base
      */
 
     @Path("")
@@ -100,28 +82,23 @@ public class OrdenResource extends Resource<Orden> implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Orden registro, @Context UriInfo uriInfo) {
         try {
-            Response verificarEntidad = verificarEntity(registro);
-            if (verificarEntidad.getStatus() != 200) return verificarEntidad;
             oBean.create(registro);
-
-            if (registro.getIdOrden() != null) {
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                uriBuilder.path(String.valueOf(registro.getIdOrden()));
-                return Response.created(uriBuilder.build()).build();
-            }
-            return Response.status(422).header(Headers.UNPROCESSABLE_ENTITY, "Record couldnt be created").build();
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+            uriBuilder.path(String.valueOf(registro.getIdOrden()));
+            return Response.created(uriBuilder.build()).build();
         } catch (Exception e) {
-            return Response.status(500).entity(e.getMessage()).build();
+            return responseExcepcions(e,registro.getIdOrden());
         }
     }
 
     /**
      * Borra un registro de tipo Orden Especifico
-     *
      * @param id      id del Orden a eliminar
      * @param uriInfo info de url de donde se esta realizado la peticion
-     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
-     * y 500 si falla el servdor
+     * @return un status 200 si se borro la entidad
+     * 422 si hubo un problema con las reglas de integridad referencial
+     * 500 si falla el servdor o la base d e datos
+     * 400 si hubo error con los argumentos
      */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
@@ -129,14 +106,10 @@ public class OrdenResource extends Resource<Orden> implements Serializable {
     @Path("{id}")
     public Response delete(@PathParam("id") Long id, @Context UriInfo uriInfo) {
         try {
-            Response verificarId = verificarId(id, "idOrden");
-            if (verificarId.getStatus() != 200) return verificarId;
-            Response verificarExistencia = verificarExistencia(id);
-            if (verificarExistencia.getStatus() != 200) return verificarExistencia;
             oBean.delete(id);
             return Response.status(200).build();
         } catch (Exception e) {
-            return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
+            return responseExcepcions(e,id);
         }
     }
 
@@ -145,29 +118,23 @@ public class OrdenResource extends Resource<Orden> implements Serializable {
      *
      * @param registro entidda a ser actualizada
      * @param uriInfo  info de url de donde se esta realizado la peticion
-     * @return un status 200 si se actualizo la entidad , un 422 si hubo un
-     * problema y 500 si falla el servidor
+     * @param idOrden id de la entidad a ser borrada
+     * @return un status 200 si se actualizo la entidad ,
+     * 400 si hubo un error con los argumentos
+     * problema y 500 si falla el servidor, la base de datos o,
+     * 422 si hubo error con las reglas de integridad referencial
+     * 404 si no existe dicha entidad
      */
     @Path("{idOrden}")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(Orden registro, @PathParam("idOrden") Long idOrden, @Context UriInfo uriInfo) {
+    public Response update(Orden registro, @PathParam("idOrden") @DefaultValue("0") Long idOrden, @Context UriInfo uriInfo) {
         try {
-            Response verificarid = verificarId(idOrden, "idOrden");
-            if (verificarid.getStatus() != 200) return verificarid;
-            Response encontrado = verificarExistencia(idOrden);
-            if (encontrado.getStatus() != 200) return encontrado;
-            registro.setIdOrden(idOrden);
-
-            oBean.update(registro);
-            if (registro.getIdOrden() != null) {
-                return Response.status(200).build();
-            }
-            return Response.status(422).header(Headers.PROCESS_ERROR, "error al procesar peticion").build();
-
+            oBean.update(registro, idOrden);
+            return Response.status(200).build();
         } catch (Exception e) {
-            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
+            return responseExcepcions(e,idOrden);
         }
 
 

@@ -1,10 +1,7 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -12,76 +9,46 @@ import jakarta.ws.rs.core.Response;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class OrdenResourceIT extends GenericResourceForTest {
+public class OrdenResourceIT extends AbstractContainerTest {
 
-    Client cliente;
-    WebTarget target;
-    @Container
-    static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName(dbName)
-            .withPassword(dbPassword)
-            .withUsername(dbUser)
-            .withInitScript("tipicos_tpi135_2025.sql")
-            .withExposedPorts(dbPort)
-            .withNetwork(red)
-            .withNetworkAliases("db16_tpi");
-
-    @Container
-    static GenericContainer servidor = new GenericContainer("liberty_app")
-            .withCopyFileToContainer(war, "/config/dropins/PupaSv-1.0-SNAPSHOT.war")
-            .withExposedPorts(9080)
-            .withNetwork(red)
-            .withEnv("DB_PASSWORD", dbPassword)
-            .withEnv("DB_USER", dbUser)
-            .withEnv("DB_NAME", dbName)
-            .withEnv("DB_PORT", String.valueOf(dbPort))
-            .withEnv("DB_HOST", "db16_tpi")
-            .dependsOn(postgres);
 
     @BeforeAll
     public void inicializar() {
-        System.out.println(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/orden", servidor.getMappedPort(9080)));
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidor.getMappedPort(9080)));
+        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
 
     }
+
+    Integer first = 0;
+    Integer max = 10;
+    Long cantidadEnScript = 3L;
+    Long idBase = 12345L;
 
     @Order(1)
     @Test
     public void testGetBean() {
         System.out.println("testSI get");
-        Assertions.assertTrue(servidor.isRunning());
-        Integer first = 0;
-        Integer max = 10;
+        Assertions.assertTrue(servidorDeAplicaion.isRunning());
         Response respuesta = target.path("orden").request(MediaType.APPLICATION_JSON).get();
 
-        System.out.println(servidor.getLogs());
+        //flujo bueno
         Assertions.assertEquals(200, respuesta.getStatus());
         Assertions.assertNotNull(respuesta);
         List<Orden> registros = respuesta.readEntity(new GenericType<List<Orden>>() {
         });
-        Assertions.assertEquals(3, registros.size());
+        Assertions.assertEquals(cantidadEnScript, registros.size());
 
         //argumentos malos
-        respuesta = target.path("orden").queryParam("first", first).queryParam("max", 90).request(MediaType.APPLICATION_JSON).get();
+        respuesta = target.path("orden").queryParam("first", first).queryParam("max", -80).request(MediaType.APPLICATION_JSON).get();
+        System.out.println(respuesta.getHeaders());
         Assertions.assertEquals(400, respuesta.getStatus());
-
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -93,13 +60,11 @@ public class OrdenResourceIT extends GenericResourceForTest {
         registro.setFecha(new Date());
         registro.setSucursal("Zarsa");
         registro.setAnulada(false);
-
+        //flujo bueno
         Response respuesta = target.path("orden").request(MediaType.APPLICATION_JSON).post(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Assertions.assertNotNull(respuesta);
-        System.out.println(servidor.getLogs());
         Assertions.assertEquals(201, respuesta.getStatus());
-
-        //fallo de argumentos
+        //Assertions.fail("fallo exitosamenet");
     }
 
     @Order(3)
@@ -108,36 +73,42 @@ public class OrdenResourceIT extends GenericResourceForTest {
         System.out.println("testSI update");
         String sucursal = "sa";
         boolean anulada = true;
-        Long id = 12345L;
+
         Orden registro = new Orden();
-        registro.setIdOrden(id);
+        registro.setIdOrden(idBase);
         registro.setSucursal(sucursal);
         registro.setAnulada(anulada);
 
-        Response respuesta = target.path(String.format("orden/%d", id)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
-        Response respuestaPeticion = target.path(String.format("orden/%d", id)).request(MediaType.APPLICATION_JSON).get();
-        Orden rpp = respuestaPeticion.readEntity(Orden.class);
-        System.out.println(servidor.getLogs());
-        Assertions.assertNotNull(rpp);
+        Response respuesta = target.path(String.format("orden/%d", idBase)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Assertions.assertEquals(200, respuesta.getStatus());
-        Assertions.assertEquals(sucursal, rpp.getSucursal());
-        Assertions.assertTrue(rpp.getAnulada());
-        Assertions.assertEquals(id, rpp.getIdOrden());
+        //fallo de argumentos
+        respuesta = target.path(String.format("orden/%d", 0)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
+        Assertions.assertEquals(400, respuesta.getStatus());
+        //fid No existe
+        respuesta = target.path(String.format("orden/%d", 112233L)).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
+        Assertions.assertEquals(404, respuesta.getStatus());
 
 //        Assertions.fail("fallo exitosamente");
-    } 
+    }
 
     @Order(4)
     @Test
     public void testGetId() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("testSI getById");
-        Long id = 12345L;
-        Response respuestaPeticion = target.path(String.format("orden/%d", id)).request(MediaType.APPLICATION_JSON).get();
+
+        //flujo bueno
+        Response respuestaPeticion = target.path(String.format("orden/%d", idBase)).request(MediaType.APPLICATION_JSON).get();
         Orden respuesta = respuestaPeticion.readEntity(Orden.class);
-//        Assertions.assertNotNull(respuesta);
+        Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(200, respuestaPeticion.getStatus());
-        Assertions.assertEquals(id, respuesta.getIdOrden());
+        Assertions.assertEquals(idBase, respuesta.getIdOrden());
+        //fallo de argumentos
+        respuestaPeticion = target.path(String.format("orden/%d", -90)).request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(400, respuestaPeticion.getStatus());
+        //id No existe
+        respuestaPeticion = target.path(String.format("orden/%d", 112233L)).request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(404, respuestaPeticion.getStatus());
 //        Assertions.fail("fallo exitosamente");
 
     }

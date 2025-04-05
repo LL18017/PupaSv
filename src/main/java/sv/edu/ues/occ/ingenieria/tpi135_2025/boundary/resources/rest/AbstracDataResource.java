@@ -174,10 +174,9 @@ public abstract class AbstracDataResource<T> implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(T registro, @Context UriInfo uriInfo) {
-        System.out.println(getId(registro));
         if (registro != null && getId(registro) != null) {
             try {
-                getBean().update(registro);
+                getBean().update(registro,getId(registro));
                 if (getId(registro) != null) {
 
                     return Response.status(200).build();

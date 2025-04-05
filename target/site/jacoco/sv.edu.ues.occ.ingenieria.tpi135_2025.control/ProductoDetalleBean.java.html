@@ -6,17 +6,17 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 /**
  * @author mjlopez bean para control de entidad ProductoDetalle
@@ -34,61 +34,83 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
 
     @Override
     public EntityManager getEntityManager() {
-<span class="fc" id="L37">        return em;</span>
+<span class="nc" id="L37">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="fc" id="L42">        return &quot;idProductoDetalle&quot;;</span>
+<span class="nc" id="L42">        return &quot;idProductoDetalle&quot;;</span>
     }
 
-
+    /**
+     * Encuentra un objeto específico por su ID. Verifica que el ID no sea nulo
+     * antes de realizar la búsqueda.
+     *
+     * @param idProducto     id del producto relacionado al detalle
+     * @param idTipoProducto id del tipo producto relacionado al detalle
+     * @return el detalle correspondiente a los ids enviados.
+     * @throws IllegalArgumentException Si el ID es nulo o inválido.
+     * @throws IllegalStateException    Si no se puede acceder al repositorio.
+     * @throws EntityNotFoundException  Si no existe una entidad con ese id.
+     * @throws PersistenceException     si hay un error general con el repositorio.
+     */
     public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
-<span class="pc bpc" id="L47" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt; 0)</span>
-<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
-<span class="pc bpc" id="L49" title="2 of 4 branches missed.">        if (idProducto == null || idProducto &lt; 0)</span>
-<span class="nc" id="L50">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
+<span class="pc bpc" id="L58" title="2 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0)</span>
+<span class="nc" id="L59">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
+<span class="pc bpc" id="L60" title="2 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0)</span>
+<span class="nc" id="L61">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
 
         try {
+<span class="fc" id="L64">            Producto producto = em.find(Producto.class, idProducto);</span>
+<span class="fc" id="L65">            TipoProducto tipoProducto = em.find(TipoProducto.class, idTipoProducto);</span>
 
-<span class="fc" id="L54">            return em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
-<span class="fc" id="L55">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
-<span class="fc" id="L56">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
-<span class="fc" id="L57">                    .getSingleResult();</span>
-<span class="fc" id="L58">        } catch (NoResultException ex) {</span>
-<span class="fc" id="L59">            Logger.getLogger(ProductoDetalleBean.class.getName()).log(Level.SEVERE, null, ex);</span>
-<span class="fc" id="L60">            return null;</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">            if (tipoProducto == null) {</span>
+<span class="nc" id="L68">                throw new EntityNotFoundException(&quot;No se encontro el registro de tipoProdcuto con el id &quot; + idTipoProducto);</span>
+            }
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (producto == null) {</span>
+<span class="nc" id="L71">                throw new EntityNotFoundException(&quot;no se encontro el registro de producto con el id &quot; + idProducto);</span>
+            }
+<span class="fc" id="L73">            ProductoDetalle registro = em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
+<span class="fc" id="L74">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
+<span class="fc" id="L75">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
+<span class="fc" id="L76">                    .getSingleResult();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            if (registro == null) {</span>
+<span class="nc" id="L78">                throw new EntityNotFoundException(&quot;No se encontro el registro&quot;);</span>
+            }
+<span class="fc" id="L80">            return registro;</span>
+<span class="nc" id="L81">        } catch (PersistenceException ex) {</span>
+<span class="nc" id="L82">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
         }
     }
 
 
     public void deleteByPk(ProductoDetallePK pk) {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (pk != null) {</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (pk != null) {</span>
             try {
-<span class="fc" id="L68">                em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, pk.getIdProducto()).setParameter(&quot;idTipoProducto&quot;, pk.getIdTipoProducto()).executeUpdate();</span>
-<span class="fc" id="L69">                return;</span>
-<span class="fc" id="L70">            } catch (Exception e) {</span>
-<span class="fc" id="L71">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="fc" id="L72">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+<span class="nc" id="L90">                em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, pk.getIdProducto()).setParameter(&quot;idTipoProducto&quot;, pk.getIdTipoProducto()).executeUpdate();</span>
+<span class="nc" id="L91">                return;</span>
+<span class="nc" id="L92">            } catch (Exception e) {</span>
+<span class="nc" id="L93">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L94">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L75">        throw new IllegalArgumentException(&quot;la llave no pueden ser null&quot;);</span>
+<span class="nc" id="L97">        throw new IllegalArgumentException(&quot;la llave no pueden ser null&quot;);</span>
     }
 
 
     @Override
-    public List&lt;ProductoDetalle&gt; findRange(int first, int max) {
-<span class="pc bpc" id="L81" title="1 of 4 branches missed.">        if (first &gt;=0 &amp;&amp; max &gt;0) {</span>
+    public List&lt;ProductoDetalle&gt; findRange(Integer first, Integer max) {
+<span class="nc bnc" id="L103" title="All 4 branches missed.">        if (first &gt;= 0 &amp;&amp; max &gt; 0) {</span>
             try {
-<span class="fc" id="L83">                return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
-<span class="fc" id="L84">                        .setFirstResult(first)</span>
-<span class="fc" id="L85">                        .setMaxResults(max)</span>
-<span class="fc" id="L86">                        .getResultList();</span>
-<span class="fc" id="L87">            } catch (Exception e) {</span>
-<span class="fc" id="L88">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
+<span class="nc" id="L105">                return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
+<span class="nc" id="L106">                        .setFirstResult(first)</span>
+<span class="nc" id="L107">                        .setMaxResults(max)</span>
+<span class="nc" id="L108">                        .getResultList();</span>
+<span class="nc" id="L109">            } catch (Exception e) {</span>
+<span class="nc" id="L110">                throw new IllegalStateException(&quot;error al aceder al repositorio&quot;, e);</span>
             }
         }
-<span class="fc" id="L91">        throw new IllegalArgumentException(&quot;first y max no pueden ser nulos&quot;);</span>
+<span class="nc" id="L113">        throw new IllegalArgumentException(&quot;first y max no pueden ser nulos&quot;);</span>
     }
 
 }

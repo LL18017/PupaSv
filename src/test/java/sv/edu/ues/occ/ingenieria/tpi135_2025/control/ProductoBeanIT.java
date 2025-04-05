@@ -1,60 +1,44 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Persistence;
-import jakarta.ws.rs.core.Response;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolationException;
+import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProductoBeanIT extends GenericControlIT{
-    Producto registro;
+public class ProductoBeanIT extends AbstractContainerTest {
 
-    List<Producto> LISTA_Producto = new ArrayList<>();
-
-    EntityManagerFactory emf;
-    public ProductoBeanIT() {
-    }
-
-    @Container
-    static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName("TipicoSVtest")
-            .withPassword("abc123")
-            .withUsername("postgres")
-            .withInitScript("tipicos_tpi135_2025.sql")
-            .withExposedPorts(5432)
-            .withNetworkAliases("db");
-
+    private static final Logger log = LoggerFactory.getLogger(ProductoBeanIT.class);
     ProductoBean cut;
     EntityManager mockEm;
-    ProductoDetalleBean cut2;
+    ProductoBean cut2;
+
+    Long totalEnScript = 4l;//cantidad en el script
+    Long idDePrueba = 1001L;//ya se encuentra en el script
+    Long idCreadoEnPrueba = 1001L;//se cambiara luego
+    Integer idTipoProdcutoCreado = 1002;
 
     @BeforeEach
     void setUp() {
         cut = new ProductoBean();
         mockEm = Mockito.mock(EntityManager.class);
-        cut2 = Mockito.spy(new ProductoDetalleBean());
+        cut2 = Mockito.spy(new ProductoBean());
     }
 
-    @BeforeAll
-    public void inicializar() {
-        HashMap<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://localhost:%d/TipicoSVtest", postgres.getMappedPort(5432)));
-        emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
-
-    }
 
     @Order(1)
     @Test
@@ -62,246 +46,267 @@ public class ProductoBeanIT extends GenericControlIT{
         System.out.println("Producto testIT create");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Integer idTipoProducto=1002;
         Producto creado = new Producto();
         creado.setNombre("nuegados test");
-        try {
-            //creamos
-            cut.em.getTransaction().begin();
-            cut.createProducto(creado, idTipoProducto);
-            cut.em.getTransaction().commit();
-            this.registro=creado;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        //creamos
+        cut.em.getTransaction().begin();
+        cut.createProductoAndDetail(creado, idTipoProdcutoCreado);
+        cut.em.getTransaction().commit();
+        idCreadoEnPrueba = creado.getIdProducto();
+        totalEnScript++;
+        //fallo de registro
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.create(null));
+        cut.em.getTransaction().commit();
+        ProductoDetalleBean cd = new ProductoDetalleBean();
+        cd.em = emf.createEntityManager();
+        ProductoDetalle detalle = cd.findById(idTipoProdcutoCreado, idCreadoEnPrueba);
+        System.out.println(detalle.toString());
+
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(2)
     @Test
     void findRange() {
-        System.out.println("Producto testIT findRange");
+        System.out.println("TipoProducto testIT findRange");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        int first = 0;
-        int max = 2;
 
-        try {
-            cut.em.getTransaction().begin();
-            List<Producto> respuesta = cut.findRange(first, max);
-            cut.em.getTransaction().commit();
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(max, respuesta.size());
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        //flujo normal
+        cut.em.getTransaction().begin();
+        List<Producto> respuesta = cut.findRange(first, max);
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta.size());
+
+        //fallo de argumentos
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRange(null, max));
+        cut.em.getTransaction().commit();
+
+        //fallo de 0
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRange(0, 0));
+        cut.em.getTransaction().commit();
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(3)
     @Test
     public void findAll() {
-        System.out.println("Producto testIT fiand all");
+        System.out.println("TipoProducto testIT fiand all");
         EntityManager em = emf.createEntityManager();
-        Integer cantidad_esperada = 5;//5 en script + el creado en createProducto
         cut.em = em;
 
-        try {
-            cut.em.getTransaction().begin();
-            List<Producto> respuesta = cut.findAll();
-            cut.em.getTransaction().commit();
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(cantidad_esperada, respuesta.size());
-            Assertions.assertTrue(respuesta.contains(registro));
+        //flujo normal
+        cut.em.getTransaction().begin();
+        List<Producto> respuesta = cut.findAll();
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta.size());
 
-            respuesta.forEach(p-> System.out.println(p.toString()));
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(4)
     @Test
     public void findById() {
-        System.out.println("Producto testIT fiandById");
+        System.out.println("TipoProducto testIT fiandById");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Producto esperado = registro;
-        Long idPerado = 1L;//el ultimo agregado
 
-        try {
-            em.getTransaction().begin();
-            Producto respuesta = cut.findById(idPerado);//id primer elemento
-            em.getTransaction().commit();
-
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(esperado, respuesta);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+        Producto respuesta = cut.findById(idDePrueba);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(idDePrueba, respuesta.getIdProducto());
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(5)
-//    @Test
+    @Test
     public void contar() {
-        System.out.println("Producto testIT Contar");
-        ProductoBean cut = new ProductoBean();
+        System.out.println("TipoProducto testIT Contar");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Long esperado = 4L;
 
-        try {
-            Long respuesta = cut.count();
-            Assertions.assertEquals(esperado, respuesta);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+        Long respuesta = cut.count();
+        em.getTransaction().commit();
+        Assertions.assertEquals(totalEnScript, respuesta);
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(6)
-//    @Test
+    @Test
     public void update() {
-        System.out.println("Producto testIT update");
+        System.out.println("TipoProducto testIT update");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Long idESperado = 3L;
-        String nombreEsperado = "comida test";
-        Producto actualizado = new Producto(idESperado);
-        actualizado.setNombre(nombreEsperado);
+
+        String nombreEsperado = "hace hambruna test";
+        Producto registroActualizar = new Producto(idDePrueba);
+        registroActualizar.setNombre(nombreEsperado);
         //creamos
-        try {
-            cut.em.getTransaction().begin();
-            cut.update(actualizado);
-            cut.em.getTransaction().commit();
+        cut.em.getTransaction().begin();
+        cut.update(registroActualizar, idDePrueba);
+        cut.em.getTransaction().commit();
+        //verificamos
+        em.getTransaction().begin();
+        Producto respuesta = cut.findById(idDePrueba);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(nombreEsperado, respuesta.getNombre());
+        Assertions.assertEquals(idDePrueba, respuesta.getIdProducto());
 
-            Producto respuesta = cut.findById(idESperado);
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(nombreEsperado, respuesta.getNombre());
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        //fallo de argumentos id menor a 0
 
-//        Assertions.fail("fallo exitosamente");
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.update(registroActualizar, -63));
+        em.getTransaction().commit();
+
+        //id nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.update(registroActualizar, -63));
+        em.getTransaction().commit();
+
+        //registro inexistente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(registroActualizar, 112233L));
+        em.getTransaction().commit();
+
+        em.close();
     }
 
     @Order(7)
     @Test
     public void delete() {
-        System.out.println("Producto testIT delete");
-        ProductoBean cut = new ProductoBean();
+        System.out.println("TipoProducto testIT delete");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Long idProdcutoEliminado = 1L;
+        Assertions.assertThrows(PersistenceException.class, () -> {
+            cut.delete(idDePrueba);
+        });
 
-
+        //id menor a 0
         em.getTransaction().begin();
-        // Ahora proceder a eliminarla
-        cut.delete(idProdcutoEliminado);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findById(-90));
         em.getTransaction().commit();
-
+        //ID NULO
         em.getTransaction().begin();
-        Assertions.assertNull( cut.findById(idProdcutoEliminado));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findById(null));
         em.getTransaction().commit();
-//        Assertions.fail("fallo exitosamente");
+        //no existe registro
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.findById(112233L));
+        em.getTransaction().commit();
     }
 
+    @Order(8)
     @Test
     void findRangeByIdTipoProductosAndActivo() {
         System.out.println("Producto testIT findRangeByIdTipoProductosAndActivo");
         EntityManager em = emf.createEntityManager();
-        Integer first=0;
-        Integer max=10;
-        Integer idTipoProducto=1001;
-        boolean activo=true;
-        Long cantiddaESperada=2L;
+        Integer idTipoProducto = 1001;
+        boolean activo = true;
+        Long cantiddaESperada = 1L;
 
         cut.em = em;
-        List<Producto> respuesta = cut.findRangeByIdTipoProductosAndActivo(idTipoProducto,activo,first, max);
-        //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
-        respuesta.forEach(p-> System.out.println(p.toString()));
+        //flujo normal
+        List<Producto> respuesta = cut.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(cantiddaESperada, respuesta.size());
-        Assertions.assertTrue(respuesta.get(0).getActivo());
+        Assertions.assertEquals(activo, respuesta.get(0).getActivo());
+
+        //erro de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeByIdTipoProductosAndActivo(-96, activo, first, max));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, -8, max));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, 0));
+        //idInexistente
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.findRangeByIdTipoProductosAndActivo(112233, activo, first, max));
 //        Assertions.fail("fallo exitosamente");
 
     }
+
+    @Order(9)
     @Test
     void countByIdTipoProductosAndActivo() {
         System.out.println("Producto testIT countByIdTipoProductosAndActivo");
         EntityManager em = emf.createEntityManager();
-        Integer idTipoProducto=1001;
+        Integer idTipoProducto = 1001;
         cut.em = em;
-        Long cantiddaESperada=2L;
-        boolean activo=true;
-        Long respuesta = cut.countByIdTipoProductosAndActivo(idTipoProducto,activo);
-        //se deberia devolver los unicos 1 unico valor que tiene true con idTipoProdcuto 1001
+        Long cantidadESperada = 1L;
+        boolean activo = true;
+        Long respuesta = cut.countByIdTipoProductosAndActivo(idTipoProducto, activo);
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(cantiddaESperada, respuesta);
+        Assertions.assertEquals(cantidadESperada, respuesta);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.countByIdTipoProductosAndActivo(-96, activo));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.countByIdTipoProductosAndActivo(112233, activo));
 //        Assertions.fail("fallo exitosamente");
 
     }
 
 
+    @Order(10)
     @Test
     void findRangeProductoActivos() {
         System.out.println("Producto testIT findRangeProductoActivos");
         EntityManager em = emf.createEntityManager();
-        Integer first=0;
-        Integer max=10;
-        Long cantiddaEsperada=3L;//segun script db
-        boolean activo=true;
+        Long cantidadEsperada = 2L;//
+        boolean activo = true;
         cut.em = em;
-        List<Producto> respuesta = cut.findRangeProductoActivos(first,max,activo);
-        respuesta.forEach(p-> System.out.println(p.toString()));
+        List<Producto> respuesta = cut.findRangeProductoActivos(first, max, activo);
+        respuesta.forEach(p -> System.out.println(p.toString()));
         Assertions.assertNotNull(respuesta);
-        Assertions.assertEquals(cantiddaEsperada, respuesta.size());
+        Assertions.assertEquals(cantidadEsperada, respuesta.size());
+
+        //fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeProductoActivos(-9, max, activo));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeProductoActivos(first, 0, activo));
 //        Assertions.fail("fallo exitosamente");
 
     }
+
+    @Order(11)
     @Test
     void countProductoActivos() {
         System.out.println("Producto testIT countProductoActivos");
         EntityManager em = emf.createEntityManager();
-        boolean activo=true;
-        Long cantiddaEsperada=3L;//segun script db
+        boolean activo = true;
+        Long cantiddaEsperada = 2L;//segun script db
         cut.em = em;
+        em.getTransaction().begin();
         Long respuesta = cut.countProductoActivos(activo);
+        em.getTransaction().commit();
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(cantiddaEsperada, respuesta);
+        em.close();
 //        Assertions.fail("fallo exitosamente");
+
+    }
+
+    @Order(12)
+    @Test
+    void deleteProductoAndDetail() {
+        System.out.println("Producto testIT deleteProductoAndDetail");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+        //FLUJO NORMAL
+        em.getTransaction().begin();
+        Assertions.assertDoesNotThrow(() -> cut.deleteProductoAndDetail(idCreadoEnPrueba, idTipoProdcutoCreado));
+        em.close();
+
+
+        //error de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(-90L, idTipoProdcutoCreado));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(idCreadoEnPrueba, null));
 
     }
 

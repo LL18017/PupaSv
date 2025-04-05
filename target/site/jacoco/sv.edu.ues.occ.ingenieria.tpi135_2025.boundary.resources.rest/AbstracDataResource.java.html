@@ -174,21 +174,20 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(T registro, @Context UriInfo uriInfo) {
-<span class="nc" id="L177">        System.out.println(getId(registro));</span>
-<span class="nc bnc" id="L178" title="All 4 branches missed.">        if (registro != null &amp;&amp; getId(registro) != null) {</span>
+<span class="nc bnc" id="L177" title="All 4 branches missed.">        if (registro != null &amp;&amp; getId(registro) != null) {</span>
             try {
-<span class="nc" id="L180">                getBean().update(registro);</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">                if (getId(registro) != null) {</span>
+<span class="nc" id="L179">                getBean().update(registro,getId(registro));</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                if (getId(registro) != null) {</span>
 
-<span class="nc" id="L183">                    return Response.status(200).build();</span>
+<span class="nc" id="L182">                    return Response.status(200).build();</span>
                 }
-<span class="nc" id="L185">                return Response.status(500).header(&quot;process-error&quot;, &quot;Record couldnt be updated&quot;).build();</span>
-<span class="nc" id="L186">            } catch (Exception e) {</span>
-<span class="nc" id="L187">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L188">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L184">                return Response.status(500).header(&quot;process-error&quot;, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L185">            } catch (Exception e) {</span>
+<span class="nc" id="L186">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L187">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
         }
-<span class="nc" id="L191">        return Response.status(500).header(&quot;Wrong-parameter&quot;, registro).build();</span>
+<span class="nc" id="L190">        return Response.status(500).header(&quot;Wrong-parameter&quot;, registro).build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -24,7 +24,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
  * @author mjlopez
  */
 @Path(&quot;producto&quot;)
-public class ProductoResource extends Resource&lt;Producto&gt; implements Serializable {
+<span class="nc" id="L27">public class ProductoResource extends GeneralRest implements Serializable {</span>
 
 
     @Inject
@@ -34,14 +34,6 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
     @Inject
     ProductoDetalleBean pdBean;
 
-    @Override
-    AbstractDataAccess&lt;Producto&gt; getBean() {
-<span class="nc" id="L39">        return pBean;</span>
-    }
-    public ProductoResource() {
-<span class="fc" id="L42">        super(Producto.class);</span>
-<span class="fc" id="L43">    }</span>
-
     /**
      * metodo que devueleve una rango de datos de tipo Producto
      *
@@ -49,8 +41,10 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
      * @param max            la cantidad de datos que se desea obtener
      * @param activo         indica si se desea solo registros con la propiedad activo
      * @param idTipoProducto string que indica si se quiere encontra todos los registro &quot;any&quot; o los relacionados con idEspecifico
-     * @return una lista de tipo T si no definel los parametros entonces
-     * devuelve los primeros 20 registros
+     * @return estatus 200 junto una lista de tipo T si no definel los parametros entonces devuelve los primeros 20 registros
+     * 400 si los argumentos son erroneos
+     * 500 si existe problema con el entity, si i al buscar la cantidad de datos devuelve mas de un resultado o existe problema con la base de datos por restriciones
+     * 404 si no existe el tipoProducto enviado
      */
 
     @Path(&quot;&quot;)
@@ -58,39 +52,30 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) Integer first, @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) Integer max, @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto, @QueryParam(&quot;activo&quot;) Boolean activo) {
         try {
-<span class="nc" id="L61">            Response verificarFirstAndMax = veririficarMaxAndFirst(first, max);</span>
 
-<span class="nc bnc" id="L63" title="All 2 branches missed.">            if (verificarFirstAndMax.getStatus() != 200) return verificarFirstAndMax;</span>
-            //find range normal
-<span class="nc bnc" id="L65" title="All 4 branches missed.">            if (activo == null &amp;&amp; idTipoProducto == 0) {</span>
-<span class="nc" id="L66">                List&lt;Producto&gt; registros = pBean.findRange(first, max);</span>
-<span class="nc" id="L67">                long totalRegistros = pBean.count();</span>
-<span class="nc" id="L68">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
+            //FINDrANGE NORMAL
+<span class="nc bnc" id="L57" title="All 4 branches missed.">            if (activo == null &amp;&amp; idTipoProducto == 0) {</span>
+<span class="nc" id="L58">                List&lt;Producto&gt; registros = pBean.findRange(first, max);</span>
+<span class="nc" id="L59">                long totalRegistros = pBean.count();</span>
+<span class="nc" id="L60">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
             }
-//            find range de acuerdo a activos
-<span class="nc bnc" id="L71" title="All 4 branches missed.">            if (activo != null &amp;&amp; idTipoProducto == 0) {</span>
-<span class="nc" id="L72">                List&lt;Producto&gt; registros = pBean.findRangeProductoActivos(first, max, activo);</span>
-<span class="nc" id="L73">                long totalRegistros = pBean.countProductoActivos(activo);</span>
-<span class="nc" id="L74">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
+//            find range activos
+<span class="nc bnc" id="L63" title="All 4 branches missed.">            if (activo != null &amp;&amp; idTipoProducto == 0) {</span>
+<span class="nc" id="L64">                List&lt;Producto&gt; registros = pBean.findRangeProductoActivos(first, max, activo);</span>
+<span class="nc" id="L65">                long totalRegistros = pBean.countProductoActivos(activo);</span>
+<span class="nc" id="L66">                return Response.ok(registros).header(Headers.TOTAL_RECORD, totalRegistros).build();</span>
             }
-
-
-<span class="nc" id="L78">            Response verificarIdTipoProducto = verificarId(idTipoProducto, &quot;IdTipoProduct&quot;);</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (verificarIdTipoProducto.getStatus() != 200) return verificarIdTipoProducto;</span>
-
+//
             //find range por idTipoProducto y cualquier valor de activo
-<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (verificarIdTipoProducto.getStatus() == 200) {</span>
-<span class="nc" id="L83">                return buscarPorTipoProductosAndActivo(idTipoProducto, Boolean.TRUE.equals(activo), first, max);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (activo == null ) {</span>
+<span class="nc" id="L71">                activo = Boolean.TRUE;</span>
             }
-            //findRange by activo
-<span class="nc" id="L86">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;NO SE PUEDE REALIZAR LA PETICION&quot;).build();</span>
+<span class="nc" id="L73">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
+<span class="nc" id="L74">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
+<span class="nc" id="L75">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
 
-<span class="nc" id="L88">        } catch (Exception e) {</span>
-<span class="nc" id="L89">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, &quot;Error en findRangeByIdTipoProducto&quot;, e);</span>
-<span class="nc" id="L90">            return Response.status(500)</span>
-<span class="nc" id="L91">                    .header(Headers.PROCESS_ERROR, e.getMessage())</span>
-<span class="nc" id="L92">                    .entity(&quot;Error interno del servidor&quot;)</span>
-<span class="nc" id="L93">                    .build();</span>
+<span class="nc" id="L77">        } catch (Exception e) {</span>
+<span class="nc" id="L78">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
         }
     }
 
@@ -100,42 +85,34 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
      *
      * @param idProducto del registro a buscar
      * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
-     * un estatus 500 en dado caso falle el servidor un estatus 404 si no se
-     * encuentra ningun registro con el id especificado 400 si se envia mal una
-     * parametro
+     * 500 en dado caso falle el servidor o la base de datos
+     * 404 si no se encuentra la entidad
+     * 400 si hay problema con los parametros
      */
 
     @Path(&quot;{idProducto}&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findById(@PathParam(&quot;idProducto&quot;) Long idProducto) {
-
         try {
-<span class="nc" id="L114">            Response verificarIdProducto = verificarId(idProducto, &quot;IdProducto&quot;);</span>
-
-<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (verificarIdProducto.getStatus() != 200) return verificarIdProducto;</span>
-<span class="nc" id="L117">            Producto encontrado = pBean.findById(idProducto);</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (encontrado != null) {</span>
-<span class="nc" id="L119">                Response.ResponseBuilder builder = Response.ok(encontrado);</span>
-<span class="nc" id="L120">                return builder.build();</span>
-            }
-<span class="nc" id="L122">            return Response.status(404).header(Headers.NOT_FOUND_ID, idProducto).build();</span>
-
-<span class="nc" id="L124">        } catch (Exception e) {</span>
-<span class="nc" id="L125">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L126">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L98">            Producto encontrado = pBean.findById(idProducto);</span>
+<span class="nc" id="L99">            Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L100">            return builder.build();</span>
+<span class="nc" id="L101">        } catch (Exception e) {</span>
+<span class="nc" id="L102">            return responseExcepcions(e, idProducto);</span>
         }
     }
 
 
     /**
-     * registra una entidad Producto ademas de establecer la relacion producto detalle
+     * Registra una entidad Producto
      *
-     * @param idTipoProducto id de la entidad tipoProductoRelacionada con producto
-     * @param uriInfo        informacion de URl donde se encuantra la peticion
-     * @return un estatus 201 si la entidad es creada junto con la url donde se
-     * puede encontra dicha entidad 422 en dado caso falle la creacion de la
-     * entidad y 500 si por fall el servidor
+     * @param uriInfo informacion de URl donde se encuantra la peticion
+     * @return un estatus 201 si la entidad es creada junto con la url donde se encuentra
+     * 400 si hay error con los argumentos
+     * 422 si la entidad ha sido creada previamente
+     * 500 si falla el servidor o la base
+     * 404 si no existe el tipoProducto
      */
 
     @Path(&quot;&quot;)
@@ -143,59 +120,49 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Producto registro, @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto, @Context UriInfo uriInfo) {
-
         try {
-
             //si no se agrega idTipoProducto
-<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
-<span class="nc" id="L151">                pBean.create(registro);</span>
-<span class="nc" id="L152">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L153">                uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
-<span class="nc" id="L154">                return Response.created(uriBuilder.build()).build();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
+<span class="nc" id="L126">                pBean.create(registro);</span>
+<span class="nc" id="L127">                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L128">                uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
+<span class="nc" id="L129">                return Response.created(uriBuilder.build()).build();</span>
             }
-<span class="nc" id="L156">            Response verificarTipoProducto = verificarId(idTipoProducto, &quot;idTipoProducto&quot;);</span>
-
-<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (verificarTipoProducto.getStatus() != 200) return verificarTipoProducto;</span>
-<span class="nc" id="L159">            TipoProducto encontrado = tpBean.findById(idTipoProducto);</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (encontrado == null)</span>
-<span class="nc" id="L161">                return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;no existe el tipo producto: &quot; + idTipoProducto).build();</span>
-
-<span class="nc" id="L163">            pBean.createProducto(registro, idTipoProducto);</span>
-
-<span class="nc" id="L165">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
-<span class="nc" id="L166">            uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
-<span class="nc" id="L167">            return Response.created(uriBuilder.build()).build();</span>
-<span class="nc" id="L168">        } catch (Exception e) {</span>
-<span class="nc" id="L169">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L170">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L131">            pBean.createProductoAndDetail(registro, idTipoProducto);</span>
+<span class="nc" id="L132">            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();</span>
+<span class="nc" id="L133">            uriBuilder.path(String.valueOf(registro.getIdProducto()));</span>
+<span class="nc" id="L134">            return Response.created(uriBuilder.build()).build();</span>
+<span class="nc" id="L135">        } catch (Exception e) {</span>
+<span class="nc" id="L136">            return responseExcepcions(e, Long.valueOf(idTipoProducto));</span>
         }
     }
 
     /**
      * Borra un registro de tipo Producto Especifico
      *
-     * @param idProducto
+     * @param idProducto a identificador de la entidda a borar
      * @param uriInfo    info de url de donde se esta realizado la peticion
-     * @return un status 200 si se borro la entidad , un 422 si hubo un problema
-     * y 500 si falla el servdor
+     * @return un status 200 si se borro la entidad ,
+     * un 422 si hubo un problema
+     * y 500 si falla el seridor o la base
+     * 404 si no existe el tipoProducto
      */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path(&quot;/{idProducto}&quot;)
-    public Response delete(@PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo
+            , @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto) {
         try {
-<span class="nc" id="L188">            Response verificarProducto = verificarId(idProducto, &quot;idProducto&quot;);</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">            if (verificarProducto.getStatus() != 200) return verificarProducto;</span>
-<span class="nc" id="L190">            Producto encontrado = pBean.findById(idProducto);</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">            if (encontrado == null) {</span>
-<span class="nc" id="L192">                return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;no existe este registro: &quot; + idProducto).build();</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (idTipoProducto == 0) {</span>
+<span class="nc" id="L158">                pBean.delete(idProducto);</span>
+<span class="nc" id="L159">                return Response.status(200).build();</span>
             }
-<span class="nc" id="L194">            pBean.delete(idProducto);</span>
-<span class="nc" id="L195">            return Response.status(200).build();</span>
-<span class="nc" id="L196">        } catch (Exception e) {</span>
-<span class="nc" id="L197">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L198">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L161">            pBean.deleteProductoAndDetail(idProducto, idTipoProducto);</span>
+<span class="nc" id="L162">            return Response.status(200).build();</span>
+<span class="nc" id="L163">        } catch (Exception e) {</span>
+<span class="nc" id="L164">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L165">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
         }
     }
 
@@ -211,33 +178,15 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(Producto registro, @PathParam(&quot;idProducto&quot;) Long idProducto, @QueryParam(&quot;idTipoProducto&quot;) @DefaultValue(&quot;0&quot;) Integer idTipoProducto, @Context UriInfo uriInfo) {
+    public Response update(Producto registro, @PathParam(&quot;idProducto&quot;) Long idProducto, @Context UriInfo uriInfo) {
         try {
-<span class="nc" id="L216">            Response verificarProducto = verificarId(idProducto, &quot;idProducto&quot;);</span>
-<span class="nc" id="L217">            Response verificarTipoProducto = verificarId(idProducto, &quot;idTipoProducto&quot;);</span>
-
-<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (verificarProducto.getStatus() != 200) return verificarProducto;</span>
-<span class="nc bnc" id="L220" title="All 4 branches missed.">            if (verificarTipoProducto.getStatus() != 200 &amp;&amp; idTipoProducto != 0) return verificarTipoProducto;</span>
-<span class="nc" id="L221">            Producto encontrado = pBean.findById(idProducto);</span>
-<span class="nc bnc" id="L222" title="All 2 branches missed.">            if (encontrado == null) {</span>
-<span class="nc" id="L223">                return Response.status(404).header(Headers.NOT_FOUND_ID, idProducto).build();</span>
-            }
-<span class="nc" id="L225">            registro.setIdProducto(idProducto);</span>
-<span class="nc" id="L226">            pBean.update(registro);</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">            if (registro.getIdProducto() != null) {</span>
-<span class="nc" id="L228">                return Response.status(200).build();</span>
-            }
-<span class="nc" id="L230">            return Response.status(422).header(Headers.PROCESS_ERROR, &quot;error al procesar peticion&quot;).build();</span>
-
-<span class="nc" id="L232">        } catch (Exception e) {</span>
-<span class="nc" id="L233">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L234">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L183">            registro.setIdProducto(idProducto);</span>
+<span class="nc" id="L184">            pBean.update(registro, idProducto);</span>
+<span class="nc" id="L185">            return Response.status(200).build();</span>
+<span class="nc" id="L186">        } catch (Exception e) {</span>
+<span class="nc" id="L187">            return responseExcepcions(e, idProducto);</span>
         }
-
-
     }
-
-
 
 
     /**
@@ -253,15 +202,13 @@ public class ProductoResource extends Resource&lt;Producto&gt; implements Serial
 
     public Response buscarPorTipoProductosAndActivo(Integer idTipoProducto, boolean activo, int first, int max) {
         try {
-<span class="nc" id="L256">            Response verificarExiste = verificarTipoProductoExiste(idTipoProducto);</span>
-<span class="nc bnc" id="L257" title="All 2 branches missed.">            if (verificarExiste.getStatus() != 200) return verificarExiste;</span>
-<span class="nc" id="L258">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
-<span class="nc" id="L259">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
-<span class="nc" id="L260">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
+<span class="nc" id="L205">            List&lt;Producto&gt; encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);</span>
+<span class="nc" id="L206">            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);</span>
+<span class="nc" id="L207">            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();</span>
 
-<span class="nc" id="L262">        } catch (Exception e) {</span>
-<span class="nc" id="L263">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L264">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
+<span class="nc" id="L209">        } catch (Exception e) {</span>
+<span class="nc" id="L210">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L211">            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();</span>
         }
     }
 

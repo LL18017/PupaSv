@@ -457,6 +457,7 @@ INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
 INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
 INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
+INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
 INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.00);
 INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',0.80);

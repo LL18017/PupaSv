@@ -1,65 +1,31 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class TipoProductoBeanIT {
-    List<TipoProducto> LISTA_TipoProducto = new ArrayList<>();
-    EntityManagerFactory emf;
-
-    public TipoProductoBeanIT() {
-    }
-
-    @Container
-    static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName("TipicoSVtest")
-            .withPassword("abc123")
-            .withUsername("postgres")
-            .withInitScript("tipicos_tpi135_2025.sql")
-            .withExposedPorts(5432)
-            .withNetworkAliases("db");
-
+class TipoProductoBeanIT extends AbstractContainerTest {
     TipoProductoBean cut;
     EntityManager mockEm;
     ProductoDetalleBean cut2;
+
+    Long totalEnScript = 3l;//cantidad en el script
+    Integer idDePrueba = 1001;//ya se encuentra en el script
+    Integer idCreadoEnPrueba=0;//se cambiara luego
 
     @BeforeEach
     void setUp() {
         cut = new TipoProductoBean();
         mockEm = Mockito.mock(EntityManager.class);
         cut2 = Mockito.spy(new ProductoDetalleBean());
-    }
-
-    @BeforeAll
-    public void inicializar() {
-        System.out.println("Puerto Mapeado: " + postgres.getMappedPort(5432));
-        HashMap<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://localhost:%d/TipicoSVtest", postgres.getMappedPort(5432)));
-        emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
     }
 
     @Order(1)
@@ -71,21 +37,19 @@ class TipoProductoBeanIT {
         cut.em = em;
         TipoProducto creado = new TipoProducto();
         creado.setNombre("Tipo test");
-        try {
-            //creamos
-            cut.em.getTransaction().begin();
-            cut.create(creado);
-            cut.em.getTransaction().commit();
-            LISTA_TipoProducto.add(creado);
 
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        //flujo normal
+        cut.em.getTransaction().begin();
+        Assertions.assertDoesNotThrow(() -> cut.create(creado));
+        cut.em.getTransaction().commit();
+        totalEnScript = totalEnScript + 1;
+        idCreadoEnPrueba=creado.getIdTipoProducto();
+        //fallo de registro
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.create(null));
+        cut.em.getTransaction().commit();
+
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -95,22 +59,24 @@ class TipoProductoBeanIT {
         System.out.println("TipoProducto testIT findRange");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        int first = 0;
-        int max = 2;
-        try {
-            cut.em.getTransaction().begin();
-            List<TipoProducto> respuesta = cut.findRange(first, max);
-            cut.em.getTransaction().commit();
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(max, respuesta.size());
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+
+        //flujo normal
+        cut.em.getTransaction().begin();
+        List<TipoProducto> respuesta = cut.findRange(first, max);
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta.size());
+
+        //fallo de argumentos
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRange(null, max));
+        cut.em.getTransaction().commit();
+
+        //fallo de 0
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRange(0, 0));
+        cut.em.getTransaction().commit();
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -120,26 +86,15 @@ class TipoProductoBeanIT {
         System.out.println("TipoProducto testIT fiand all");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        List<TipoProducto> esperados = LISTA_TipoProducto;
-        int cantiddaESperada=4;//3 registro el escript + 1 de prueba
 
-        try {
-            cut.em.getTransaction().begin();
-            List<TipoProducto> respuesta = cut.findAll();
-            cut.em.getTransaction().commit();
-            respuesta.forEach(r-> System.out.println(r.toString()));
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(cantiddaESperada, respuesta.size());
+        //flujo normal
+        cut.em.getTransaction().begin();
+        List<TipoProducto> respuesta = cut.findAll();
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta.size());
 
-
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -149,24 +104,13 @@ class TipoProductoBeanIT {
         System.out.println("TipoProducto testIT fiandById");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        TipoProducto esperado = LISTA_TipoProducto.get(0);
-        Integer idPerado = 4;//por alguna extraña razon empieza por 4
 
-        try {
-            em.getTransaction().begin();
-            TipoProducto respuesta = cut.findById(idPerado);//id primer elemento
-            em.getTransaction().commit();
-
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(esperado, respuesta);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+        TipoProducto respuesta = cut.findById(idDePrueba);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(idDePrueba, respuesta.getIdTipoProducto());
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -177,19 +121,12 @@ class TipoProductoBeanIT {
         TipoProductoBean cut = new TipoProductoBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Long esperado = 4L;
 
-        try {
-            Long respuesta = cut.count();
-            Assertions.assertEquals(esperado, respuesta);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+        Long respuesta = cut.count();
+        em.getTransaction().commit();
+        Assertions.assertEquals(totalEnScript, respuesta);
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
@@ -199,26 +136,39 @@ class TipoProductoBeanIT {
         System.out.println("TipoProducto testIT update");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Integer idESperado = 3;
+
         String nombreEsperado = "hace hambruna test";
-        TipoProducto tpPrimeraACtualizado = new TipoProducto(idESperado);
-        tpPrimeraACtualizado.setNombre(nombreEsperado);
+        TipoProducto registroActualizar = new TipoProducto(idDePrueba);
+        registroActualizar.setNombre(nombreEsperado);
         //creamos
-        try {
-            cut.em.getTransaction().begin();
-            cut.update(tpPrimeraACtualizado);
-            cut.em.getTransaction().commit();
-            TipoProducto respuesta = cut.findById(idESperado);
-            Assertions.assertNotNull(respuesta);
-            Assertions.assertEquals(nombreEsperado, respuesta.getNombre());
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback en caso de error
-            }
-            Assertions.fail("Excepción inesperada: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+        cut.em.getTransaction().begin();
+        cut.update(registroActualizar, idDePrueba);
+        cut.em.getTransaction().commit();
+        //verificamos
+        em.getTransaction().begin();
+        TipoProducto respuesta = cut.findById(idDePrueba);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(nombreEsperado, respuesta.getNombre());
+        Assertions.assertEquals(idDePrueba, respuesta.getIdTipoProducto());
+
+        //fallo de argumentos id menor a 0
+
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.update(registroActualizar, -63));
+        em.getTransaction().commit();
+
+        //id nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.update(registroActualizar, -63));
+        em.getTransaction().commit();
+
+        //registro inexistente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(registroActualizar, 112233));
+        em.getTransaction().commit();
+
+        em.close();
 
 //        Assertions.fail("fallo exitosamente");
     }
@@ -230,17 +180,30 @@ class TipoProductoBeanIT {
         TipoProductoBean cut = new TipoProductoBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
-        Integer idProdcutoEliminado = 4;
 
 
         em.getTransaction().begin();
-        // Ahora proceder a eliminarla
-        cut.delete(idProdcutoEliminado);
+        cut.delete(idCreadoEnPrueba);
         em.getTransaction().commit();
 
         em.getTransaction().begin();
-        Assertions.assertNull( cut.findById(idProdcutoEliminado));
+        Assertions.assertThrows(EntityNotFoundException.class,()->cut.findById(idCreadoEnPrueba));
         em.getTransaction().commit();
+
+
+        //id menor a 0
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.delete(-90));
+        em.getTransaction().commit();
+        //ID NULO
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.delete(null));
+        em.getTransaction().commit();
+        //no existe registro
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.delete(112233));
+        em.getTransaction().commit();
+
 
 
 //        Assertions.fail("fallo exitosamente");

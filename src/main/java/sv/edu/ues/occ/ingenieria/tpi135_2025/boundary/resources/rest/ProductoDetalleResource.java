@@ -20,15 +20,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("productoDetalle")
-public class ProductoDetalleResource extends Resource<ProductoDetalle> implements Serializable {
-    public ProductoDetalleResource() {
-        super(ProductoDetalle.class);
-    }
+public class ProductoDetalleResource extends GeneralRest implements Serializable {
 
-    @Override
-    AbstractDataAccess<ProductoDetalle> getBean() {
-        return pdBean;
-    }
 
     @Inject
     ProductoDetalleBean pdBean;
@@ -45,38 +38,30 @@ public class ProductoDetalleResource extends Resource<ProductoDetalle> implement
      * devuelve los primeros 20 registros
      */
 
-    @Path("")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response find(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max) {
-        try {
-            List<ProductoDetalle> resultado = pdBean.findRange(first, max);
-            Long total = pdBean.count();
-            return Response.ok(resultado).header(Headers.TOTAL_RECORD, total).build();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
-        }
-    }
+//    @Path("")
+//    @GET
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response find(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max) {
+//        try {
+//            List<ProductoDetalle> resultado = pdBean.findRange(first, max);
+//            Long total = pdBean.count();
+//            return Response.ok(resultado).header(Headers.TOTAL_RECORD, total).build();
+//        } catch (Exception e) {
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
+//            return Response.status(500).entity(e.getMessage()).build();
+//        }
+//    }
 
     @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findByIDs(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto) {
         try {
-            Response comprobacion = verificarPathParams(idTipoProducto, idProducto);
-            if (comprobacion.getStatus() != 200) return comprobacion;
-            Response existe = verificarPathParams(idTipoProducto, idProducto);
-            if (comprobacion.getStatus() != 200) return existe;
-
             ProductoDetalle registro = pdBean.findById(idTipoProducto, idProducto);
-            if (registro == null)
-                return Response.status(404).header(Headers.NOT_FOUND_ID, "registro no encontrado ").build();
             return Response.ok((registro)).build();
 
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
+            return responseExcepcions(e,idProducto);
         }
     }
 
