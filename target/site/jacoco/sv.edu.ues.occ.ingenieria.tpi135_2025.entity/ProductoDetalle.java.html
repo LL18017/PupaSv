@@ -89,21 +89,21 @@ public class ProductoDetalle implements Serializable {
     }
 
     public void setProducto(Producto producto) {
-<span class="nc" id="L92">        this.producto = producto;</span>
-<span class="nc" id="L93">    }</span>
+<span class="fc" id="L92">        this.producto = producto;</span>
+<span class="fc" id="L93">    }</span>
 
     public TipoProducto getTipoProducto() {
 <span class="fc" id="L96">        return tipoProducto;</span>
     }
 
     public void setTipoProducto(TipoProducto tipoProducto) {
-<span class="nc" id="L100">        this.tipoProducto = tipoProducto;</span>
-<span class="nc" id="L101">    }</span>
+<span class="fc" id="L100">        this.tipoProducto = tipoProducto;</span>
+<span class="fc" id="L101">    }</span>
 
     @Override
     public int hashCode() {
 <span class="fc" id="L105">        int hash = 0;</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        hash += (productoDetallePK != null ? productoDetallePK.hashCode() : 0);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        hash += (productoDetallePK != null ? productoDetallePK.hashCode() : 0);</span>
 <span class="fc" id="L107">        return hash;</span>
     }
 

@@ -50,13 +50,13 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
      * @return el detalle correspondiente a los ids enviados.
      * @throws IllegalArgumentException Si el ID es nulo o inválido.
      * @throws IllegalStateException    Si no se puede acceder al repositorio.
-     * @throws EntityNotFoundException  Si no existe una entidad con ese id.
+     * @throws NoResultException  Si no existe una entidad con ese id.
      * @throws PersistenceException     si hay un error general con la base de datos.
      */
     public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
 <span class="pc bpc" id="L57" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0)</span>
 <span class="fc" id="L58">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0)</span>
+<span class="fc bfc" id="L59" title="All 4 branches covered.">        if (idProducto == null || idProducto &lt;= 0)</span>
 <span class="fc" id="L60">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
         try {
 <span class="fc" id="L62">            Producto producto = em.find(Producto.class, idProducto);</span>
@@ -68,18 +68,14 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
 <span class="fc bfc" id="L68" title="All 2 branches covered.">            if (producto == null) {</span>
 <span class="fc" id="L69">                throw new EntityNotFoundException(&quot;no se encontro el registro de producto con el id &quot; + idProducto);</span>
             }
-<span class="fc" id="L71">            ProductoDetalle registro = em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
+<span class="fc" id="L71">            return em.createNamedQuery(&quot;ProductoDetalle.findByIdTipoProductoAndIdProducto&quot;, ProductoDetalle.class)</span>
 <span class="fc" id="L72">                    .setParameter(&quot;idTipoProducto&quot;, idTipoProducto)</span>
 <span class="fc" id="L73">                    .setParameter(&quot;idProducto&quot;, idProducto)</span>
 <span class="fc" id="L74">                    .getSingleResult();</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (registro == null) {</span>
-<span class="fc" id="L76">                throw new EntityNotFoundException(&quot;No se encontro este detalle&quot;);</span>
-            }
-<span class="fc" id="L78">            return registro;</span>
-<span class="fc" id="L79">        } catch (EntityNotFoundException | IllegalStateException | IllegalArgumentException ex) {</span>
-<span class="fc" id="L80">            throw ex;</span>
-<span class="fc" id="L81">        } catch (PersistenceException ex) {</span>
-<span class="fc" id="L82">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
+<span class="fc" id="L75">        } catch (EntityNotFoundException | IllegalStateException | IllegalArgumentException | NoResultException ex) {</span>
+<span class="fc" id="L76">            throw ex;</span>
+<span class="fc" id="L77">        } catch (PersistenceException ex) {</span>
+<span class="fc" id="L78">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
         }
     }
 
@@ -88,7 +84,6 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
      *
      * @param idProducto     id del producto relacionado al detalle
      * @param idTipoProducto id del tipo producto relacionado al detalle
-     * @return el detalle correspondiente a los ids enviados.
      * @throws IllegalArgumentException Si el ID es nulo o inválido.
      * @throws EntityNotFoundException  si algulo de los ids no existe
      * @throws IllegalStateException    Si no se puede acceder al repositorio.
@@ -96,60 +91,122 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
      * @throws PersistenceException     si hay un error general con la base de datos.
      */
     public void deleteByIdTipoProductoAndIdProducto(Integer idTipoProducto, Long idProducto) {
-<span class="pc bpc" id="L99" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0) {</span>
-<span class="fc" id="L100">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos  o menor o igual a cero&quot;);</span>
+<span class="pc bpc" id="L94" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0) {</span>
+<span class="fc" id="L95">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos  o menor o igual a cero&quot;);</span>
         }
-<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0) {</span>
-<span class="fc" id="L103">            throw new IllegalArgumentException(&quot;idProducto no pueden ser nulos o menor o igual a cero&quot;);</span>
+<span class="fc bfc" id="L97" title="All 4 branches covered.">        if (idProducto == null || idProducto &lt;= 0) {</span>
+<span class="fc" id="L98">            throw new IllegalArgumentException(&quot;idProducto no pueden ser nulos o menor o igual a cero&quot;);</span>
         }
         try {
-<span class="fc" id="L106">            TipoProducto tipoProducto = em.find(TipoProducto.class, idTipoProducto);</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (tipoProducto == null) {</span>
-<span class="fc" id="L108">                throw new EntityNotFoundException(&quot;no existe el tipoProducto con el id &quot; + idTipoProducto);</span>
+<span class="fc" id="L101">            TipoProducto tipoProducto = em.find(TipoProducto.class, idTipoProducto);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (tipoProducto == null) {</span>
+<span class="fc" id="L103">                throw new EntityNotFoundException(&quot;no existe el tipoProducto con el id &quot; + idTipoProducto);</span>
             }
 
-<span class="fc" id="L111">            Producto producto = em.find(Producto.class, idProducto);</span>
-<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (producto == null) {</span>
-<span class="fc" id="L113">                throw new EntityNotFoundException(&quot;no existe el producto con el id &quot; + idProducto);</span>
+<span class="fc" id="L106">            Producto producto = em.find(Producto.class, idProducto);</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (producto == null) {</span>
+<span class="fc" id="L108">                throw new EntityNotFoundException(&quot;no existe el producto con el id &quot; + idProducto);</span>
             }
-<span class="fc" id="L115">            em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, idProducto).setParameter(&quot;idTipoProducto&quot;, idTipoProducto).executeUpdate();</span>
-<span class="fc" id="L116">            return;</span>
-<span class="fc" id="L117">        } catch (EntityNotFoundException e) {</span>
-<span class="fc" id="L118">            throw e;</span>
-<span class="fc" id="L119">        } catch (PersistenceException ex) {</span>
-<span class="fc" id="L120">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
-<span class="fc" id="L121">        } catch (IllegalStateException ex) {</span>
-<span class="fc" id="L122">            throw new IllegalStateException(&quot;error al persistir&quot;, ex);</span>
+<span class="fc" id="L110">            em.createNamedQuery(&quot;ProductoDetalle.deleteByIdProductoAndIdProducto&quot;).setParameter(&quot;idProducto&quot;, idProducto).setParameter(&quot;idTipoProducto&quot;, idTipoProducto).executeUpdate();</span>
+<span class="fc" id="L111">            return;</span>
+<span class="fc" id="L112">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L113">            throw e;</span>
+<span class="fc" id="L114">        } catch (PersistenceException ex) {</span>
+<span class="fc" id="L115">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
+<span class="fc" id="L116">        } catch (IllegalStateException ex) {</span>
+<span class="fc" id="L117">            throw new IllegalStateException(&quot;error al persistir&quot;, ex);</span>
         }
     }
 
+    public ProductoDetalle update(ProductoDetalle registro, Integer idTipoProducto, Long idProducto) throws IllegalStateException, IllegalArgumentException {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (registro == null) {</span>
+<span class="fc" id="L123">            throw new IllegalArgumentException(&quot;registro no puede ser nulo&quot;);</span>
+        }
+<span class="pc bpc" id="L125" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0) {</span>
+<span class="fc" id="L126">            throw new IllegalArgumentException(&quot;idTipoProdcuto no puede ser nulo o menor que 0&quot;);</span>
+        }
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0) {</span>
+<span class="fc" id="L129">            throw new IllegalArgumentException(&quot;idProdcuto no puede ser nulo o menor que 0&quot;);</span>
+        }
+        try {
+<span class="fc" id="L132">            Producto producto = em.find(Producto.class, idProducto);</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (producto == null) {</span>
+<span class="fc" id="L134">                throw new EntityNotFoundException(&quot;No existe el producto con el id &quot; + idProducto);</span>
+            }
+<span class="fc" id="L136">            TipoProducto tipoProducto = em.find(TipoProducto.class, idTipoProducto);</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (tipoProducto == null) {</span>
+<span class="fc" id="L138">                throw new EntityNotFoundException(&quot;No existe el tipoProdcuto con el id &quot; + idProducto);</span>
+            }
+<span class="fc" id="L140">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
+<span class="fc" id="L141">            registro.setProductoDetallePK(pk);</span>
+<span class="fc" id="L142">            em.merge(registro);</span>
+<span class="fc" id="L143">            return registro;</span>
+<span class="fc" id="L144">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L145">            throw e;</span>
+<span class="fc" id="L146">        } catch (IllegalStateException e) {</span>
+<span class="fc" id="L147">            throw new IllegalStateException(&quot;error al persistir el registro&quot;, e);</span>
+<span class="fc" id="L148">        } catch (PersistenceException ex) {</span>
+<span class="fc" id="L149">            throw new PersistenceException(&quot;error con la base de datos&quot;, ex);</span>
+        }
+    }
 
     /**
      * Encuentra un una lista de ProductoDetalle segun un rango dado.
+     *
      * @param first rango de inicio de los registros totales.
      * @param max   cantidad maxima de registros
      * @return lista de tipo ProductoDetalle correspondiente al rango.
-     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws IllegalStateException    Si no se puede acceder al repositorio.
      * @throws IllegalArgumentException si los valores de first o max son incorrectos
-     * @throws  PersistenceException si ocurre un error con la base d edatos
+     * @throws PersistenceException     si ocurre un error con la base d edatos
      */
     @Override
     public List&lt;ProductoDetalle&gt; findRange(Integer first, Integer max) {
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (!verificarnull(first, max)) {</span>
-<span class="fc" id="L139">            throw new IllegalArgumentException(&quot;los valores de first y max no pueden ser nulos&quot;);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (!verificarnull(first, max)) {</span>
+<span class="fc" id="L166">            throw new IllegalArgumentException(&quot;los valores de first y max no pueden ser nulos&quot;);</span>
         }
-<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (!verificarMayor(first, max)) {</span>
-<span class="fc" id="L142">            throw new IllegalArgumentException(&quot;los valores de first deben ser mayores a cero y max no puede ser menor o igual a cero&quot;);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (!verificarMayor(first, max)) {</span>
+<span class="fc" id="L169">            throw new IllegalArgumentException(&quot;los valores de first deben ser mayores a cero y max no puede ser menor o igual a cero&quot;);</span>
         }
         try {
-<span class="fc" id="L145">            return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
-<span class="fc" id="L146">                    .setFirstResult(first)</span>
-<span class="fc" id="L147">                    .setMaxResults(max)</span>
-<span class="fc" id="L148">                    .getResultList();</span>
-<span class="fc" id="L149">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L150">            throw new PersistenceException(&quot;error al aceder al base de datos&quot;, e);</span>
+<span class="fc" id="L172">            return em.createNamedQuery(&quot;ProductoDetalle.findAll&quot;, ProductoDetalle.class)</span>
+<span class="fc" id="L173">                    .setFirstResult(first)</span>
+<span class="fc" id="L174">                    .setMaxResults(max)</span>
+<span class="fc" id="L175">                    .getResultList();</span>
+<span class="fc" id="L176">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L177">            throw new PersistenceException(&quot;error al aceder al base de datos&quot;, e);</span>
         }
     }
 
+    public void create(ProductoDetalle registro, Integer idTipoProducto, Long idProducto) throws IllegalStateException, IllegalArgumentException {
+        try {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">            if (registro == null) {</span>
+<span class="fc" id="L184">                throw new IllegalArgumentException(&quot;registro no puede ser nulo&quot;);</span>
+            }
+<span class="pc bpc" id="L186" title="1 of 4 branches missed.">            if (idTipoProducto == null || idTipoProducto &lt;= 0) {</span>
+<span class="fc" id="L187">                throw new IllegalArgumentException(&quot;idTipoProducto no puede ser nulo o menor a cero o igual a cero&quot;);</span>
+            }
+<span class="pc bpc" id="L189" title="1 of 4 branches missed.">            if (idProducto == null || idProducto &lt;= 0) {</span>
+<span class="fc" id="L190">                throw new IllegalArgumentException(&quot;idProducto no puede ser nulo o menor a cero o igual a cero&quot;);</span>
+            }
+<span class="fc" id="L192">            TipoProducto tipoProducto = em.find(TipoProducto.class, idTipoProducto);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if (tipoProducto == null) {</span>
+<span class="fc" id="L194">                throw new EntityNotFoundException(&quot;el tipoProducto no existe el id &quot; + idProducto);</span>
+            }
+<span class="fc" id="L196">            Producto producto = em.find(Producto.class, idProducto);</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            if (producto == null) {</span>
+<span class="fc" id="L198">                throw new EntityNotFoundException(&quot;el producto no existe el id &quot; + idProducto);</span>
+            }
+<span class="fc" id="L200">            ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);</span>
+<span class="fc" id="L201">            registro.setProductoDetallePK(pk);</span>
+<span class="fc" id="L202">            super.create(registro);</span>
+<span class="fc" id="L203">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L204">            throw e;</span>
+<span class="fc" id="L205">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L206">            throw new PersistenceException(&quot;error con la base de datos&quot;, e);</span>
+<span class="fc" id="L207">        } catch ( IllegalStateException e) {</span>
+<span class="fc" id="L208">            throw new IllegalStateException(&quot;error al persistir el registro&quot;);</span>
+<span class="fc" id="L209">        }</span>
+<span class="fc" id="L210">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

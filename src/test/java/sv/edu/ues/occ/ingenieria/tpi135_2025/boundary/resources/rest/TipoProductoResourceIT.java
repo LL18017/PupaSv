@@ -31,7 +31,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
     @Order(1)
     @Test
     public void testCreate() throws InterruptedException {
-        System.out.println("TipoProdcuto testSI create");
+        System.out.println("tipoProducto testSI create");
         TipoProducto registro = new TipoProducto();
         registro.setNombre("bebidas test");
 

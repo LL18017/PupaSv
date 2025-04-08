@@ -50,7 +50,7 @@ class ProductoBeanTest {
 
     @Test
     void findRangeByIdTipoProductosAndActivo() {
-        System.out.println("test findRangeByIdTipoProductosAndActivo");
+        System.out.println("Producto test findRangeByIdTipoProductosAndActivo");
         Integer idTipoProducto = 1;
         boolean activo = true;
         List<Producto> resultadoEsperado = LIST_Producto_TEST;
@@ -105,7 +105,7 @@ class ProductoBeanTest {
     @Test
     void countByIdTipoProductosAndActivo() {
 
-        System.out.println("test countByIdTipoProductosAndActivo");
+        System.out.println("Producto test countByIdTipoProductosAndActivo");
         Integer idTipoProducto = 1001;
         Long resultadoEsperado = 2L;
         boolean activo = true;
@@ -155,7 +155,7 @@ class ProductoBeanTest {
     @Test
     void createProductoAndDetail() throws Exception {
 
-        System.out.println("test createProductoAndDetail");
+        System.out.println("Producto test createProductoAndDetail");
         Integer idTipoProducto = 1;
         Long idProducto = 1L;
 
@@ -214,7 +214,7 @@ class ProductoBeanTest {
 
     @Test
     void orderParameterQuery() {
-        System.out.println("test orderParameterQuery");
+        System.out.println("Producto test orderParameterQuery");
         String esperado = "idProducto";
         String respuesta = cut.orderParameterQuery();
         assertEquals(esperado, respuesta);
@@ -225,7 +225,7 @@ class ProductoBeanTest {
 
     @Test
     void getEntityManager() {
-        System.out.println("test getEntityManager");
+        System.out.println("Producto test getEntityManager");
         Mockito.when(cut2.getEntityManager()).thenReturn(mockEm);
 
         EntityManager em = cut2.getEntityManager();
@@ -235,7 +235,7 @@ class ProductoBeanTest {
 
     @Test
     void deleteProductoAndDetail() {
-        System.out.println("test deleteProductoAndDetail");
+        System.out.println("Producto test deleteProductoAndDetail");
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         CriteriaBuilder mockCb = Mockito.mock(CriteriaBuilder.class);
         CriteriaDelete<Producto> mockCd = Mockito.mock(CriteriaDelete.class);
@@ -285,7 +285,7 @@ class ProductoBeanTest {
 
     @Test
     void findRangeProductoActivos() {
-        System.out.println("test findRangeProductoActivos");
+        System.out.println("Producto test findRangeProductoActivos");
         int first = 0;
         int max = 2;
         int idTipoProducto = 2;
@@ -326,7 +326,7 @@ class ProductoBeanTest {
 
     @Test
     void countProductoActivos() {
-        System.out.println("test countProductoActivos");
+        System.out.println("Producto test countProductoActivos");
         Long esperado = 1L;
         boolean activo = true;
 

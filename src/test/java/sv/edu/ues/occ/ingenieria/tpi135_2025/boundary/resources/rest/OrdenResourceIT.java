@@ -38,7 +38,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     @Order(1)
     @Test
     public void testGetBean() {
-        System.out.println("testSI get");
+        System.out.println("Orden testSI get");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
         Response respuesta = target.path("orden").request(MediaType.APPLICATION_JSON).get();
 
@@ -58,7 +58,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     @Order(2)
     @Test
     public void testCreate() throws InterruptedException {
-        System.out.println("testSI create");
+        System.out.println("Orden testSI create");
         Orden registro = new Orden();
         registro.setFecha(new Date());
         registro.setSucursal("Zarsa");
@@ -73,7 +73,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     @Order(3)
     @Test
     public void testUpdate() {
-        System.out.println("testSI update");
+        System.out.println("Orden testSI update");
         String sucursal = "sa";
         boolean anulada = true;
 
@@ -98,7 +98,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     @Test
     public void testGetId() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
-        System.out.println("testSI getById");
+        System.out.println("Orden testSI getById");
 
         //flujo bueno
         Response respuestaPeticion = target.path(String.format("orden/%d", idBase)).request(MediaType.APPLICATION_JSON).get();
@@ -120,7 +120,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     @Test
     public void testDelete() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
-        System.out.println("testSI delete");
+        System.out.println("Orden testSI delete");
         Long id = 1L;
         Orden registro = new Orden(id);
         Response respuestaPeticion = target.path(String.format("orden/%d", id)).

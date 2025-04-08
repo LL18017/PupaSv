@@ -1,198 +1,238 @@
-//package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
-//
-//import jakarta.persistence.EntityManager;
-//import jakarta.persistence.EntityManagerFactory;
-//import jakarta.persistence.Persistence;
-//import org.junit.jupiter.api.*;
-//import org.mockito.Mockito;
-//import org.testcontainers.containers.GenericContainer;
-//import org.testcontainers.containers.PostgreSQLContainer;
-//import org.testcontainers.junit.jupiter.Container;
-//import org.testcontainers.junit.jupiter.Testcontainers;
-//import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
-//import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
-//
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//
-//@Testcontainers
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-//class ProductoDetalleBeanIT {
-//    ProductoDetalle registro;
-//    List<ProductoDetalle> LISTA_ProductoDetalle = new ArrayList<>();
-//    EntityManagerFactory emf;
-//    @Container
-//    static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
-//            .withDatabaseName("TipicoSVtest")
-//            .withPassword("abc123")
-//            .withUsername("postgres")
-//            .withInitScript("tipicos_tpi135_2025.sql")
-//            .withExposedPorts(5432)
-//            .withNetworkAliases("db");
-//
-//    ProductoDetalleBean cut;
-//    EntityManager mockEm;
-//    ProductoDetalleBean cut2;
-//    @BeforeEach
-//    void setUp() {
-//        cut = new ProductoDetalleBean();
-//        mockEm = Mockito.mock(EntityManager.class);
-//        cut2 = Mockito.spy(new ProductoDetalleBean());
-//    }
-//
-//    @BeforeAll
-//    public void inicializar() {
-//        HashMap<String, Object> propiedades = new HashMap<>();
-//        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://localhost:%d/TipicoSVtest", postgres.getMappedPort(5432)));
-//        emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
-//
-//    }
-//
-//    @Order(1)
-//    @Test
-//    public void createProductoDetalle() {
-//        System.out.println("ProductoDetalle testIT create");
-//        EntityManager em = emf.createEntityManager();
-//        Integer idTipoProducto=1002;
-//        Long idProducto=1004L;
-//
-//        ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
-//        cut.em = em;
-//        ProductoDetalle creado = new ProductoDetalle();
-//        creado.setProductoDetallePK(pk);
-//        try {
-//            //creamos
-//            cut.em.getTransaction().begin();
-//            cut.create(creado);
-//            cut.em.getTransaction().commit();
-//            this.registro=creado;
-//            System.out.println(creado.toString());
-//        } catch (Exception e) {
-//            if (em.getTransaction().isActive()) {
-//                em.getTransaction().rollback(); // Rollback en caso de error
-//            }
-//            Assertions.fail("Excepción inesperada: " + e.getMessage());
-//        } finally {
-//            em.close();
-//        }
-////        Assertions.fail("fallo exitosamente");
-//    }
-//
-//    @Order(2)
-//    @Test
-//    void findByIdProductoAndIdProducto() {
-//        System.out.println("ProductoDetalle testIT findByIdProductoAndIdProducto");
-//        EntityManager em = emf.createEntityManager();
-//        cut.em = em;
-//        int first = 0;
-//        int max = 2;
-//        //ya existente en el script
-//        Integer idTipoProducto=1001;
-//        Long idProducto=1001L;
-//
-//        try {
-//            cut.em.getTransaction().begin();
-//            ProductoDetalle respuesta = cut.findById(idTipoProducto,idProducto);
-//            cut.em.getTransaction().commit();
-//            Assertions.assertNotNull(respuesta);
-//            Assertions.assertEquals(respuesta.getProductoDetallePK().getIdTipoProducto(), idTipoProducto);
-//            Assertions.assertEquals(respuesta.getProductoDetallePK().getIdProducto(), idProducto);
-//        } catch (Exception e) {
-//            if (em.getTransaction().isActive()) {
-//                em.getTransaction().rollback(); // Rollback en caso de error
-//            }
-//            Assertions.fail("Excepción inesperada: " + e);
-//        } finally {
-//            em.close();
-//        }
-////        Assertions.fail("fallo exitosamente");
-//    }
-//
-//    @Order(3)
-//    @Test
-//    public void findRange() {
-//        System.out.println("ProductoDetalle testIT fiand all");
-//        EntityManager em = emf.createEntityManager();
-//        Integer first = 0;
-//        Integer max = 10;
-//        Integer cantidad_esperada = 4;//3 en script + el creado en createProductoDetalle
-//        cut.em = em;
-//
-//        try {
-//            cut.em.getTransaction().begin();
-//            List<ProductoDetalle> respuesta = cut.findRange(first, max);
-//            cut.em.getTransaction().commit();
-//            Assertions.assertNotNull(respuesta);
-//            Assertions.assertEquals(cantidad_esperada, respuesta.size());
-//            Assertions.assertTrue(respuesta.contains(registro));
-//        } catch (Exception e) {
-//            if (em.getTransaction().isActive()) {
-//                em.getTransaction().rollback(); // Rollback en caso de error
-//            }
-//            Assertions.fail("Excepción inesperada: " + e);
-//        } finally {
-//            em.close();
-//        }
-////        Assertions.fail("fallo exitosamente");
-//    }
-//    @Order(4)
-//    @Test
-//    public void update() {
-//        System.out.println("ProductoDetalle testIT update");
-//        EntityManager em = emf.createEntityManager();
-//        cut.em = em;
-//        Long idProducto = 1004L;
-//        Integer idTipoProducto = 1002;
-//        String observacion = "observado desde test";
-//        ProductoDetalle actualizado = new ProductoDetalle(idTipoProducto, idProducto);
-//        actualizado.setObservaciones(observacion);
-//        //creamos
-//        try {
-//            cut.em.getTransaction().begin();
-//            cut.update(actualizado);
-//            cut.em.getTransaction().commit();
-//
-//            ProductoDetalle respuesta = cut.findById(idTipoProducto,idProducto);
-//            Assertions.assertNotNull(respuesta);
-//            Assertions.assertEquals(observacion, respuesta.getObservaciones());
-//        } catch (Exception e) {
-//            if (em.getTransaction().isActive()) {
-//                em.getTransaction().rollback(); // Rollback en caso de error
-//            }
-//            Assertions.fail("Excepción inesperada: " + e.getMessage());
-//        } finally {
-//            em.close();
-//        }
-//
-////        Assertions.fail("fallo exitosamente");
-//    }
-//
-//    @Order(5)
-//    @Test
-//    public void delete() {
-//        System.out.println("ProductoDetalle testIT delete");
-//        ProductoDetalleBean cut = new ProductoDetalleBean();
-//        EntityManager em = emf.createEntityManager();
-//        //creado en create
-//        Integer idTipoProducto=1002;
-//        Long idProducto=1004L;
-//
-//        ProductoDetallePK pk=new ProductoDetallePK(idTipoProducto, idProducto);
-//
-//        cut.em = em;
-//        Long idProdcutoEliminado = 1L;
-//        em.getTransaction().begin();
-//        // Ahora proceder a eliminarla
-//        cut.deleteByPk(pk);
-//        em.getTransaction().commit();
-//
-//        em.getTransaction().begin();
-//        ProductoDetalle existe = cut.findById(idTipoProducto, idProducto);
-//        em.getTransaction().commit();
-//        Assertions.assertNull(existe);
-////        Assertions.fail("fallo exitosamente");
-//    }
-//
-//}
+package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
+
+import jakarta.persistence.*;
+import org.junit.jupiter.api.*;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
+
+import java.util.List;
+
+@Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class ProductoDetalleBeanIT extends AbstractContainerTest {
+    ProductoDetalleBean cut;
+
+    Long totalEnScript = 4L;
+    Integer idTipoProductoPrueba = 1001;
+    Long idProductoPrueba = 1001L;
+
+    Integer idTipoProductoCreado = 1003;
+    Long idProductoCreado = 1001L;
+
+    @BeforeEach
+    void setUp() {
+        cut = new ProductoDetalleBean();
+    }
+
+
+    @Order(1)
+    @Test
+    public void createProductoDetalle() {
+        System.out.println("ProductoDetalle testIT create");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        ProductoDetallePK pk = new ProductoDetallePK(idTipoProductoCreado, idProductoCreado);
+        ProductoDetalle creado = new ProductoDetalle();
+        creado.setProductoDetallePK(pk);
+        cut.em.getTransaction().begin();
+        cut.create(creado, idTipoProductoCreado, idProductoCreado);
+        cut.em.getTransaction().commit();
+        totalEnScript++;
+
+        //fallo de argumentos idTipoProducto nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(creado, null, idProductoCreado);
+        });
+        em.getTransaction().commit();
+
+        //fallo de argumentos idProducto nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(creado, idTipoProductoPrueba, null);
+        });
+        em.getTransaction().commit();
+
+        //fallo de argumentos registro nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(null, idTipoProductoPrueba, idProductoCreado);
+        });
+        em.getTransaction().commit();
+
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.create(creado, 112233, idProductoCreado);
+        });
+        em.getTransaction().commit();
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.create(creado, idTipoProductoCreado, 112233L);
+        });
+        em.getTransaction().commit();
+
+
+        em.close();
+//        Assertions.fail("fallo exitosamente");
+    }
+
+    @Order(2)
+    @Test
+    void findByIdProductoAndIdProducto() {
+        System.out.println("ProductoDetalle testIT findByIdProductoAndIdProducto");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+        //flujop normal
+        cut.em.getTransaction().begin();
+        ProductoDetalle respuesta = cut.findById(idTipoProductoPrueba, idProductoPrueba);
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(respuesta.getProductoDetallePK().getIdTipoProducto(), idTipoProductoPrueba);
+        Assertions.assertEquals(respuesta.getProductoDetallePK().getIdProducto(), idProductoPrueba);
+
+        //fallo de argumentos idProducto nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.findById(idTipoProductoPrueba, null);
+        });
+        em.getTransaction().commit();
+
+        //fallo de argumentos registro nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.findById(null, idProductoCreado);
+        });
+        em.getTransaction().commit();
+
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.findById(112233, idProductoCreado);
+        });
+        em.getTransaction().commit();
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.findById(idTipoProductoCreado, 112233L);
+        });
+        em.getTransaction().commit();
+
+        em.close();
+
+//        Assertions.fail("fallo exitosamente");
+    }
+
+    @Order(3)
+    @Test
+    public void findRange() {
+        System.out.println("ProductoDetalle testIT find all");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        cut.em.getTransaction().begin();
+        List<ProductoDetalle> respuesta = cut.findRange(first, max);
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(totalEnScript, respuesta.size());
+
+
+        em.close();
+//        Assertions.fail("fallo exitosamente");
+    }
+
+    @Order(4)
+    @Test
+    public void update() {
+        System.out.println("ProductoDetalle testIT update");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+        String observacion = "observado desde test";
+        ProductoDetalle actualizado = new ProductoDetalle(idTipoProductoPrueba, idProductoPrueba);
+        actualizado.setObservaciones(observacion);
+        //creamos
+        cut.em.getTransaction().begin();
+        cut.update(actualizado, idTipoProductoPrueba, idProductoPrueba);
+        cut.em.getTransaction().commit();
+
+        ProductoDetalle respuesta = cut.findById(idTipoProductoPrueba, idProductoPrueba);
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(observacion, respuesta.getObservaciones());
+
+
+        //fallo de argumentos registro nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(null,idTipoProductoPrueba, idProductoCreado);
+        });
+        em.getTransaction().commit();
+        //fallo de argumentos idProducto nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(actualizado,idTipoProductoPrueba, null);
+        });
+        em.getTransaction().commit();
+
+        //fallo de argumentos registro nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(actualizado,null, idProductoCreado);
+        });
+        em.getTransaction().commit();
+
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.update(actualizado ,112233, idProductoCreado);
+        });
+        em.getTransaction().commit();
+        //registros inexistentente
+        em.getTransaction().begin();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.update(actualizado,idTipoProductoCreado, 112233L);
+        });
+        em.getTransaction().commit();
+
+        em.close();
+
+//        Assertions.fail("fallo exitosamente");
+    }
+
+    @Order(5)
+    @Test
+    public void delete() {
+        System.out.println("ProductoDetalle testIT delete");
+        ProductoDetalleBean cut = new ProductoDetalleBean();
+        EntityManager em = emf.createEntityManager();
+
+        cut.em = em;
+        em.getTransaction().begin();
+        // Ahora proceder a eliminarla
+        cut.deleteByIdTipoProductoAndIdProducto(idTipoProductoCreado, idProductoCreado);
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        Assertions.assertThrows(NoResultException.class, () -> {cut.findById(idTipoProductoCreado, idProductoCreado);});
+        em.getTransaction().commit();
+//        Assertions.fail("fallo exitosamente");
+
+
+        //fallo de argumentos registro nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.deleteByIdTipoProductoAndIdProducto(null, idProductoCreado);
+        });
+        em.getTransaction().commit();
+        //fallo de argumentos idProducto nulo
+        em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.deleteByIdTipoProductoAndIdProducto(idTipoProductoPrueba, null);
+        });
+        em.getTransaction().commit();//fallo idTipoProducto malo
+    }
+
+}

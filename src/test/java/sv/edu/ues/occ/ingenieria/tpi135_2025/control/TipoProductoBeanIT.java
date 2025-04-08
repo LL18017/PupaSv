@@ -83,7 +83,7 @@ class TipoProductoBeanIT extends AbstractContainerTest {
     @Order(3)
     @Test
     public void findAll() {
-        System.out.println("TipoProducto testIT fiand all");
+        System.out.println("TipoProducto testIT findAll");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -101,7 +101,7 @@ class TipoProductoBeanIT extends AbstractContainerTest {
     @Order(4)
     @Test
     public void findById() {
-        System.out.println("TipoProducto testIT fiandById");
+        System.out.println("TipoProducto testIT findById");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 

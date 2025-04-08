@@ -7,6 +7,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,6 +54,7 @@ public class Pago implements Serializable {
     private String metodoPago;
     @Column(name = "referencia")
     private String referencia;
+    @JsonbTransient
     @OneToMany(mappedBy = "idPago")
     private List<PagoDetalle> pagoDetalleList;
     @JoinColumn(name = "id_orden", referencedColumnName = "id_orden")

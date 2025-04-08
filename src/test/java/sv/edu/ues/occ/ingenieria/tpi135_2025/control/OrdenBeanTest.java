@@ -39,7 +39,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testFindAll() {
-        System.out.println("test findAll");
+        System.out.println("Orden test findAll");
         OrdenBean cut = new OrdenBean();
 
         EntityManager mockEm = Mockito.mock(EntityManager.class);
@@ -85,7 +85,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testFindById() {
-        System.out.println("test findBYId");
+        System.out.println("Orden test findBYId");
         Long idBuscado = 1L;
         Orden Buscado = new Orden(1L);
         OrdenBean cut = new OrdenBean();
@@ -115,7 +115,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testFindRange() {
-        System.out.println("test findRange");
+        System.out.println("Orden test findRange");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         CriteriaBuilder mockCb = Mockito.mock(CriteriaBuilder.class);
@@ -157,7 +157,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testCreate() {
-        System.out.println("test create");
+        System.out.println("Orden test create");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         Orden ordenCreada = new Orden(9L);
@@ -184,7 +184,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testCount() {
-        System.out.println("test count");
+        System.out.println("Orden test count");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         CriteriaBuilder mockCb = Mockito.mock(CriteriaBuilder.class);
@@ -227,7 +227,7 @@ public class OrdenBeanTest {
 
     @Test
     public void updateTest() {
-        System.out.println("test update");
+        System.out.println("Orden test update");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         Orden Ordenmodificar = LIST_ORDEN_TEST.get(0);
@@ -254,7 +254,7 @@ public class OrdenBeanTest {
         Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(Ordenmodificar, 12345));
         //ConstraintViolationException
         EntityManager mockEm2 = Mockito.spy(EntityManager.class);
-        cut.em=mockEm2;
+        cut.em = mockEm2;
         Mockito.doThrow(ConstraintViolationException.class).when(mockEm2).find(Orden.class, idModificado);
         Assertions.assertThrows(ConstraintViolationException.class, () -> cut.update(Ordenmodificar, idModificado));
         //ConstraintViolationException
@@ -266,7 +266,7 @@ public class OrdenBeanTest {
 
     @Test
     public void testDelete() {
-        System.out.println("test delete");
+        System.out.println("Orden test delete");
         OrdenBean cut = new OrdenBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
         CriteriaBuilder mockCb = Mockito.mock(CriteriaBuilder.class);
@@ -303,6 +303,7 @@ public class OrdenBeanTest {
         Mockito.doThrow(PersistenceException.class).when(mockTq2).executeUpdate();
         Assertions.assertThrows(PersistenceException.class, () -> cut.delete(idEliminar));
 
+//        Assertions.fail("la prueba fallo exitosamente");
         // Si llegamos aquí, el test ha pasado, ya que no se lanzó ninguna excepción
     }
 

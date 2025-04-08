@@ -42,7 +42,7 @@ public class OrdenBeanIT extends AbstractContainerTest {
     @Order(1)
     @Test
     public void contar() {
-        System.out.println("testIT Contar");
+        System.out.println("Orden testIT Contar");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         em.getTransaction().begin();
@@ -56,7 +56,7 @@ public class OrdenBeanIT extends AbstractContainerTest {
     @Order(2)
     @Test
     public void findRange() {
-        System.out.println("testIT findRange");
+        System.out.println("Orden testIT findRange");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         //flujo normal
@@ -84,7 +84,7 @@ public class OrdenBeanIT extends AbstractContainerTest {
     @Order(3)
     @Test
     public void findAll() {
-        System.out.println("testIT fiand all");
+        System.out.println("orden testIT findAll");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         em.getTransaction().begin();
@@ -93,13 +93,14 @@ public class OrdenBeanIT extends AbstractContainerTest {
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(totalEnScript, respuesta.size());
 
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(4)
     @Test
     public void findById() {
-        System.out.println("testIT fiandById");
+        System.out.println("Orden testIT findById");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         //datos esperados segun script
@@ -132,13 +133,14 @@ public class OrdenBeanIT extends AbstractContainerTest {
             cut.findById(0);
             em.getTransaction().commit();
         });
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(5)
     @Test
     public void create() {
-        System.out.println("testIT create");
+        System.out.println("Orden testIT create");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Orden creado = new Orden();
@@ -162,13 +164,15 @@ public class OrdenBeanIT extends AbstractContainerTest {
             cut.create(null);
         });
         em.getTransaction().commit();
+
+        em.close();
 //        Assertions.fail("fallo exitosamente");
     }
 
     @Order(6)
     @Test
     public void update() {
-        System.out.println("testIT update");
+        System.out.println("Orden testIT update");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Orden ordenPrimera = new Orden(12345L);
@@ -205,13 +209,15 @@ public class OrdenBeanIT extends AbstractContainerTest {
         });
         em.getTransaction().commit();
 
+        em.close();
+//        Assertions.fail("fallo exitosamnete");
 
     }
 
     @Order(7)
     @Test
     public void delete() {
-        System.out.println("testIT delete");
+        System.out.println("Orden testIT delete");
         OrdenBean cut = new OrdenBean();
         EntityManager em = emf.createEntityManager();
         cut.em = em;
@@ -243,6 +249,11 @@ public class OrdenBeanIT extends AbstractContainerTest {
         });
         em.getTransaction().commit();
 
+        em.close();
+
+
+
+//        Assertions.fail("fallo exitosamnete");
     }
 
 }

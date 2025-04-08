@@ -7,6 +7,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,90 +54,91 @@ public class Pago implements Serializable {
     private String metodoPago;
     @Column(name = &quot;referencia&quot;)
     private String referencia;
+    @JsonbTransient
     @OneToMany(mappedBy = &quot;idPago&quot;)
     private List&lt;PagoDetalle&gt; pagoDetalleList;
     @JoinColumn(name = &quot;id_orden&quot;, referencedColumnName = &quot;id_orden&quot;)
     @ManyToOne
     private Orden idOrden;
 
-<span class="fc" id="L61">    public Pago() {</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L64">    public Pago() {</span>
+<span class="fc" id="L65">    }</span>
 
-<span class="nc" id="L64">    public Pago(Long idPago) {</span>
-<span class="nc" id="L65">        this.idPago = idPago;</span>
-<span class="nc" id="L66">    }</span>
+<span class="fc" id="L67">    public Pago(Long idPago) {</span>
+<span class="fc" id="L68">        this.idPago = idPago;</span>
+<span class="fc" id="L69">    }</span>
 
     public Long getIdPago() {
-<span class="nc" id="L69">        return idPago;</span>
+<span class="nc" id="L72">        return idPago;</span>
     }
 
     public void setIdPago(Long idPago) {
-<span class="nc" id="L73">        this.idPago = idPago;</span>
-<span class="nc" id="L74">    }</span>
+<span class="nc" id="L76">        this.idPago = idPago;</span>
+<span class="nc" id="L77">    }</span>
 
     public Date getFecha() {
-<span class="nc" id="L77">        return fecha;</span>
+<span class="nc" id="L80">        return fecha;</span>
     }
 
     public void setFecha(Date fecha) {
-<span class="nc" id="L81">        this.fecha = fecha;</span>
-<span class="nc" id="L82">    }</span>
+<span class="nc" id="L84">        this.fecha = fecha;</span>
+<span class="nc" id="L85">    }</span>
 
     public String getMetodoPago() {
-<span class="nc" id="L85">        return metodoPago;</span>
+<span class="nc" id="L88">        return metodoPago;</span>
     }
 
     public void setMetodoPago(String metodoPago) {
-<span class="nc" id="L89">        this.metodoPago = metodoPago;</span>
-<span class="nc" id="L90">    }</span>
+<span class="nc" id="L92">        this.metodoPago = metodoPago;</span>
+<span class="nc" id="L93">    }</span>
 
     public String getReferencia() {
-<span class="nc" id="L93">        return referencia;</span>
+<span class="nc" id="L96">        return referencia;</span>
     }
 
     public void setReferencia(String referencia) {
-<span class="nc" id="L97">        this.referencia = referencia;</span>
-<span class="nc" id="L98">    }</span>
+<span class="nc" id="L100">        this.referencia = referencia;</span>
+<span class="nc" id="L101">    }</span>
 
     public List&lt;PagoDetalle&gt; getPagoDetalleList() {
-<span class="nc" id="L101">        return pagoDetalleList;</span>
+<span class="nc" id="L104">        return pagoDetalleList;</span>
     }
 
     public void setPagoDetalleList(List&lt;PagoDetalle&gt; pagoDetalleList) {
-<span class="nc" id="L105">        this.pagoDetalleList = pagoDetalleList;</span>
-<span class="nc" id="L106">    }</span>
+<span class="nc" id="L108">        this.pagoDetalleList = pagoDetalleList;</span>
+<span class="nc" id="L109">    }</span>
 
     public Orden getIdOrden() {
-<span class="nc" id="L109">        return idOrden;</span>
+<span class="nc" id="L112">        return idOrden;</span>
     }
 
     public void setIdOrden(Orden idOrden) {
-<span class="nc" id="L113">        this.idOrden = idOrden;</span>
-<span class="nc" id="L114">    }</span>
+<span class="nc" id="L116">        this.idOrden = idOrden;</span>
+<span class="nc" id="L117">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L118">        int hash = 0;</span>
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        hash += (idPago != null ? idPago.hashCode() : 0);</span>
-<span class="nc" id="L120">        return hash;</span>
+<span class="nc" id="L121">        int hash = 0;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        hash += (idPago != null ? idPago.hashCode() : 0);</span>
+<span class="nc" id="L123">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (!(object instanceof Pago)) {</span>
-<span class="nc" id="L127">            return false;</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (!(object instanceof Pago)) {</span>
+<span class="nc" id="L130">            return false;</span>
         }
-<span class="nc" id="L129">        Pago other = (Pago) object;</span>
-<span class="nc bnc" id="L130" title="All 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
-<span class="nc" id="L131">            return false;</span>
+<span class="fc" id="L132">        Pago other = (Pago) object;</span>
+<span class="pc bpc" id="L133" title="5 of 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
+<span class="nc" id="L134">            return false;</span>
         }
-<span class="nc" id="L133">        return true;</span>
+<span class="fc" id="L136">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L138">        return &quot;com.mycompany.extreciondeentities.entities.Pago[ idPago=&quot; + idPago + &quot; ]&quot;;</span>
+<span class="fc" id="L141">        return &quot;com.mycompany.extreciondeentities.entities.Pago[ idPago=&quot; + idPago + &quot; ]&quot;;</span>
     }
     
 }

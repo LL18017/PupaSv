@@ -473,6 +473,7 @@ INSERT INTO public.combo VALUES (1001, 'amigos', true, '10 pupusas y 3 cocas');
 INSERT INTO public.combo VALUES (1002, 'familiar', true, '20 pupusas y 5 pepsis');
 INSERT INTO public.combo VALUES (1003, 'personal', true, '4 pupusas y 1 pepsis');
 
+
 INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
 INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);
 INSERT INTO public.combo_detalle VALUES (1002,1003,20,true);
@@ -480,9 +481,23 @@ INSERT INTO public.combo_detalle VALUES (1002,1002,5,true);
 INSERT INTO public.combo_detalle VALUES (1003,1003,4,true);
 INSERT INTO public.combo_detalle VALUES (1003,1002,1,true);
 
+-- 1. generar un ordenDetalle dado un IdOrden , un producto y una cantidad especifica por defecto la cantidad 1 , del producto se obtiene el idProducto y de este se busca su precio
+-- 2. generar un ordenDetalle dado un combo y una cantidad de dicho combo,del combo se buscara su combo detalle y de este combo detalle
+-- se obtendra el idProducto y del idProducto su IdPrecio de igual manera del combo detalle se obtine la cantidad de productos
+-- 3. metodo mixto para los dos casos combinar los producto enviados junto con los productos de los combos
 INSERT INTO public.orden_detalle VALUES (12345,1001,5,null,null);
 INSERT INTO public.orden_detalle VALUES (12346,1002,6,null,null);
 INSERT INTO public.orden_detalle VALUES (12347,1001,8,null,null);
+
+INSERT INTO public.pago VALUES (1001,12345,'2025-03-03','contado',null);
+INSERT INTO public.pago VALUES (1002,12346,'2025-03-03','contado',null);
+INSERT INTO public.pago VALUES (1003,12347,'2025-03-03','contado',null);
+-- generar un pago detalle dado un idPago del cual se obtendra el idOrden relacionado , delIdOrden se obtendra la lista OrdenDetalle relacionado y de este el precio y la cantidad para el monto
+INSERT INTO public.pago_detalle VALUES (1001,1001,8.20,null);
+INSERT INTO public.pago_detalle VALUES (1002,1002,8.20,null);
+INSERT INTO public.pago_detalle VALUES (1004,1001,8.20,null);
+INSERT INTO public.pago_detalle VALUES (1005,1001,8.20,null);
+INSERT INTO public.pago_detalle VALUES (1006,1001,8.20,null);
 
 
 --

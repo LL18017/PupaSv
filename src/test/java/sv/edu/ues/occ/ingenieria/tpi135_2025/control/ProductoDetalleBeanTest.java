@@ -1,15 +1,13 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 import java.util.Arrays;
@@ -35,6 +33,7 @@ class ProductoDetalleBeanTest {
 
     ProductoDetalleBean cut;
     EntityManager mockEm;
+    EntityManager mockEm2;
     ProductoDetalleBean cut2;
     TypedQuery mockTp;
     TypedQuery mockTp2;
@@ -45,6 +44,7 @@ class ProductoDetalleBeanTest {
     void setUp() {
         cut = new ProductoDetalleBean();
         mockEm = Mockito.mock(EntityManager.class);
+        mockEm2 = Mockito.spy(EntityManager.class);
         cut.em = mockEm;
         mockTp = Mockito.mock(TypedQuery.class);
         mockTp2 = Mockito.spy(TypedQuery.class);
@@ -54,7 +54,7 @@ class ProductoDetalleBeanTest {
 
     @Test
     void orderParameterQuery() {
-        System.out.println("test orderParameterQuery");
+        System.out.println("ProductoDetalle test orderParameterQuery");
         String esperado = "idProductoDetalle";
         String respuesta = cut.orderParameterQuery();
         assertEquals(esperado, respuesta);
@@ -65,7 +65,7 @@ class ProductoDetalleBeanTest {
 
     @Test
     void getEntityManager() {
-        System.out.println("test getEntityManager");
+        System.out.println(" ProductoDetalletest getEntityManager");
         Mockito.when(cut2.getEntityManager()).thenReturn(mockEm);
 
         EntityManager em = cut2.getEntityManager();
@@ -74,8 +74,8 @@ class ProductoDetalleBeanTest {
     }
 
     @Test
-    void findById() {
-        System.out.println("test findByIdProductoAndIdProductoDetalle");
+    void findByIdProductoAndIdProductoDetalle() {
+        System.out.println("ProductoDetalle test findByIdProductoAndIdProductoDetalle");
         Integer idTipoProducto = 1;
         Long idProducto = 1L;
 
@@ -118,11 +118,6 @@ class ProductoDetalleBeanTest {
             cut.findById(idTipoProducto, 112233L);
         });
 
-        //suponiendo que no existe el detalle
-        Mockito.when(mockTp.getSingleResult()).thenReturn(null);
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.findById(idTipoProducto, idProducto);});
-
-
 
         //FALLO EN BASE DE DATOS
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.findByIdTipoProductoAndIdProducto", ProductoDetalle.class))
@@ -141,13 +136,18 @@ class ProductoDetalleBeanTest {
             cut.findById(idTipoProducto, idProducto);
         });
 
+        //suponiendo que no existe el detalle
+        Mockito.doThrow(NoResultException.class).when(mockTp2).getSingleResult();
+        Assertions.assertThrows(NoResultException.class, () -> {
+            cut.findById(idTipoProducto, idProducto);
+        });
 
         //        Assertions.fail("fallo exitosamente");
     }
 
     @Test
     void deleteByPk() {
-        System.out.println("test deleteByPk");
+        System.out.println("ProductoDetalle test deleteByPk");
         Integer idTipoProducto = 1;
         Long idProducto = 1L;
 
@@ -173,12 +173,24 @@ class ProductoDetalleBeanTest {
         Mockito.when(mockEm.find(TipoProducto.class, 112233)).thenReturn(null);
         Mockito.when(mockEm.find(Producto.class, 112233L)).thenReturn(null);
 
-        Assertions.assertDoesNotThrow(() -> {cut.deleteByIdTipoProductoAndIdProducto(idTipoProducto, idProducto);});
+        Assertions.assertDoesNotThrow(() -> {
+            cut.deleteByIdTipoProductoAndIdProducto(idTipoProducto, idProducto);
+        });
 
         //no existe producto o tipoProducto
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.deleteByIdTipoProductoAndIdProducto(idTipoProducto, 112233L);});
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.deleteByIdTipoProductoAndIdProducto(112233, idProducto);});
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.deleteByIdTipoProductoAndIdProducto(idTipoProducto, 112233L);
+        });
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.deleteByIdTipoProductoAndIdProducto(112233, idProducto);
+        });
+
+        //no existe detalle
+        Mockito.when(mockEm.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto")).thenReturn(mockTp);
+        Mockito.when(mockTp.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTp);
+        Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
+        Mockito.when(mockTp.executeUpdate()).thenReturn(1);
 
         //forzar error
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto"))
@@ -201,7 +213,7 @@ class ProductoDetalleBeanTest {
 
     @Test
     void findRange() {
-        System.out.println("test findAll");
+        System.out.println("ProductoDetalle test findRange");
         int first = 1;
         int max = 1;
 
@@ -228,9 +240,113 @@ class ProductoDetalleBeanTest {
         Mockito.when(mockTp2.setFirstResult(first)).thenReturn(mockTp2);
         Mockito.when(mockTp2.setMaxResults(max)).thenReturn(mockTp2);
         Mockito.doThrow(PersistenceException.class).when(mockTp2).getResultList();
-        Assertions.assertThrows(PersistenceException.class, () -> {cut.findRange(first, max);});
+        Assertions.assertThrows(PersistenceException.class, () -> {
+            cut.findRange(first, max);
+        });
 //                Assertions.fail("fallo exitosamente");
 
     }
 
+    @Test
+    void update() {
+        System.out.println("ProductoDetalle test update");
+        Integer idTipoProducto = 1;
+        Long idProducto = 1L;
+        ProductoDetalle registro = new ProductoDetalle();
+        cut.em = mockEm;
+        //fallo de argumentos registro nulo
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(null, idTipoProducto, idProducto);
+        });
+        //fallo de argumentos idTipoProducto nulo o igual cero
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(registro, null, idProducto);
+        });
+        //fallo de argumentos idProducto nulo o igual a cero
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.update(registro, idTipoProducto, null);
+        });
+
+        Mockito.when(mockEm.find(Producto.class,idProducto)).thenReturn(new Producto());
+        Mockito.when(mockEm.find(TipoProducto.class,idTipoProducto)).thenReturn(new TipoProducto());
+
+        ProductoDetallePK pk = new ProductoDetallePK(idTipoProducto, idProducto);
+        ProductoDetalle esperado = new ProductoDetalle(pk);
+
+        Mockito.when(mockEm.merge(registro)).thenReturn(esperado);
+        ProductoDetalle resultado = cut.update(registro, idTipoProducto, idProducto);
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(resultado, esperado);
+
+        Mockito.when(mockEm.find(TipoProducto.class,112233)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.update(registro, 112233, idProducto);
+        });
+        //fallos idProducto no existe
+        Mockito.when(mockEm.find(Producto.class,112233L)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.update(registro, idTipoProducto, 112233L);
+        });
+
+
+        //excepciones
+        cut.em=mockEm2;
+        Mockito.when(mockEm2.find(Producto.class,idProducto)).thenReturn(new Producto());
+        Mockito.when(mockEm2.find(TipoProducto.class,idTipoProducto)).thenReturn(new TipoProducto());
+        Mockito.doThrow(IllegalStateException.class).when(mockEm2).merge(registro);
+        Assertions.assertThrows(IllegalStateException.class, () -> {cut.update(registro, idTipoProducto, idProducto);});
+
+        Mockito.doThrow(PersistenceException.class).when(mockEm2).merge(registro);
+        Assertions.assertThrows(PersistenceException.class, () -> {cut.update(registro, idTipoProducto, idProducto);});
+//        fail("fallo exitosamente");
+
+    }
+
+    @Test
+    void create() {
+        System.out.println("ProductoDetalle test create");
+        Integer idTipoProducto = 1;
+        Long idProducto = 1L;
+        ProductoDetalle registro = new ProductoDetalle();
+        cut.em = mockEm;
+        //fallo de argumentos registro nulo
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(null, idTipoProducto, idProducto);
+        });
+        //fallo de argumentos idTipoProducto nulo o igual cero
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(registro, null, idProducto);
+        });
+        //fallo de argumentos idProducto nulo o igual a cero
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.create(registro, idTipoProducto, null);
+        });
+
+
+
+        cut2.em=mockEm;
+        Mockito.when(mockEm.find(Producto.class, idProducto)).thenReturn(new Producto());
+        Mockito.when(mockEm.find(TipoProducto.class, idTipoProducto)).thenReturn(new TipoProducto());
+        Mockito.doNothing().when(cut2).create(registro);
+        Assertions.assertDoesNotThrow(() -> {cut2.create(registro, idTipoProducto, idProducto);});
+
+        //registros no existen
+        Mockito.when(mockEm.find(TipoProducto.class,112233)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.create(registro, 112233, idProducto);});
+        Mockito.when(mockEm.find(Producto.class,112233L)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.create(registro, idTipoProducto, 112233L);});
+
+
+        //excepciones
+        Mockito.doThrow(IllegalStateException.class).when(cut2).create(registro);
+        Assertions.assertThrows(IllegalStateException.class, () -> {cut2.create(registro,idTipoProducto, idProducto);});
+        Mockito.doThrow(PersistenceException.class).when(cut2).create(Mockito.any(ProductoDetalle.class));
+        Assertions.assertThrows(PersistenceException.class, () -> {cut2.create(registro,idTipoProducto, idProducto);});
+
+        Mockito.doThrow(IllegalStateException.class).when(cut2).create(Mockito.any(ProductoDetalle.class));
+        Assertions.assertThrows(Exception.class, () -> {cut2.create(registro,idTipoProducto, idProducto);});
+
+//        fail("fallo exitosamente");
+
+    }
 }

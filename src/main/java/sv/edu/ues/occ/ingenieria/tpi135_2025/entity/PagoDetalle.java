@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +47,7 @@ public class PagoDetalle implements Serializable {
     private BigDecimal monto;
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @JoinColumn(name = "id_pago", referencedColumnName = "id_pago")
     @ManyToOne
     private Pago idPago;

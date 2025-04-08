@@ -2,10 +2,7 @@
 
 import jakarta.inject.Inject;
 import jakarta.json.bind.JsonbException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
+import jakarta.persistence.*;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,6 +13,9 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class GeneralRest{
@@ -37,19 +37,28 @@ public class GeneralRest{
     public Response responseExcepcions(Exception e,Long id) {
 <span class="nc" id="L38">        Throwable causa = e.getCause();</span>
 <span class="nc bnc" id="L39" title="All 2 branches missed.">        if (causa instanceof IllegalArgumentException) {</span>
-<span class="nc" id="L40">            return Response.status(400).header(Headers.WRONG_PARAMETER, &quot;id: &quot; + id).build();</span>
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (causa instanceof EntityNotFoundException) {</span>
-<span class="nc" id="L42">            return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;no se ha encontrado el registro con el id: &quot; + id).build();</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (causa instanceof ConstraintViolationException) {</span>
-<span class="nc" id="L44">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error al aceder a la base de datos&quot;).build();</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (causa instanceof IllegalStateException) {</span>
-<span class="nc" id="L46">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error en el repositorio&quot;).build();</span>
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (causa instanceof PersistenceException) {</span>
-<span class="nc" id="L48">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error en la base  de datos&quot;).build();</span>
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        }else if (causa instanceof JsonbException) {</span>
-<span class="nc" id="L50">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error al serializar&quot;).entity(e).build();</span>
+<span class="nc" id="L40">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L41">            return Response.status(400).header(Headers.WRONG_PARAMETER, &quot;id: &quot; + id).build();</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        } else if (causa instanceof EntityNotFoundException ) {</span>
+<span class="nc" id="L43">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L44">            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (causa instanceof NoResultException) {</span>
+<span class="nc" id="L46">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L47">            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getCause()).build();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        } else if (causa instanceof ConstraintViolationException) {</span>
+<span class="nc" id="L49">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L50">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error al aceder a la base de datos&quot;).build();</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        } else if (causa instanceof IllegalStateException) {</span>
+<span class="nc" id="L52">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L53">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error en el repositorio&quot;).build();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (causa instanceof PersistenceException) {</span>
+<span class="nc" id="L55">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L56">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error en la base  de datos&quot;).build();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        }else if (causa instanceof JsonbException) {</span>
+<span class="nc" id="L58">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="nc" id="L59">            return Response.status(500).header(Headers.PROCESS_ERROR, &quot;error al serializar&quot;).entity(e).build();</span>
         }
-<span class="nc" id="L52">        return Response.status(500).header(Headers.PROCESS_ERROR, causa.toString()).entity(e).build();</span>
+<span class="nc" id="L61">        return Response.status(500).header(Headers.PROCESS_ERROR, causa.toString()).entity(e).build();</span>
 
     }
 

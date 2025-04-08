@@ -2,19 +2,14 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import jakarta.validation.ConstraintViolationException;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Testcontainers
@@ -24,8 +19,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
 
     private static final Logger log = LoggerFactory.getLogger(ProductoBeanIT.class);
     ProductoBean cut;
-    EntityManager mockEm;
-    ProductoBean cut2;
 
     Long totalEnScript = 4l;//cantidad en el script
     Long idDePrueba = 1001L;//ya se encuentra en el script
@@ -35,8 +28,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @BeforeEach
     void setUp() {
         cut = new ProductoBean();
-        mockEm = Mockito.mock(EntityManager.class);
-        cut2 = Mockito.spy(new ProductoBean());
     }
 
 
@@ -69,7 +60,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(2)
     @Test
     void findRange() {
-        System.out.println("TipoProducto testIT findRange");
+        System.out.println("Producto testIT findRange");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -96,7 +87,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(3)
     @Test
     public void findAll() {
-        System.out.println("TipoProducto testIT fiand all");
+        System.out.println("Producto testIT fiand all");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -114,7 +105,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(4)
     @Test
     public void findById() {
-        System.out.println("TipoProducto testIT fiandById");
+        System.out.println("Producto testIT fiandById");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -130,7 +121,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(5)
     @Test
     public void contar() {
-        System.out.println("TipoProducto testIT Contar");
+        System.out.println("Producto testIT Contar");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -145,7 +136,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(6)
     @Test
     public void update() {
-        System.out.println("TipoProducto testIT update");
+        System.out.println("Producto testIT update");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
@@ -186,7 +177,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     @Order(7)
     @Test
     public void delete() {
-        System.out.println("TipoProducto testIT delete");
+        System.out.println("Producto testIT delete");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Assertions.assertThrows(PersistenceException.class, () -> {
