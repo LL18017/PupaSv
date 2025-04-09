@@ -24,7 +24,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
     @BeforeAll
     public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/",servidorDeAplicaion.getHost(), servidorDeAplicaion.getMappedPort(9080)));
 
     }
 
