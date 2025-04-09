@@ -1,20 +1,19 @@
 pipeline {
     agent any
 	 tools {
-        maven 'mvn 3.8.7' // Asegúrate de que 'Maven 3' sea el nombre de la instalación en Jenkins
+        maven 'mvn 3.8.7'
     }
     stages {
         stage('Limpiar Workspace') {
             steps {
                 echo 'Eliminando archivos del workspace...'
-                deleteDir() // Borra todo el contenido del workspace
-            }
+                deleteDir()
+                            }
         }
 
         stage('Clonar Proyecto desde Repositorio Local') {
             steps {
-                echo 'Clonando proyecto desde ruta local con git...'
-                // Clona el repositorio en el workspace de Jenkins
+                echo 'Clonando proyecto desde ruta local con git'
                 sh '''
                     git clone /usr/local/proyectos/PupaSv
                 '''
@@ -30,8 +29,7 @@ pipeline {
 
         stage('Ejecutar Pruebas Unitarias') {
             steps {
-                echo 'Ejecutando pruebas unitarias con Maven...'
-                // Ejecuta las pruebas unitarias con Maven
+                echo 'Ejecutando pruebas unitarias con Maven'
                 sh '''
                     cd PupaSv
                     mvn test
@@ -41,14 +39,22 @@ pipeline {
 
         stage('Ejecutar Pruebas de Integración') {
             steps {
-                echo 'Ejecutando pruebas de integración con Maven...'
-                // Ejecuta las pruebas de integración con Maven
+                echo 'Ejecutando pruebas de integración con Maven'
                 sh '''
                     cd PupaSv
                     mvn -P integracionpg verify
                 '''
             }
         }
+         stage('Ejecutar Pruebas de Sistema') {
+                    steps {
+                        echo 'Ejecutando pruebas de sistemas con Maven'
+                        sh '''
+                            cd PupaSv
+                            mvn -P sistemaspg verify
+                        '''
+                    }
+                }
     }
 
     post {

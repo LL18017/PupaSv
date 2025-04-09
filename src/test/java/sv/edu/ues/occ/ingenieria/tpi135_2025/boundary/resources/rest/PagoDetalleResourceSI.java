@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.PagoDetalle;
 
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PagoDetalleResourceIT extends AbstractContainerTest{
+public class PagoDetalleResourceSI extends AbstractContainerTest{
     Long totalEnScript = 5L;
     Long idParaTest = 1001L;
     Long idPagoDetalleCreado = 1006L;
@@ -26,7 +25,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     @BeforeAll
     public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getHost(),servidorDeAplicaion.getMappedPort(9080)));
 
     }
 
@@ -74,7 +73,6 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
 
         //todos los registros
         Response respuesta = target.path(path).request(MediaType.APPLICATION_JSON).get();
-        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(200, respuesta.getStatus());
         Assertions.assertNotNull(respuesta);
         List<PagoDetalle> registros = respuesta.readEntity(new GenericType<List<PagoDetalle>>() {

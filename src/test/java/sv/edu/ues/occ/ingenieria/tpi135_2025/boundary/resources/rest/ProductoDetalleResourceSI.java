@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProductoDetalleResourceIT extends AbstractContainerTest {
+public class ProductoDetalleResourceSI extends AbstractContainerTest {
     // Configuración de entidades y contenedores
     Long totalEnScript = 4L;
     Integer idTipoProductoPrueba = 1001;
@@ -28,7 +28,7 @@ public class ProductoDetalleResourceIT extends AbstractContainerTest {
     @BeforeAll
     public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/",servidorDeAplicaion.getHost(), servidorDeAplicaion.getMappedPort(9080)));
 
     }
 

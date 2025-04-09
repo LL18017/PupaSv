@@ -18,15 +18,15 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class OrdenResourceIT extends AbstractContainerTest {
+public class OrdenResourceSI extends AbstractContainerTest {
 
 
-    private static final Logger log = LoggerFactory.getLogger(OrdenResourceIT.class);
+    private static final Logger log = LoggerFactory.getLogger(OrdenResourceSI.class);
 
     @BeforeAll
     public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/",servidorDeAplicaion.getHost(), servidorDeAplicaion.getMappedPort(9080)));
 
     }
 

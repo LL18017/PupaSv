@@ -1,25 +1,14 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.xml.bind.SchemaOutputResolver;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProductoResourceIT extends AbstractContainerTest {
+public class ProductoResourceSI extends AbstractContainerTest {
 
     Long totalEnScript = 4L;
     Long idParaTest = 1001L;
@@ -38,7 +27,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     @BeforeAll
     public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://localhost:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getMappedPort(9080)));
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/", servidorDeAplicaion.getHost(),servidorDeAplicaion.getMappedPort(9080)));
 
     }
 

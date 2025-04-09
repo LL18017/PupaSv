@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class TipoProductoResourceIT extends AbstractContainerTest{
+class TipoProductoResourceSI extends AbstractContainerTest{
     Long totalEnScript=3L;
     Integer idParaTest=1001;
     Integer idCreado=1001;
