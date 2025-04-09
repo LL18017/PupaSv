@@ -1,0 +1,21 @@
+#Tue Apr 08 18:19:09 CST 2025
+bin/pluginUtility=8b8b5e49936b4b7321cee17bfcd3d1d0
+bin/pluginUtility.bat=4b293d8af9a1c3819fdc0386c75a78a6
+bin/tools/ws-webserverPluginutil.jar=b5ce7d39834c81050b7d8a74eba8ceb9
+dev/api/ibm/com.ibm.websphere.appserver.api.servlet_1.1.99.jar=9d230a9338ff0552ceed6f68164d82be
+dev/api/ibm/javadoc/com.ibm.websphere.appserver.api.servlet_1.1-javadoc.zip=18af2ebb2e46d424ed8d717d09efb5de
+lib/com.ibm.websphere.security_1.1.99.jar=aa5aa5bf17af649149c7e2096dd4c9d8
+lib/com.ibm.ws.app.manager.war_1.0.99.jar=8c07590e0000b249e5de2a221324b584
+lib/com.ibm.ws.http.plugin.merge_1.0.99.jar=4060bb27cd3afff23ae9b3148e512412
+lib/com.ibm.ws.managedobject_1.0.99.jar=4c067f37ccb9d4aaeb5a79d869fbd26d
+lib/com.ibm.ws.org.apache.commons.fileupload_1.0.99.jar=340014c25509e243c8461dfb8a556a14
+lib/com.ibm.ws.org.apache.commons.io_1.0.99.jar=59864c08368eeff57e4c8eda0b9bb1b0
+lib/com.ibm.ws.session_1.0.99.jar=557de45e34279fdf694e8d3ba1ce3267
+lib/com.ibm.ws.webcontainer.cors_1.0.99.jar=4c80d0ae8954a71251cfadad9bf2508e
+lib/com.ibm.ws.webcontainer.servlet.3.1.factories_1.0.99.jar=9534521aeaa50194c37befabc6a3c580
+lib/com.ibm.ws.webcontainer.servlet.3.1_1.0.99.jar=5df36b9bd4531dd29c00a3173f883dee
+lib/com.ibm.ws.webcontainer_1.1.99.jar=5d2f956cb9f84ba0e9dce6ba0b6d5e7f
+lib/com.ibm.ws.webserver.plugin.runtime.interfaces_1.0.99.jar=4c172ef122372c91c0f50235c38df74e
+lib/com.ibm.ws.webserver.plugin.runtime_1.0.99.jar=163fca390b68ff3b6b9f5c88b2cde7fc
+lib/com.ibm.ws.webserver.plugin.utility_1.0.99.jar=43e0a983f624769f2afc9a1cfd304e28
+lib/features/com.ibm.websphere.appserver.servlet-3.1.mf=9a3fb4b51af6e106b31fbbb33cef3184

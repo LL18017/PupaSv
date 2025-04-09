@@ -74,6 +74,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
 
         //todos los registros
         Response respuesta = target.path(path).request(MediaType.APPLICATION_JSON).get();
+        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(200, respuesta.getStatus());
         Assertions.assertNotNull(respuesta);
         List<PagoDetalle> registros = respuesta.readEntity(new GenericType<List<PagoDetalle>>() {
@@ -104,7 +105,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     @Order(3)
     @Test
     public void testUpdate() {
-        System.out.println("Producto  testSI update");
+        System.out.println("pagoDetalle  testSI update");
         String path = String.format("pagoDetalle/%d", idParaTest);
         BigDecimal monto=BigDecimal.valueOf(99.99);
         PagoDetalle registro = new PagoDetalle();

@@ -4,27 +4,16 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.WebTarget;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Clase base para pruebas de integración utilizando Testcontainers.
@@ -58,7 +47,7 @@ public abstract class AbstractContainerTest {
     @BeforeAll
     public void inicializar() {
         HashMap<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://localhost:%d/%s", postgres.getMappedPort(5432),DB_NAME));
+        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://db:%d/%s", postgres.getMappedPort(5432),DB_NAME));
         emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
     }
 

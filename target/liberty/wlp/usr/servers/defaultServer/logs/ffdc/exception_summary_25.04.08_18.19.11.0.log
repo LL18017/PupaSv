@@ -1,0 +1,10 @@
+
+ Index  Count  Time of first Occurrence    Time of last Occurrence     Exception SourceId ProbeId
+------+------+---------------------------+---------------------------+---------------------------
+     0      1    8/4/25, 18:19:11:349 CST    8/4/25, 18:19:11:349 CST com.ibm.wsspi.adaptable.module.UnableToAdaptException com.ibm.ws.app.manager.module.internal.ContextRootUtil 45
+                                                                            - /usr/local/proyectos/PupaSv/target/liberty/wlp/usr/servers/defaultServer/logs/ffdc/ffdc_25.04.08_18.19.11.0.log
+     1      1    8/4/25, 18:19:11:382 CST    8/4/25, 18:19:11:382 CST com.ibm.wsspi.adaptable.module.UnableToAdaptException com.ibm.ws.app.manager.war.internal.WARApplicationHandlerImpl 53
+                                                                            - /usr/local/proyectos/PupaSv/target/liberty/wlp/usr/servers/defaultServer/logs/ffdc/ffdc_25.04.08_18.19.11.1.log
+     2      1    8/4/25, 18:19:11:433 CST    8/4/25, 18:19:11:433 CST java.lang.IllegalStateException com.ibm.ws.app.manager.internal.statemachine.StartAction 205
+                                                                            - /usr/local/proyectos/PupaSv/target/liberty/wlp/usr/servers/defaultServer/logs/ffdc/ffdc_25.04.08_18.19.11.2.log
+------+------+---------------------------+---------------------------+---------------------------
