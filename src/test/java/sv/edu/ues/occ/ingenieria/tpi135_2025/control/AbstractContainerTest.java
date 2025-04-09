@@ -18,12 +18,13 @@ import java.util.HashMap;
 /**
  * Clase base para pruebas de integración utilizando Testcontainers.
  * <p>
- * Esta clase proporciona un contenedor de PostgreSQL
- * configurados con una red compartida para realizar pruebas de integración.
+ * Esta clase proporciona un contenedor de PostgreSQL configurados con una red
+ * compartida para realizar pruebas de integración.
  */
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractContainerTest {
+
     EntityManagerFactory emf;
     static String DB_NAME = "tpi135_2025";
     static String DB_PASSWORD = "abc123";
@@ -31,8 +32,8 @@ public abstract class AbstractContainerTest {
     static String DB_SCRIPT = "tipicos_tpi135_2025.sql";
     static int DB_PORT = 5432;
 
-    Integer first=0;
-     Integer max=10;
+    Integer first = 0;
+    Integer max = 10;
 
     @Container
     static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")
@@ -43,7 +44,6 @@ public abstract class AbstractContainerTest {
             .withExposedPorts(DB_PORT)
             .withNetworkAliases("db");
 
-
     @BeforeAll
     public void inicializar() {
         System.out.println("la conexion de potgres esta en : "+postgres.getHost());
@@ -52,7 +52,4 @@ public abstract class AbstractContainerTest {
         emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
     }
 
-
 }
-
-

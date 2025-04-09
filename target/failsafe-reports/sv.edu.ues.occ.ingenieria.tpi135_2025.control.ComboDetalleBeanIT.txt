@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboDetalleBeanIT
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 6.847 s <<< FAILURE! -- in sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboDetalleBeanIT
+sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboDetalleBeanIT.create -- Time elapsed: 0.132 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+Excepción inesperada: Exception [EclipseLink-4002] (Eclipse Persistence Services - 4.0.5.v202412231137-a96b873527f305f932543045c8679bb1de8d3a43): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: org.postgresql.util.PSQLException: ERROR: insert or update on table "combo_detalle" violates foreign key constraint "fk_combo_detalle_combo"
+  Detail: Key (id_combo)=(1004) is not present in table "combo".
+Error Code: 0
+Call: INSERT INTO combo_detalle (activo, cantidad, id_combo, id_producto) VALUES (?, ?, ?, ?)
+	bind => [4 parameters bound]
+Query: InsertObjectQuery(com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=com.mycompany.extreciondeentities.entities.ComboDetallePK[ idCombo=1004, idProducto=1002 ] ])
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboDetalleBeanIT.create(ComboDetalleBeanIT.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

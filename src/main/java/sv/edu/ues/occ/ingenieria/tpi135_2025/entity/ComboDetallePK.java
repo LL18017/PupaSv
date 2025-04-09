@@ -8,11 +8,15 @@ import java.io.Serializable;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
  *
  * @author mjlopez
  */
+@Entity
+@Table(name = "combodetallepk")
 @Embeddable
 public class ComboDetallePK implements Serializable {
 

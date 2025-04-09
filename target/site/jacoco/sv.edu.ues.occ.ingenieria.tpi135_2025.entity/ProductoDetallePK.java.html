@@ -32,7 +32,7 @@ public class ProductoDetallePK implements Serializable {
 <span class="fc" id="L32">    }</span>
 
     public int getIdTipoProducto() {
-<span class="fc" id="L35">        return idTipoProducto;</span>
+<span class="nc" id="L35">        return idTipoProducto;</span>
     }
 
     public void setIdTipoProducto(int idTipoProducto) {
@@ -40,7 +40,7 @@ public class ProductoDetallePK implements Serializable {
 <span class="fc" id="L40">    }</span>
 
     public long getIdProducto() {
-<span class="fc" id="L43">        return idProducto;</span>
+<span class="nc" id="L43">        return idProducto;</span>
     }
 
     public void setIdProducto(long idProducto) {
@@ -65,8 +65,8 @@ public class ProductoDetallePK implements Serializable {
 <span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (this.idTipoProducto != other.idTipoProducto) {</span>
 <span class="nc" id="L66">            return false;</span>
         }
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (this.idProducto != other.idProducto) {</span>
-<span class="fc" id="L69">            return false;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (this.idProducto != other.idProducto) {</span>
+<span class="nc" id="L69">            return false;</span>
         }
 <span class="fc" id="L71">        return true;</span>
     }

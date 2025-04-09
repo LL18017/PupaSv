@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanTest.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBeanIT.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ResourceTest.java
@@ -22,3 +23,28 @@
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/GenericControlIT.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResourceIT.java
 /usr/local/proyectos/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GenericResourceForTest.java
+=======
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GenericResourceForTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/AbstractContainerTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/GenericControlIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResourceIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResourceIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboBeanIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/TipoProductoBeanIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ResourceTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractContainerTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoPrecioBeanTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoPrecioBeanIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResourceIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/resources/JakartaEE10ResourceTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioResourceIT.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/JerseyTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanTest.java
+/home/hdz/TPI/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenBeanIT.java
+>>>>>>> 077760b (Agregando pruebas ComboBeanIT y ComboDetalleBeanIT y archivos necesarios)

@@ -7,6 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
@@ -23,18 +24,89 @@ public class ComboBean extends AbstractDataAccess&lt;Combo&gt; implements Serial
     EntityManager em;
 
     public ComboBean() {
-<span class="nc" id="L26">        super(Combo.class);</span>
-<span class="nc" id="L27">    }</span>
+<span class="fc" id="L27">        super(Combo.class);</span>
+<span class="fc" id="L28">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L31">        return em;</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if (em == null) {</span>
+<span class="nc" id="L33">            throw new IllegalStateException(&quot;EntityManager no ha sido inicializado correctamente.&quot;);</span>
+        }
+<span class="fc" id="L35">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L36">        return &quot;idCombo&quot;;</span>
+<span class="fc" id="L40">        return &quot;idCombo&quot;;</span>
     }
 
+    public void update(Combo combo, Long id) {
+        try {
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">            if (id == null || id &lt;= 0) {</span>
+<span class="fc" id="L46">                throw new IllegalArgumentException(&quot;ID inválido.&quot;);</span>
+            }
+
+<span class="fc" id="L49">            Combo registroExistente = em.find(Combo.class, id);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            if (registroExistente == null) {</span>
+<span class="nc" id="L51">                throw new EntityNotFoundException(&quot;Registro no encontrado.&quot;);</span>
+            }
+
+<span class="fc" id="L54">            registroExistente.setNombre(combo.getNombre());</span>
+<span class="fc" id="L55">            em.merge(registroExistente);</span>
+
+<span class="nc" id="L57">        } catch (IllegalStateException e) {</span>
+<span class="nc" id="L58">            throw new RuntimeException(&quot;Error al acceder al EntityManager.&quot;, e);</span>
+<span class="fc" id="L59">        }</span>
+<span class="fc" id="L60">    }</span>
+
+    public void delete(Long id) {
+        try {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (id == null) {</span>
+<span class="fc" id="L65">                throw new IllegalArgumentException(&quot;El ID no puede ser null.&quot;);</span>
+            }
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (id &lt;= 0) {</span>
+<span class="fc" id="L68">                throw new IllegalArgumentException(&quot;El ID debe ser mayor que 0.&quot;);</span>
+            }
+
+<span class="fc" id="L71">            Combo registroExistente = em.find(Combo.class, id);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (registroExistente == null) {</span>
+<span class="fc" id="L73">                throw new EntityNotFoundException(&quot;Registro con ID &quot; + id + &quot; no encontrado en la base de datos.&quot;);</span>
+            }
+
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            em.remove(em.contains(registroExistente) ? registroExistente : em.merge(registroExistente));</span>
+
+<span class="nc" id="L78">        } catch (IllegalStateException e) {</span>
+<span class="nc" id="L79">            throw new RuntimeException(&quot;Error al acceder al EntityManager.&quot;, e);</span>
+<span class="fc" id="L80">        }</span>
+<span class="fc" id="L81">    }</span>
 }
+
+
+
+//prueba de IT
+//    @BeforeEach
+//    void setUp() {
+//        cut = new ComboBean();
+//        mockEm = Mockito.mock(EntityManager.class);
+//        cut2 = Mockito.spy(new ComboDetalleBean());
+//
+//        // Asigna IDs únicos temporales para pruebas
+//        cut.em = emf.createEntityManager();
+//        Mockito.doAnswer(invocation -&gt; {
+//            Combo combo = invocation.getArgument(0);
+//            if (combo.getIdCombo() == null) {
+//                combo.setIdCombo(1004L); // ID simulado
+//            }
+//            return null;
+//        }).when(mockEm).persist(Mockito.any());
+//    }
+// Flujo normal: Eliminar el registro existente
+            // Validar que el ID fue correctamente inicializado
+//            Assertions.assertTrue(idCreadoEnPrueba != null &amp;&amp; idCreadoEnPrueba &gt; 0,
+//                    &quot;El ID del combo creado en prueba no está inicializado correctamente.&quot;);
+//            em.getTransaction().begin();
+//            System.out.println(&quot;ID recibido para eliminación: &quot; + idCreadoEnPrueba);
+//
+//            Assertions.assertDoesNotThrow(() -&gt; cut.delete(idCreadoEnPrueba));
+//            em.getTransaction().commit();
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
