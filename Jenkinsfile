@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'Este bloque se ejecuta siempre al final, independientemente del resultado.'
+            echo 'prueba desde laptop'
         }
     }
 }
