@@ -43,7 +43,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     }
 
     @Order(1)
-   //// @Test
+   @Test
 
     public void testCreate() throws InterruptedException {
         System.out.println("Producto testSI create");
@@ -93,7 +93,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     }
 
     @Order(2)
-   //// @Test
+   @Test
     public void testGetRange() {
         System.out.println("Producto  testSI getRange");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -139,7 +139,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     }
 
     @Order(3)
-   //// @Test
+   @Test
     public void testUpdate() {
         System.out.println("Producto  testSI update");
         Long idProdcuto = 1L;
@@ -180,7 +180,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     }
 
     @Order(4)
-   //// @Test
+   @Test
     public void testGetById() {
         System.out.println("Producto  testSI getById");
         Long idBuscado = 1001L;//ya existe en el scrip de db
@@ -208,7 +208,7 @@ public class ProductoResourceIT extends AbstractContainerTest {
     }
 
     @Order(5)
-   //// @Test
+   @Test
     public void testDelete() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("Producto  testSIdelete");

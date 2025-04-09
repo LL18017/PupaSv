@@ -31,7 +31,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     }
 
     @Order(1)
-   //// @Test
+   @Test
 
     public void testCreate() throws InterruptedException {
         System.out.println("PagoDetalle testSI create");
@@ -65,7 +65,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     }
 
     @Order(2)
-   //// @Test
+   @Test
     public void testGetRange() {
         System.out.println("pagoDetalle  testSI getRange");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -103,7 +103,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     }
 
     @Order(3)
-   //// @Test
+   @Test
     public void testUpdate() {
         System.out.println("pagoDetalle  testSI update");
         String path = String.format("pagoDetalle/%d", idParaTest);
@@ -137,7 +137,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     }
 
     @Order(4)
-   //// @Test
+   @Test
     public void testGetById() {
         System.out.println("pagoDetalle  testSI getById");
         String formato = String.format("pagoDetalle/%d", idParaTest);
@@ -164,7 +164,7 @@ public class PagoDetalleResourceIT extends AbstractContainerTest{
     }
 
     @Order(5)
-   //// @Test
+   @Test
     public void testDelete() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("pagoDetalle  testSI delete");
