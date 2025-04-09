@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'prueba desde laptop'
+            echo 'prueba desde con hook'
         }
     }
 }
