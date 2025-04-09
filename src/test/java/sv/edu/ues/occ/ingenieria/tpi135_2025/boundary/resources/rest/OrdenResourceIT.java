@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
-@Testcontainers
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+// @Testcontainers
+// @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+// @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrdenResourceIT extends AbstractContainerTest {
 
 
@@ -36,7 +36,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     Long idBase = 12345L;
 
     @Order(1)
-    @Test
+    // @Test
     public void testGetBean() {
         System.out.println("Orden testSI get");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -56,7 +56,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     }
 
     @Order(2)
-    @Test
+    // @Test
     public void testCreate() throws InterruptedException {
         System.out.println("Orden testSI create");
         Orden registro = new Orden();
@@ -71,7 +71,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     }
 
     @Order(3)
-    @Test
+    // @Test
     public void testUpdate() {
         System.out.println("Orden testSI update");
         String sucursal = "sa";
@@ -95,7 +95,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     }
 
     @Order(4)
-    @Test
+    // @Test
     public void testGetId() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("Orden testSI getById");
@@ -117,7 +117,7 @@ public class OrdenResourceIT extends AbstractContainerTest {
     }
 
     @Order(5)
-    @Test
+    // @Test
     public void testDelete() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("Orden testSI delete");

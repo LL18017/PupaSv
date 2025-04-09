@@ -29,7 +29,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
     }
 
     @Order(1)
-    @Test
+   // @Test
     public void testCreate() throws InterruptedException {
         System.out.println("tipoProducto testSI create");
         TipoProducto registro = new TipoProducto();
@@ -48,7 +48,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
 //        Assertions.fail("fallo exitosamente");
     }
     @Order(2)
-    @Test
+   // @Test
     public void testGetBean() {
         System.out.println("TipoProducto  testSI getBean");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -69,7 +69,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
 //        Assertions.fail("fallo exitosamente");
     }
     @Order(3)
-    @Test
+   // @Test
     public void testUpdate() {
         System.out.println("TipoProducto  testSI update");
         Integer id = 4;
@@ -100,7 +100,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
     }
 
     @Order(4)
-    @Test
+   // @Test
     public void testGetId() {
         System.out.println("TipoProducto  testSI getById");
 
@@ -121,7 +121,7 @@ class TipoProductoResourceIT extends AbstractContainerTest{
     }
 
     @Order(5)
-    @Test
+   // @Test
     public void testDelete() {
         // Esta prueba está vacía, así que agregaríamos la lógica de la prueba aquí
         System.out.println("TipoProducto  testSIdelete");

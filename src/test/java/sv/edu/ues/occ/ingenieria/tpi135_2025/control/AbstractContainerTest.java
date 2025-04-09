@@ -46,8 +46,9 @@ public abstract class AbstractContainerTest {
 
     @BeforeAll
     public void inicializar() {
+        System.out.println("la conexion de potgres esta en : "+postgres.getHost());
         HashMap<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://db:%d/%s", postgres.getMappedPort(5432),DB_NAME));
+        propiedades.put("jakarta.persistence.jdbc.url", String.format("jdbc:postgresql://%s:%d/%s",postgres.getHost(), postgres.getMappedPort(5432),DB_NAME));
         emf = Persistence.createEntityManagerFactory("Test-PupaSV-PU", propiedades);
     }
 

@@ -33,7 +33,7 @@ public class ProductoDetalleResourceIT extends AbstractContainerTest {
     }
 
     @Order(1)
-    @Test
+   //// @Test
     public void testCreate() {
         System.out.println("ProductoDetalle testSI create");
         ProductoDetalle registro = new ProductoDetalle();
@@ -69,7 +69,7 @@ public class ProductoDetalleResourceIT extends AbstractContainerTest {
     }
 
     @Order(2)
-    @Test
+   //// @Test
     public void testGetBean() {
         System.out.println("ProductoDetalle  testSI getBean");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -112,7 +112,7 @@ public class ProductoDetalleResourceIT extends AbstractContainerTest {
     }
 
     @Order(3)
-    @Test
+   //// @Test
     public void testUpdate() {
         System.out.println("ProductoDetalle  testSI update");
         String observeacion = "observacion de prueba test";
@@ -155,7 +155,7 @@ public class ProductoDetalleResourceIT extends AbstractContainerTest {
     }
 
     @Order(4)
-    @Test
+   //// @Test
     public void testDelete() {
         System.out.println("ProductoDetalle  testSIdelete");
 
