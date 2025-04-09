@@ -25,5 +25,33 @@ pipeline {
                 sh 'ls -la'
             }
         }
+
+        stage('Ejecutar Pruebas Unitarias') {
+            steps {
+                echo 'Ejecutando pruebas unitarias con Maven...'
+                // Ejecuta las pruebas unitarias con Maven
+                sh '''
+                    cd PupaSv
+                    mvn test
+                '''
+            }
+        }
+
+        stage('Ejecutar Pruebas de Integración') {
+            steps {
+                echo 'Ejecutando pruebas de integración con Maven...'
+                // Ejecuta las pruebas de integración con Maven
+                sh '''
+                    cd PupaSv
+                    mvn -P integracionpg verify
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Este bloque se ejecuta siempre al final, independientemente del resultado.'
+        }
     }
 }
