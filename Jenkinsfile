@@ -1,3 +1,5 @@
+// docker run -d --name jenkins -p 9080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /usr/local/proyectos/PupaSv:/usr/local/proyectos/PupaSv -e JAVA_OPTS="-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true" -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker  jenkins/jenkins:lts
+
 pipeline {
     agent any
 	 tools {
