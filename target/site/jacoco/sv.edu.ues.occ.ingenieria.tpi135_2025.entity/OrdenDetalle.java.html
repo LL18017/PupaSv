@@ -68,9 +68,9 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L68">        this.cantidad = cantidad;</span>
 <span class="nc" id="L69">    }</span>
 
-<span class="nc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
-<span class="nc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
+<span class="fc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
+<span class="fc" id="L73">    }</span>
 
     public OrdenDetallePK getOrdenDetallePK() {
 <span class="nc" id="L76">        return ordenDetallePK;</span>
@@ -81,20 +81,20 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L81">    }</span>
 
     public int getCantidad() {
-<span class="nc" id="L84">        return cantidad;</span>
+<span class="fc" id="L84">        return cantidad;</span>
     }
 
     public void setCantidad(int cantidad) {
-<span class="nc" id="L88">        this.cantidad = cantidad;</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        this.cantidad = cantidad;</span>
+<span class="fc" id="L89">    }</span>
 
     public BigDecimal getPrecio() {
-<span class="nc" id="L92">        return precio;</span>
+<span class="fc" id="L92">        return precio;</span>
     }
 
     public void setPrecio(BigDecimal precio) {
-<span class="nc" id="L96">        this.precio = precio;</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L96">        this.precio = precio;</span>
+<span class="fc" id="L97">    }</span>
 
     public String getObservaciones() {
 <span class="nc" id="L100">        return observaciones;</span>

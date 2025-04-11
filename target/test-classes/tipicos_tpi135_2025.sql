@@ -1,6 +1,16 @@
 
+
+CREATE SEQUENCE public.combo_id_combo_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.combo_id_combo_seq OWNER TO postgres;
+
 CREATE TABLE public.combo (
-    id_combo bigint NOT NULL,
+    id_combo bigint NOT NULL  DEFAULT nextval('combo_id_combo_seq'),
     nombre character varying(155),
     activo boolean,
     descripcion_publica text
@@ -449,16 +459,6 @@ INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, NULL);
 
-INSERT INTO public.combo VALUES (1001, 'superCombo', true, NULL);
-INSERT INTO public.combo VALUES (1002, 'megaCombo', true, NULL);
-INSERT INTO public.combo VALUES (1003, 'ultraCombo', true, NULL);
-
-INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
-INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);
-INSERT INTO public.combo_detalle VALUES (1002,1003,20,true);
-INSERT INTO public.combo_detalle VALUES (1002,1002,5,true);
-INSERT INTO public.combo_detalle VALUES (1003,1003,4,true);
-INSERT INTO public.combo_detalle VALUES (1003,1002,1,true);
 
 INSERT INTO public.producto VALUES (1001, 'coca', true, NULL);
 INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL);
@@ -480,17 +480,18 @@ INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
-INSERT INTO public.combo VALUES (1001, 'amigos', true, '10 pupusas y 3 cocas');
-INSERT INTO public.combo VALUES (1002, 'familiar', true, '20 pupusas y 5 pepsis');
-INSERT INTO public.combo VALUES (1003, 'personal', true, '4 pupusas y 1 pepsis');
 
+INSERT INTO public.combo VALUES (1001, 'superCombo', true, NULL);
+INSERT INTO public.combo VALUES (1002, 'megaCombo', true, NULL);
+INSERT INTO public.combo VALUES (1003, 'ultraCombo', true, NULL);
 
 INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
 INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);
 INSERT INTO public.combo_detalle VALUES (1002,1003,20,true);
 INSERT INTO public.combo_detalle VALUES (1002,1002,5,true);
-INSERT INTO public.combo_detalle VALUES (1003,1003,4,true);
+INSERT INTO public.combo_detalle VALUES (1003,1001,4,true);
 INSERT INTO public.combo_detalle VALUES (1003,1002,1,true);
+
 
 -- 1. generar un ordenDetalle dado un IdOrden , un producto y una cantidad especifica por defecto la cantidad 1 , del producto se obtiene el idProducto y de este se busca su precio
 
@@ -519,7 +520,7 @@ INSERT INTO public.pago_detalle VALUES (1006,1001,8.20,null);
 -- TOC entry 3508 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: orden_id_orden_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
+
 
 SELECT pg_catalog.setval('public.orden_id_orden_seq', 1, false);
 

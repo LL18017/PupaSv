@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceSI
 -------------------------------------------------------------------------------
-<<<<<<< HEAD:target/failsafe-reports/sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceSI.txt
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.92 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceSI
-=======
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceTest
->>>>>>> 077760b (Agregando pruebas ComboBeanIT y ComboDetalleBeanIT y archivos necesarios):target/surefire-reports/sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceTest.txt
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.43 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.OrdenResourceSI

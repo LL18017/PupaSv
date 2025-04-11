@@ -44,7 +44,7 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
     public void create() {
         System.out.println("ComboDetalle testIT create");
         ComboDetalle nuevo = new ComboDetalle();
-        ComboDetallePK pk = new ComboDetallePK(1004L, 1002L); // Nuevos valores
+        ComboDetallePK pk = new ComboDetallePK(1003L, 1003L); // valores daban conflictos
         nuevo.setComboDetallePK(pk);
         nuevo.setCantidad(7);
         nuevo.setActivo(true);

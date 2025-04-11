@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
  *
  * @author mjlopez
  */
-@Entity
 @Table(name = "combodetallepk")
 @Embeddable
 public class ComboDetallePK implements Serializable {
