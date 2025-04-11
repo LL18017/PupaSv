@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBeanTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBeanTest
-=======
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.851 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBeanTest
->>>>>>> 077760b (Agregando pruebas ComboBeanIT y ComboDetalleBeanIT y archivos necesarios)
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.102 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBeanTest

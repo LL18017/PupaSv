@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.TipoProductoResourceIT
--------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.54 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.TipoProductoResourceIT
-=======
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.11 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.TipoProductoResourceIT
->>>>>>> 077760b (Agregando pruebas ComboBeanIT y ComboDetalleBeanIT y archivos necesarios)

@@ -1,6 +1,0 @@
-CWWKG0030E: La referencia de pid com.ibm.ws.jca.resourceAdapter indicada en la extensión ibm:reference no existe.
-CWWKG0030E: La referencia de pid com.ibm.ws.sslchannel.options indicada en la extensión ibm:reference no existe.
-CWWKG0069W: El atributo ignoreWriteAfterCommit de la definición de clase de objeto com.ibm.ws.http.options del paquete com.ibm.ws.transport.http/1.0.99.cl250320250310-1902 contiene una descripción de atributo sin resolver.
-CWWKG0070W: El atributo ignoreWriteAfterCommit de la definición de clase de objeto com.ibm.ws.http.options del paquete com.ibm.ws.transport.http/1.0.99.cl250320250310-1902 contiene un nombre de atributo sin resolver.
-CWWKG0030E: La referencia de pid com.ibm.ws.security.jca.internal.authdata.config indicada en la extensión ibm:reference no existe.
-CWWKG0109I: Se ha creado el esquema en el archivo [/usr/local/proyectos/PupaSv/target/.libertyls/ol-25.0.0.3.xsd].

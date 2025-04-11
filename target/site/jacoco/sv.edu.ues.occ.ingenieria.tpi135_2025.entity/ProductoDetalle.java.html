@@ -52,9 +52,9 @@ public class ProductoDetalle implements Serializable {
 <span class="fc" id="L52">    public ProductoDetalle() {</span>
 <span class="fc" id="L53">    }</span>
 
-<span class="nc" id="L55">    public ProductoDetalle(ProductoDetallePK productoDetallePK) {</span>
-<span class="nc" id="L56">        this.productoDetallePK = productoDetallePK;</span>
-<span class="nc" id="L57">    }</span>
+<span class="fc" id="L55">    public ProductoDetalle(ProductoDetallePK productoDetallePK) {</span>
+<span class="fc" id="L56">        this.productoDetallePK = productoDetallePK;</span>
+<span class="fc" id="L57">    }</span>
 
 <span class="fc" id="L59">    public ProductoDetalle(int idTipoProducto, long idProducto) {</span>
 <span class="fc" id="L60">        this.productoDetallePK = new ProductoDetallePK(idTipoProducto, idProducto);</span>
@@ -89,16 +89,16 @@ public class ProductoDetalle implements Serializable {
     }
 
     public void setProducto(Producto producto) {
-<span class="fc" id="L92">        this.producto = producto;</span>
-<span class="fc" id="L93">    }</span>
+<span class="nc" id="L92">        this.producto = producto;</span>
+<span class="nc" id="L93">    }</span>
 
     public TipoProducto getTipoProducto() {
 <span class="nc" id="L96">        return tipoProducto;</span>
     }
 
     public void setTipoProducto(TipoProducto tipoProducto) {
-<span class="fc" id="L100">        this.tipoProducto = tipoProducto;</span>
-<span class="fc" id="L101">    }</span>
+<span class="nc" id="L100">        this.tipoProducto = tipoProducto;</span>
+<span class="nc" id="L101">    }</span>
 
     @Override
     public int hashCode() {

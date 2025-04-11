@@ -32,16 +32,16 @@ public class PagoDetalleBean extends AbstractDataAccess&lt;PagoDetalle&gt; imple
 
     @Override
     public EntityManager getEntityManager() {
-<span class="fc" id="L35">        return em;</span>
+<span class="nc" id="L35">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="fc" id="L40">        return &quot;idPagoDetalle&quot;;</span>
+<span class="nc" id="L40">        return &quot;idPagoDetalle&quot;;</span>
     }
 
     public List&lt;PagoDetalle&gt; findRangeByIdPago(Long idPago, Integer first, Integer max) {
-<span class="fc bfc" id="L44" title="All 4 branches covered.">        if (idPago == null || idPago &lt;= 0) {</span>
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">        if (idPago == null || idPago &lt;= 0) {</span>
 <span class="fc" id="L45">            throw new IllegalArgumentException(&quot;idPago no puede ser nulo o menor a cero&quot;);</span>
         }
 <span class="fc bfc" id="L47" title="All 2 branches covered.">        if (!verificarnull(first, max)) {</span>

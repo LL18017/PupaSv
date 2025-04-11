@@ -23,17 +23,17 @@ public class TipoProductoBean extends AbstractDataAccess&lt;TipoProducto&gt; imp
     EntityManager em;
 
     public TipoProductoBean() {
-<span class="fc" id="L26">        super(TipoProducto.class);</span>
-<span class="fc" id="L27">    }</span>
+<span class="nc" id="L26">        super(TipoProducto.class);</span>
+<span class="nc" id="L27">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
-<span class="fc" id="L31">        return em;</span>
+<span class="nc" id="L31">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="fc" id="L36">        return &quot;idTipoProducto&quot;;</span>
+<span class="nc" id="L36">        return &quot;idTipoProducto&quot;;</span>
     }
 
 }
