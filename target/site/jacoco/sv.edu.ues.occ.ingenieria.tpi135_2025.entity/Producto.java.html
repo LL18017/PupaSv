@@ -92,12 +92,12 @@ public class Producto implements Serializable {
 <span class="fc" id="L92">    }</span>
 
     public String getObservaciones() {
-<span class="fc" id="L95">        return observaciones;</span>
+<span class="nc" id="L95">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="fc" id="L99">        this.observaciones = observaciones;</span>
-<span class="fc" id="L100">    }</span>
+<span class="nc" id="L99">        this.observaciones = observaciones;</span>
+<span class="nc" id="L100">    }</span>
 
     public List&lt;ComboDetalle&gt; getComboDetalleList() {
 <span class="nc" id="L103">        return comboDetalleList;</span>
@@ -125,7 +125,7 @@ public class Producto implements Serializable {
     @Override
     public int hashCode() {
 <span class="fc" id="L127">        int hash = 0;</span>
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        hash += (idProducto != null ? idProducto.hashCode() : 0);</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        hash += (idProducto != null ? idProducto.hashCode() : 0);</span>
 <span class="fc" id="L129">        return hash;</span>
     }
 

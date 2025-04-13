@@ -105,20 +105,20 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L105">    }</span>
 
     public Orden getOrden() {
-<span class="nc" id="L108">        return orden;</span>
+<span class="fc" id="L108">        return orden;</span>
     }
 
     public void setOrden(Orden orden) {
-<span class="nc" id="L112">        this.orden = orden;</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        this.orden = orden;</span>
+<span class="fc" id="L113">    }</span>
 
     public ProductoPrecio getProductoPrecio() {
-<span class="nc" id="L116">        return productoPrecio;</span>
+<span class="fc" id="L116">        return productoPrecio;</span>
     }
 
     public void setProductoPrecio(ProductoPrecio productoPrecio) {
-<span class="nc" id="L120">        this.productoPrecio = productoPrecio;</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L120">        this.productoPrecio = productoPrecio;</span>
+<span class="fc" id="L121">    }</span>
 
     @Override
     public int hashCode() {
@@ -134,7 +134,7 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L134">            return false;</span>
         }
 <span class="fc" id="L136">        OrdenDetalle other = (OrdenDetalle) object;</span>
-<span class="pc bpc" id="L137" title="5 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
+<span class="pc bpc" id="L137" title="2 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
 <span class="nc" id="L138">            return false;</span>
         }
 <span class="fc" id="L140">        return true;</span>

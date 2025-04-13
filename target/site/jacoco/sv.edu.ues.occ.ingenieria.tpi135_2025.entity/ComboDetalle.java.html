@@ -100,12 +100,12 @@ public class ComboDetalle implements Serializable {
 <span class="nc" id="L100">    }</span>
 
     public Producto getProducto() {
-<span class="nc" id="L103">        return producto;</span>
+<span class="fc" id="L103">        return producto;</span>
     }
 
     public void setProducto(Producto producto) {
-<span class="nc" id="L107">        this.producto = producto;</span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this.producto = producto;</span>
+<span class="fc" id="L108">    }</span>
 
     @Override
     public int hashCode() {
@@ -121,15 +121,15 @@ public class ComboDetalle implements Serializable {
 <span class="nc" id="L121">            return false;</span>
         }
 <span class="fc" id="L123">        ComboDetalle other = (ComboDetalle) object;</span>
-<span class="pc bpc" id="L124" title="5 of 8 branches missed.">        if ((this.comboDetallePK == null &amp;&amp; other.comboDetallePK != null) || (this.comboDetallePK != null &amp;&amp; !this.comboDetallePK.equals(other.comboDetallePK))) {</span>
-<span class="nc" id="L125">            return false;</span>
+<span class="pc bpc" id="L124" title="4 of 8 branches missed.">        if ((this.comboDetallePK == null &amp;&amp; other.comboDetallePK != null) || (this.comboDetallePK != null &amp;&amp; !this.comboDetallePK.equals(other.comboDetallePK))) {</span>
+<span class="fc" id="L125">            return false;</span>
         }
 <span class="fc" id="L127">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="fc" id="L132">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=&quot; + comboDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L132">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=&quot; + comboDetallePK + &quot; ]&quot;;</span>
     }
     
 }

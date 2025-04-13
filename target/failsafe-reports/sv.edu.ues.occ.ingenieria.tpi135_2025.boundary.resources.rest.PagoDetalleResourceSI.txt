@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.PagoDetalleResourceSI
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.20 s -- in sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.PagoDetalleResourceSI

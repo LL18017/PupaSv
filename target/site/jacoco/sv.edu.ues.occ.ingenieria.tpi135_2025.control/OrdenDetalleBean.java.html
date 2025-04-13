@@ -9,11 +9,13 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
+
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 /**
  *
@@ -27,55 +29,242 @@ public class OrdenDetalleBean extends AbstractDataAccess&lt;OrdenDetalle&gt; imp
     EntityManager em;
 
     public OrdenDetalleBean() {
-<span class="nc" id="L30">        super(OrdenDetalle.class);</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L32">        super(OrdenDetalle.class);</span>
+<span class="fc" id="L33">    }</span>
 
+    public void setEntityManager(EntityManager em) {
+<span class="nc" id="L36">        this.em = em;</span>
+<span class="nc" id="L37">    }</span>
     @Override
     public EntityManager getEntityManager() {
-<span class="nc" id="L35">        return em;</span>
+<span class="fc" id="L40">        return em;</span>
     }
 
     @Override
     public String orderParameterQuery() {
-<span class="nc" id="L40">        return &quot;idOrdenDetalle&quot;;</span>
+<span class="fc" id="L45">        return &quot;idOrdenDetalle&quot;;</span>
     }
 
 
     public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
         try {
-<span class="nc" id="L46">            return em.createNamedQuery(&quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,OrdenDetalle.class)</span>
-<span class="nc" id="L47">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L48">                    .setParameter(&quot;idProductoPrecio&quot;, idProductoPrecio)</span>
-<span class="nc" id="L49">                    .getSingleResult();</span>
-<span class="nc" id="L50">        } catch (Exception e) {</span>
-<span class="nc" id="L51">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="fc" id="L51">            return em.createNamedQuery(&quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="fc" id="L52">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="fc" id="L53">                    .setParameter(&quot;idProductoPrecio&quot;, idProductoPrecio)</span>
+<span class="fc" id="L54">                    .getSingleResult();</span>
+<span class="fc" id="L55">        } catch (Exception e) {</span>
+<span class="fc" id="L56">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
         
-<span class="nc" id="L54">        return null;</span>
+<span class="fc" id="L59">        return null;</span>
     }
     public List&lt;OrdenDetalle&gt; findRangeByIdOrden(Long idOrden,int first , int max) {
         try {
-<span class="nc" id="L58">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
-<span class="nc" id="L59">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L60">                    .setFirstResult(first)</span>
-<span class="nc" id="L61">                    .setMaxResults(max)</span>
-<span class="nc" id="L62">                    .getResultList();</span>
-<span class="nc" id="L63">        } catch (Exception e) {</span>
-<span class="nc" id="L64">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="fc" id="L63">            return em.createNamedQuery(&quot;OrdenDetalle.findByIdOrden&quot;,OrdenDetalle.class)</span>
+<span class="fc" id="L64">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="fc" id="L65">                    .setFirstResult(first)</span>
+<span class="fc" id="L66">                    .setMaxResults(max)</span>
+<span class="fc" id="L67">                    .getResultList();</span>
+<span class="fc" id="L68">        } catch (Exception e) {</span>
+<span class="fc" id="L69">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
 
-<span class="nc" id="L67">        return List.of();</span>
+<span class="fc" id="L72">        return List.of();</span>
     }
     public Long countByIdOrden(Long idOrden) {
         try {
-<span class="nc" id="L71">            return em.createNamedQuery(&quot;OrdenDetalle.countByIdOrden&quot;,Long.class)</span>
-<span class="nc" id="L72">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
-<span class="nc" id="L73">                    .getSingleResult();</span>
-<span class="nc" id="L74">        } catch (Exception e) {</span>
-<span class="nc" id="L75">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
+<span class="fc" id="L76">            return em.createNamedQuery(&quot;OrdenDetalle.countByIdOrden&quot;,Long.class)</span>
+<span class="fc" id="L77">                    .setParameter(&quot;idOrden&quot;, idOrden)</span>
+<span class="fc" id="L78">                    .getSingleResult();</span>
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);</span>
         }
 
-<span class="nc" id="L78">        return 0L;</span>
+<span class="nc" id="L83">        return 0L;</span>
+    }
+
+    /**
+     * Genera un objeto OrdenDetalle a partir de un IdOrden, un Producto y una cantidad.
+     * Busca el precio del producto por su idProducto.
+     * No calcula subtotal (eso se realiza en otra clase/proceso).
+     *
+     * @param orden Objeto Orden asociado (debe tener IdOrden).
+     * @param producto Objeto Producto a agregar (debe tener IdProducto).
+     * @param cantidad Cantidad de producto (si es nula o menor a 1, se asume 1 por defecto).
+     * @return Objeto OrdenDetalle generado o lanza excepción si los datos son inválidos.
+     */
+    public OrdenDetalle generarOrdenDetalleProducto(Orden orden, Producto producto, Integer cantidad) {
+<span class="pc bpc" id="L97" title="1 of 4 branches missed.">        if(orden==null || orden.getIdOrden()==null){</span>
+<span class="fc" id="L98">            throw new IllegalArgumentException(&quot;La orden es invalida o no tiene ID&quot;);</span>
+        }
+
+<span class="pc bpc" id="L101" title="1 of 4 branches missed.">        if(producto==null || producto.getIdProducto()==null){</span>
+<span class="fc" id="L102">            throw new IllegalArgumentException(&quot;La producto es invalida o no tiene ID&quot;);</span>
+        }
+<span class="pc bpc" id="L104" title="1 of 4 branches missed.">        if(cantidad==null || cantidad&lt;1){</span>
+<span class="fc" id="L105">            cantidad=1;</span>
+        }
+<span class="fc" id="L107">        ProductoPrecio productoPrecio=em.createNamedQuery(&quot;Producto.findByIdProducto&quot;,ProductoPrecio.class)</span>
+<span class="fc" id="L108">                .setParameter(&quot;idProducto&quot;,producto.getIdProducto())</span>
+<span class="fc" id="L109">                .setMaxResults(1)</span>
+<span class="fc" id="L110">                .getSingleResult();</span>
+
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if(productoPrecio==null){</span>
+<span class="nc" id="L113">            throw new IllegalArgumentException(&quot;La producto es invalida o no tiene precio&quot;);</span>
+        }
+
+<span class="fc" id="L116">        OrdenDetalle ordenDetalle = new OrdenDetalle();</span>
+<span class="fc" id="L117">        ordenDetalle.setOrden(orden);</span>
+<span class="fc" id="L118">        ordenDetalle.setProductoPrecio(productoPrecio);</span>
+<span class="fc" id="L119">        ordenDetalle.setCantidad(cantidad);</span>
+
+<span class="fc" id="L121">        return ordenDetalle;</span>
+    }
+
+
+    /**
+     * Genera una lista de objetos OrdenDetalle a partir de un Combo y una cantidad de combo especificada.
+     * Cada OrdenDetalle representa un producto dentro del combo, multiplicado por la cantidad del combo.
+     * No calcula subtotal.
+     *
+     * @param orden Objeto Orden asociado.
+     * @param combo Objeto Combo a procesar.
+     * @param cantidadCombo Cantidad de combos a aplicar (por defecto 1 si es nulo o menor a 1).
+     * @return Lista de objetos OrdenDetalle generados, o null si hay error o combo sin productos.
+     */
+    public  List&lt;OrdenDetalle&gt; generarOrdenDetalleDesdeCombo(Orden orden, Combo combo, Integer cantidadCombo) {
+<span class="fc bfc" id="L136" title="All 4 branches covered.">        if(orden==null || orden.getIdOrden()==null){</span>
+<span class="fc" id="L137">            throw new IllegalArgumentException(&quot;La orden es invalida o no tiene ID&quot;);</span>
+        }
+<span class="fc bfc" id="L139" title="All 4 branches covered.">        if(combo==null || combo.getIdCombo()==null){</span>
+<span class="fc" id="L140">            throw new IllegalArgumentException(&quot;La combo es invalida o no tiene ID&quot;);</span>
+        }
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">        if(cantidadCombo==null || cantidadCombo&lt;1){</span>
+<span class="fc" id="L143">            cantidadCombo=1;//por defecto se asigna uno</span>
+        }
+
+        //Buscarlos detalles del combo
+<span class="fc" id="L147">        List&lt;ComboDetalle&gt; comboDetalles=em.createNamedQuery(&quot;ComboDetalle.findByIdCombo&quot;,ComboDetalle.class)</span>
+<span class="fc" id="L148">                .setParameter(&quot;idCombo&quot;, combo.getIdCombo())</span>
+<span class="fc" id="L149">                .getResultList();</span>
+<span class="pc bpc" id="L150" title="1 of 4 branches missed.">        if(comboDetalles==null || comboDetalles.isEmpty()){</span>
+<span class="fc" id="L151">            return null;//No hay productos</span>
+        }
+<span class="fc" id="L153">        List&lt;OrdenDetalle&gt; ordenDetalles=new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        for (ComboDetalle comboDetalle : comboDetalles) {</span>
+<span class="fc" id="L156">            Producto producto=comboDetalle.getProducto();</span>
+
+<span class="pc bpc" id="L158" title="1 of 4 branches missed.">            if (producto==null || producto.getIdProducto()==null) {</span>
+<span class="fc" id="L159">                continue;//Si el producto no es válido, lo ignoramos</span>
+            }
+
+<span class="fc" id="L162">            ProductoPrecio precio=em.createNamedQuery(&quot;Producto.findByIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="fc" id="L163">                    .setParameter(&quot;idProducto&quot;,producto.getIdProducto())</span>
+<span class="fc" id="L164">                    .setMaxResults(1)</span>
+<span class="fc" id="L165">                    .getSingleResult();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">            if (precio==null) {</span>
+<span class="fc" id="L167">                continue;//No tiene precio, no se agrega a la orden</span>
+            }
+            // Calcular la cantidad total del producto = cantidad del producto en el combo * cantidad del combo
+<span class="fc" id="L170">            int cantidadFinal=comboDetalle.getCantidad() * cantidadCombo;</span>
+
+            // Crear el OrdenDetalle individual
+<span class="fc" id="L173">            OrdenDetalle detalle=new OrdenDetalle();</span>
+<span class="fc" id="L174">            detalle.setOrden(orden);</span>
+<span class="fc" id="L175">            detalle.setProductoPrecio(precio);</span>
+<span class="fc" id="L176">            detalle.setCantidad(cantidadFinal);</span>
+
+<span class="fc" id="L178">            ordenDetalles.add(detalle);</span>
+<span class="fc" id="L179">        }</span>
+<span class="fc" id="L180">        return ordenDetalles;</span>
+    }
+
+
+    /**
+     * Genera una lista de objetos OrdenDetalle combinando productos individuales y productos dentro de combos.
+     * Si se proporcionan ambos tipos de entrada, se generan OrdenDetalle para ambos.
+     * No calcula subtotal, solo genera los detalles de la orden.
+     *
+     * @param orden Objeto Orden asociado.
+     * @param productos Lista de productos individuales a agregar a la orden.
+     * @param combos Lista de combos a agregar a la orden.
+     * @param cantidadProductos Cantidad de productos individuales a agregar (por defecto 1 si es nulo o menor a 1).
+     * @param cantidadCombo Cantidad de combos a agregar (por defecto 1 si es nulo o menor a 1).
+     * @return Lista de objetos OrdenDetalle generados combinando productos individuales y productos de los combos.
+     */
+    public List&lt;OrdenDetalle&gt; generarOrdenDetalleMixto(Orden orden, List&lt;Producto&gt; productos, List&lt;Combo&gt; combos, Integer cantidadProductos, Integer cantidadCombo) {
+<span class="fc bfc" id="L197" title="All 4 branches covered.">        if (orden == null || orden.getIdOrden() == null) {</span>
+<span class="fc" id="L198">            throw new IllegalArgumentException(&quot;La orden es inválida o no tiene ID.&quot;);</span>
+        }
+        // Validar la cantidad de productos (por defecto 1)
+<span class="pc bpc" id="L201" title="1 of 4 branches missed.">        if (cantidadProductos == null || cantidadProductos &lt; 1) {</span>
+<span class="fc" id="L202">            cantidadProductos = 1;</span>
+        }
+        // Validar la cantidad de combos (por defecto 1)
+<span class="pc bpc" id="L205" title="1 of 4 branches missed.">        if (cantidadCombo == null || cantidadCombo &lt; 1) {</span>
+<span class="fc" id="L206">            cantidadCombo = 1;</span>
+        }
+        // Lista para almacenar todos los detalles generados
+<span class="fc" id="L209">        List&lt;OrdenDetalle&gt; detallesGenerados = new ArrayList&lt;&gt;();</span>
+        // 1. Procesar los productos individuales
+<span class="pc bpc" id="L211" title="1 of 4 branches missed.">        if (productos != null &amp;&amp; !productos.isEmpty()) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            for (Producto producto : productos) {</span>
+                // Validar que el producto tenga un precio asignado
+<span class="fc" id="L214">                ProductoPrecio productoPrecio = em.createNamedQuery(&quot;Producto.findByIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="fc" id="L215">                        .setParameter(&quot;idProducto&quot;, producto.getIdProducto())</span>
+<span class="fc" id="L216">                        .setMaxResults(1)</span>
+<span class="fc" id="L217">                        .getSingleResult();</span>
+
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                if (productoPrecio == null) {</span>
+<span class="fc" id="L220">                    continue; // Si el producto no tiene precio, lo ignoramos</span>
+                }
+                // Crear el OrdenDetalle para el producto
+<span class="fc" id="L223">                OrdenDetalle detalleProducto = new OrdenDetalle();</span>
+<span class="fc" id="L224">                detalleProducto.setOrden(orden);</span>
+<span class="fc" id="L225">                detalleProducto.setProductoPrecio(productoPrecio);</span>
+<span class="fc" id="L226">                detalleProducto.setCantidad(cantidadProductos);</span>
+
+<span class="fc" id="L228">                detallesGenerados.add(detalleProducto); // Agregar a la lista de detalles generados</span>
+<span class="fc" id="L229">            }</span>
+        }
+        // 2. Procesar los productos dentro de los combos
+<span class="pc bpc" id="L232" title="1 of 4 branches missed.">        if (combos != null &amp;&amp; !combos.isEmpty()) {</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">            for (Combo combo : combos) {</span>
+                // Obtener los detalles del combo (productos dentro del combo)
+<span class="fc" id="L235">                List&lt;ComboDetalle&gt; comboDetalles = em.createNamedQuery(&quot;ComboDetalle.findByIdCombo&quot;, ComboDetalle.class)</span>
+<span class="fc" id="L236">                        .setParameter(&quot;idCombo&quot;, combo.getIdCombo())</span>
+<span class="fc" id="L237">                        .getResultList();</span>
+
+<span class="pc bpc" id="L239" title="2 of 4 branches missed.">                if (comboDetalles != null &amp;&amp; !comboDetalles.isEmpty()) {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                    for (ComboDetalle comboDetalle : comboDetalles) {</span>
+<span class="fc" id="L241">                        Producto productoCombo = comboDetalle.getProducto();</span>
+                        // Validar que el producto del combo tenga un precio asignado
+<span class="fc" id="L243">                        ProductoPrecio precioCombo = em.createNamedQuery(&quot;Producto.findByIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="fc" id="L244">                                .setParameter(&quot;idProducto&quot;, productoCombo.getIdProducto())</span>
+<span class="fc" id="L245">                                .setMaxResults(1)</span>
+<span class="fc" id="L246">                                .getSingleResult();</span>
+
+<span class="fc bfc" id="L248" title="All 2 branches covered.">                        if (precioCombo == null) {</span>
+<span class="fc" id="L249">                            continue; // Si el producto no tiene precio, lo ignoramos</span>
+                        }
+
+                        // Calcular la cantidad final del producto = cantidad en combo * cantidad de combos
+<span class="fc" id="L253">                        int cantidadFinalCombo = comboDetalle.getCantidad() * cantidadCombo;</span>
+
+                        // Crear el OrdenDetalle para el producto dentro del combo
+<span class="fc" id="L256">                        OrdenDetalle detalleCombo = new OrdenDetalle();</span>
+<span class="fc" id="L257">                        detalleCombo.setOrden(orden);</span>
+<span class="fc" id="L258">                        detalleCombo.setProductoPrecio(precioCombo);</span>
+<span class="fc" id="L259">                        detalleCombo.setCantidad(cantidadFinalCombo);</span>
+
+<span class="fc" id="L261">                        detallesGenerados.add(detalleCombo); // Agregar a la lista de detalles generados</span>
+<span class="fc" id="L262">                    }</span>
+                }
+<span class="fc" id="L264">            }</span>
+        }
+        // Retornar la lista combinada de detalles generados
+<span class="fc" id="L267">        return detallesGenerados;</span>
     }
 
 

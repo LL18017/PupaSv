@@ -68,17 +68,17 @@ public class ProductoPrecio implements Serializable {
 <span class="fc" id="L68">    public ProductoPrecio() {</span>
 <span class="fc" id="L69">    }</span>
 
-<span class="nc" id="L71">    public ProductoPrecio(Long idProductoPrecio) {</span>
-<span class="nc" id="L72">        this.idProductoPrecio = idProductoPrecio;</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L71">    public ProductoPrecio(Long idProductoPrecio) {</span>
+<span class="fc" id="L72">        this.idProductoPrecio = idProductoPrecio;</span>
+<span class="fc" id="L73">    }</span>
 
     public Long getIdProductoPrecio() {
 <span class="nc" id="L76">        return idProductoPrecio;</span>
     }
 
     public void setIdProductoPrecio(Long idProductoPrecio) {
-<span class="nc" id="L80">        this.idProductoPrecio = idProductoPrecio;</span>
-<span class="nc" id="L81">    }</span>
+<span class="fc" id="L80">        this.idProductoPrecio = idProductoPrecio;</span>
+<span class="fc" id="L81">    }</span>
 
     public Date getFechaDesde() {
 <span class="nc" id="L84">        return fechaDesde;</span>
@@ -134,7 +134,7 @@ public class ProductoPrecio implements Serializable {
 <span class="nc" id="L134">            return false;</span>
         }
 <span class="fc" id="L136">        ProductoPrecio other = (ProductoPrecio) object;</span>
-<span class="pc bpc" id="L137" title="5 of 8 branches missed.">        if ((this.idProductoPrecio == null &amp;&amp; other.idProductoPrecio != null) || (this.idProductoPrecio != null &amp;&amp; !this.idProductoPrecio.equals(other.idProductoPrecio))) {</span>
+<span class="pc bpc" id="L137" title="2 of 8 branches missed.">        if ((this.idProductoPrecio == null &amp;&amp; other.idProductoPrecio != null) || (this.idProductoPrecio != null &amp;&amp; !this.idProductoPrecio.equals(other.idProductoPrecio))) {</span>
 <span class="nc" id="L138">            return false;</span>
         }
 <span class="fc" id="L140">        return true;</span>
