@@ -43,6 +43,7 @@ public class PagoDetalleResourceSI extends AbstractContainerTest{
                 .request(MediaType.APPLICATION_JSON).
                 post(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Assertions.assertNotNull(respuesta);
+        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(201, respuesta.getStatus());
 
         String[] id = respuesta.getLocation().toString().split("/");

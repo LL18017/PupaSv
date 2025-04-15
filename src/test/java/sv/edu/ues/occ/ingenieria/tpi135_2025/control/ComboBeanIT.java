@@ -262,5 +262,5 @@ public class ComboBeanIT extends AbstractContainerTest {
             em.close();
         }
     }
-
 }
+

@@ -33,8 +33,9 @@ import jakarta.persistence.Table;
 public class Combo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id 
+    @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_combo")
     private Long idCombo;
     @Column(name = "nombre")

@@ -4,17 +4,13 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
-import jakarta.annotation.Resource;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import jakarta.transaction.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;

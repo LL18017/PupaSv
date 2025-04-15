@@ -38,7 +38,10 @@ import jakarta.persistence.TemporalType;
     @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
     @NamedQuery(name = "ProductoPrecio.findByIdTipoProductoAndIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
     @NamedQuery(name = "ProductoPrecio.countByIdTipoProductoAndIdProducto", query = "SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
-    @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido")})
+    @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
+    @NamedQuery(name = "ProductoPrecio.findByIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
+
+})
 public class ProductoPrecio implements Serializable {
 
     private static final long serialVersionUID = 1L;

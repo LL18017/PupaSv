@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetallePK;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -349,4 +347,5 @@ class ProductoDetalleBeanTest {
 //        fail("fallo exitosamente");
 
     }
+
 }
