@@ -18,9 +18,9 @@ public class GenericResourceForTest {
     static MountableFile war = MountableFile.forHostPath(Paths.get("target/PupaSv-1.0-SNAPSHOT.war").toAbsolutePath());
     static Network red = Network.newNetwork();
 
-    static String ruta = "/home/mjlopez/Escritorio/PupaSv/target/PupaSv-1.0-SNAPSHOT.war";
-    static String dbName = "Tipicos";
-    static String dbPassword = "12345";
+    static String ruta = "/home/gmoran/IdeaProjects/PupaSv/target//PupaSv-1.0-SNAPSHOT.war";
+    static String dbName = "tipicos_tpi135_2025";
+    static String dbPassword = "abc123";
     static String dbUser = "postgres";
     static int dbPort = 5432;
 

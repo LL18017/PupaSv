@@ -7,13 +7,15 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,OrdenBean,0,9,
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoDetallePKBean,9,0,0,0,4,0,3,0,3,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoDetalleBean,0,394,4,34,0,98,4,26,0,11
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,TipoProductoBean,0,9,0,0,0,4,0,3,0,3
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoPrecioBean,0,80,0,4,0,22,0,7,0,5
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoPrecioBean,4,80,0,4,2,22,1,7,1,5
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoBean,59,0,0,0,14,0,5,0,5,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboBean,28,88,4,12,6,23,4,9,0,5
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,DatosMixtosDTO,38,0,0,0,16,0,11,0,11,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboDetalleBean,172,7,0,0,42,3,8,2,8,2
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoBean,5,343,8,42,1,92,8,27,0,10
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,OrdenDetalleBean,22,419,13,59,6,112,14,32,1,9
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,OrdenResource,105,0,0,0,27,0,6,0,6,0
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,OrdenDetalleResource,497,0,52,0,96,0,35,0,9,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,ProductoResource,283,0,14,0,54,0,14,0,7,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,PagoDetalleResource,190,0,10,0,44,0,11,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,TipoProductoResource,116,0,0,0,27,0,6,0,6,0

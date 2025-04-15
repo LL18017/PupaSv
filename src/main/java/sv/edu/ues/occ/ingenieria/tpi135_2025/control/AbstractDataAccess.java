@@ -296,5 +296,4 @@ public abstract class AbstractDataAccess<T> {
     public boolean verificarMayor(Integer first, Integer max) {
         return first >= 0 && max > 0;
     }
-
 }

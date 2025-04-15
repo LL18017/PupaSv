@@ -36,6 +36,11 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
         return em;
     }
 
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
+
+
     @Override
     public String orderParameterQuery() {
         return "idProductoPrecio";
