@@ -73,8 +73,8 @@ public class Pago implements Serializable {
     }
 
     public void setIdPago(Long idPago) {
-<span class="nc" id="L76">        this.idPago = idPago;</span>
-<span class="nc" id="L77">    }</span>
+<span class="fc" id="L76">        this.idPago = idPago;</span>
+<span class="fc" id="L77">    }</span>
 
     public Date getFecha() {
 <span class="nc" id="L80">        return fecha;</span>
@@ -113,8 +113,8 @@ public class Pago implements Serializable {
     }
 
     public void setIdOrden(Orden idOrden) {
-<span class="nc" id="L116">        this.idOrden = idOrden;</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L116">        this.idOrden = idOrden;</span>
+<span class="fc" id="L117">    }</span>
 
     @Override
     public int hashCode() {
@@ -126,14 +126,14 @@ public class Pago implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (!(object instanceof Pago)) {</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (!(object instanceof Pago)) {</span>
 <span class="nc" id="L130">            return false;</span>
         }
-<span class="nc" id="L132">        Pago other = (Pago) object;</span>
-<span class="nc bnc" id="L133" title="All 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
+<span class="fc" id="L132">        Pago other = (Pago) object;</span>
+<span class="pc bpc" id="L133" title="5 of 8 branches missed.">        if ((this.idPago == null &amp;&amp; other.idPago != null) || (this.idPago != null &amp;&amp; !this.idPago.equals(other.idPago))) {</span>
 <span class="nc" id="L134">            return false;</span>
         }
-<span class="nc" id="L136">        return true;</span>
+<span class="fc" id="L136">        return true;</span>
     }
 
     @Override

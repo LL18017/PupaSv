@@ -9,11 +9,14 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+
 import java.io.Serializable;
+
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolationException;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 /**
- *
  * @author mjlopez bean para control de entidad Orden
  */
 @LocalBean
@@ -47,7 +50,7 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
     @Override
     public Combo update(Combo combo, Object id) {
         if (getEntityManager() == null) {
-            throw new RuntimeException("EntityManager no ha sido inicializado correctamente.");
+            throw new IllegalStateException("EntityManager no ha sido inicializado correctamente.");
         }
         if (combo == null) {
             throw new IllegalArgumentException("Combo no puede ser null.");
@@ -56,34 +59,20 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
             throw new IllegalArgumentException("ID inválido.");
         }
 
-        Combo registroExistente = getEntityManager().find(Combo.class, id);
-        if (registroExistente == null) {
-            throw new EntityNotFoundException("Registro no encontrado.");
+        try {
+            Combo registroExistente = getEntityManager().find(Combo.class, id);
+            if (registroExistente == null) {
+                throw new EntityNotFoundException("Registro no encontrado.");
+            }
+            registroExistente.setNombre(combo.getNombre());
+            return em.merge(registroExistente);
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new ConstraintViolationException(e.getConstraintViolations());
+        } catch (PersistenceException e) {
+            throw new PersistenceException("errror con la base d edatos: " + e.getMessage());
         }
-
-        registroExistente.setNombre(combo.getNombre());
-        return getEntityManager().merge(registroExistente);
     }
 
-    public void delete(Long id) {
-
-        if (id == null) {
-            throw new IllegalArgumentException("El ID no puede ser null.");
-        }
-        if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser mayor que 0.");
-        }
-
-        Combo registroExistente = getEntityManager().find(Combo.class, id);
-        if (registroExistente == null) {
-            throw new EntityNotFoundException("Registro con ID " + id + " no encontrado en la base de datos.");
-        }
-
-        getEntityManager().remove(
-                getEntityManager().contains(registroExistente)
-                ? registroExistente
-                : getEntityManager().merge(registroExistente)
-        );
-
-    }
 }

@@ -76,7 +76,7 @@ public class Producto implements Serializable {
 <span class="fc" id="L76">    }</span>
 
     public String getNombre() {
-<span class="nc" id="L79">        return nombre;</span>
+<span class="fc" id="L79">        return nombre;</span>
     }
 
     public void setNombre(String nombre) {
@@ -84,7 +84,7 @@ public class Producto implements Serializable {
 <span class="fc" id="L84">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L87">        return activo;</span>
+<span class="fc" id="L87">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
@@ -92,12 +92,12 @@ public class Producto implements Serializable {
 <span class="fc" id="L92">    }</span>
 
     public String getObservaciones() {
-<span class="nc" id="L95">        return observaciones;</span>
+<span class="fc" id="L95">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="nc" id="L99">        this.observaciones = observaciones;</span>
-<span class="nc" id="L100">    }</span>
+<span class="fc" id="L99">        this.observaciones = observaciones;</span>
+<span class="fc" id="L100">    }</span>
 
     public List&lt;ComboDetalle&gt; getComboDetalleList() {
 <span class="nc" id="L103">        return comboDetalleList;</span>
@@ -124,20 +124,20 @@ public class Producto implements Serializable {
 
     @Override
     public int hashCode() {
-<span class="nc" id="L127">        int hash = 0;</span>
-<span class="nc bnc" id="L128" title="All 2 branches missed.">        hash += (idProducto != null ? idProducto.hashCode() : 0);</span>
-<span class="nc" id="L129">        return hash;</span>
+<span class="fc" id="L127">        int hash = 0;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        hash += (idProducto != null ? idProducto.hashCode() : 0);</span>
+<span class="fc" id="L129">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (!(object instanceof Producto)) {</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (!(object instanceof Producto)) {</span>
 <span class="nc" id="L136">            return false;</span>
         }
-<span class="nc" id="L138">        Producto other = (Producto) object;</span>
-<span class="nc bnc" id="L139" title="All 8 branches missed.">        if ((this.idProducto == null &amp;&amp; other.idProducto != null) || (this.idProducto != null &amp;&amp; !this.idProducto.equals(other.idProducto))) {</span>
-<span class="nc" id="L140">            return false;</span>
+<span class="fc" id="L138">        Producto other = (Producto) object;</span>
+<span class="pc bpc" id="L139" title="5 of 8 branches missed.">        if ((this.idProducto == null &amp;&amp; other.idProducto != null) || (this.idProducto != null &amp;&amp; !this.idProducto.equals(other.idProducto))) {</span>
+<span class="fc" id="L140">            return false;</span>
         }
 <span class="nc" id="L142">        return true;</span>
     }

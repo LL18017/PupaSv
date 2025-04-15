@@ -68,9 +68,9 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L68">        this.cantidad = cantidad;</span>
 <span class="nc" id="L69">    }</span>
 
-<span class="nc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
-<span class="nc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
+<span class="fc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
+<span class="fc" id="L73">    }</span>
 
     public OrdenDetallePK getOrdenDetallePK() {
 <span class="nc" id="L76">        return ordenDetallePK;</span>
@@ -81,20 +81,20 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L81">    }</span>
 
     public int getCantidad() {
-<span class="nc" id="L84">        return cantidad;</span>
+<span class="fc" id="L84">        return cantidad;</span>
     }
 
     public void setCantidad(int cantidad) {
-<span class="nc" id="L88">        this.cantidad = cantidad;</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        this.cantidad = cantidad;</span>
+<span class="fc" id="L89">    }</span>
 
     public BigDecimal getPrecio() {
-<span class="nc" id="L92">        return precio;</span>
+<span class="fc" id="L92">        return precio;</span>
     }
 
     public void setPrecio(BigDecimal precio) {
-<span class="nc" id="L96">        this.precio = precio;</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L96">        this.precio = precio;</span>
+<span class="fc" id="L97">    }</span>
 
     public String getObservaciones() {
 <span class="nc" id="L100">        return observaciones;</span>
@@ -105,20 +105,20 @@ public class OrdenDetalle implements Serializable {
 <span class="nc" id="L105">    }</span>
 
     public Orden getOrden() {
-<span class="nc" id="L108">        return orden;</span>
+<span class="fc" id="L108">        return orden;</span>
     }
 
     public void setOrden(Orden orden) {
-<span class="nc" id="L112">        this.orden = orden;</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        this.orden = orden;</span>
+<span class="fc" id="L113">    }</span>
 
     public ProductoPrecio getProductoPrecio() {
-<span class="nc" id="L116">        return productoPrecio;</span>
+<span class="fc" id="L116">        return productoPrecio;</span>
     }
 
     public void setProductoPrecio(ProductoPrecio productoPrecio) {
-<span class="nc" id="L120">        this.productoPrecio = productoPrecio;</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L120">        this.productoPrecio = productoPrecio;</span>
+<span class="fc" id="L121">    }</span>
 
     @Override
     public int hashCode() {
@@ -130,14 +130,14 @@ public class OrdenDetalle implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
 <span class="nc" id="L134">            return false;</span>
         }
-<span class="nc" id="L136">        OrdenDetalle other = (OrdenDetalle) object;</span>
-<span class="nc bnc" id="L137" title="All 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
+<span class="fc" id="L136">        OrdenDetalle other = (OrdenDetalle) object;</span>
+<span class="pc bpc" id="L137" title="2 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
 <span class="nc" id="L138">            return false;</span>
         }
-<span class="nc" id="L140">        return true;</span>
+<span class="fc" id="L140">        return true;</span>
     }
 
     @Override

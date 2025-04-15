@@ -68,8 +68,6 @@ public class ComboBeanIT extends AbstractContainerTest {
             Assertions.assertEquals(creado.getNombre(), persistido.getNombre());
             // Verificar que el total aumentó correctamente
             totalEnScript = totalEnScript + 1;
-            System.out.println("Total actualizado en script: " + totalEnScript);
-            System.out.println("ID creado en create(): " + idCreadoEnPrueba);
 
             // Simular un caso de error al intentar persistir un valor nulo
             cut.em.getTransaction().begin();
@@ -187,7 +185,6 @@ public class ComboBeanIT extends AbstractContainerTest {
             Assertions.assertNotNull(respuesta, "El objeto actualizado no debe ser null.");
             Assertions.assertEquals(nombreEsperado, respuesta.getNombre(), "El nombre no coincide con el esperado.");
             Assertions.assertEquals(idDePrueba, respuesta.getIdCombo(), "El ID no coincide con el esperado.");
-            System.out.println("Registro actualizado correctamente: " + respuesta);
 
             // Casos negativos
             // ID menor a 0
@@ -230,7 +227,6 @@ public class ComboBeanIT extends AbstractContainerTest {
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         try {
-            System.out.println("ID para eliminación: " + idCreadoEnPrueba);
             Assertions.assertNotEquals(0L, idCreadoEnPrueba, "El ID no fue asignado correctamente.");
             // Verifica que el objeto existe antes de eliminarlo
             Combo existe = em.find(Combo.class, idCreadoEnPrueba);
@@ -242,7 +238,6 @@ public class ComboBeanIT extends AbstractContainerTest {
             // Verificar que el registro ha sido eliminado correctamente
             Combo eliminado = em.find(Combo.class, idCreadoEnPrueba);
             Assertions.assertNull(eliminado, "El registro eliminado aún existe en la base de datos.");
-            System.out.println("Registro eliminado correctamente: " + idCreadoEnPrueba);
             // Casos negativos
             // Intentar eliminar un ID menor a 0 ( lanzar IllegalArgumentException)
             Assertions.assertThrows(IllegalArgumentException.class, () -> cut.delete(-90L),

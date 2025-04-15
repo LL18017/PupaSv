@@ -43,6 +43,7 @@ public class ComboResourceSI extends AbstractContainerTest {
     Integer max = 10;
     Long cantidadEnScript = 3L;
     Long idBase = 1001L; // ID de referencia de Combo
+    Long idCreado=1L;
 
     @Order(1)
     @Test
@@ -75,6 +76,9 @@ public class ComboResourceSI extends AbstractContainerTest {
         Response respuesta = target.path("combo").request(MediaType.APPLICATION_JSON).post(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Assertions.assertNotNull(respuesta);
         Assertions.assertEquals(201, respuesta.getStatus());
+
+        String[] id = respuesta.getLocation().toString().split("/");
+        idCreado = Long.valueOf(id[id.length - 1]);
     }
 
     @Order(3)
@@ -124,7 +128,7 @@ public class ComboResourceSI extends AbstractContainerTest {
     @Test
     public void testDeleteCombo() {
         System.out.println("Combo testSI delete");
-        Long id = 1003L; // ID de referencia existente para eliminar
+        Long id = idCreado; // ID de referencia existente para eliminar
 
         // Caso exitoso
         Response respuestaPeticion = target.path(String.format("combo/%d", id))

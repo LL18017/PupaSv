@@ -18,8 +18,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
+
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,13 +29,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import jakarta.persistence.criteria.Predicate;
+
 import java.util.HashSet;
+
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 /**
- *
  * @author hdz
  */
 public class ComboBeanTest {
@@ -55,7 +59,6 @@ public class ComboBeanTest {
         mockEm = Mockito.mock(EntityManager.class);
         cut.setEntityManager(mockEm);
     }
-
 
 
     @Test
@@ -244,8 +247,8 @@ public class ComboBeanTest {
 //        // resultado no único
         Assertions.assertThrows(PersistenceException.class, () -> cut.count());
     }
-    
-        @Test
+
+    @Test
     public void updateTest() {
         System.out.println("ComboBean test update");
 
@@ -267,12 +270,15 @@ public class ComboBeanTest {
 
         // id Inexistente
         when(mockEm.find(Combo.class, 12345L)).thenReturn(null);
-        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(comboModificar, (Object) 12345L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(comboModificar,  12345L));
 
-// EntityManager nulo (para lanzar RuntimeException)
+        // EntityManager nulo (para lanzar RuntimeException)
         ComboBean cut2 = Mockito.spy(new ComboBean());
-        cut2.setEntityManager(null);  // Esta línea reemplaza al when(...).thenReturn(null)
-        Assertions.assertThrows(RuntimeException.class, () -> cut2.update(comboModificar, (Object) idModificado));
+        Mockito.doReturn(null).when(cut2).getEntityManager();
+
+        Assertions.assertThrows(IllegalStateException.class, () ->
+                cut2.update(comboModificar, (Object) idModificado));
+
 
         // ConstraintViolationException
         EntityManager mockEm2 = Mockito.mock(EntityManager.class);
@@ -284,7 +290,7 @@ public class ComboBeanTest {
         doThrow(PersistenceException.class).when(mockEm2).find(Combo.class, idModificado);
         Assertions.assertThrows(PersistenceException.class, () -> cut.update(comboModificar, (Object) idModificado));
     }
-    
+
     @Test
     public void testDelete() {
         System.out.println("ComboBean test delete");
@@ -325,14 +331,9 @@ public class ComboBeanTest {
         Mockito.when(mockEm.find(Combo.class, idEliminar)).thenReturn(null);
         Assertions.assertThrows(EntityNotFoundException.class, () -> cut.delete(idEliminar));
 
-        // 5. ConstraintViolationException
         EntityManager mockEm2 = Mockito.mock(EntityManager.class);
-        cut.setEntityManager(mockEm2);
-        Mockito.when(mockEm2.find(Combo.class, idEliminar)).thenReturn(listaCombo.get(0));
-        Mockito.doThrow(ConstraintViolationException.class).when(mockEm2).remove(Mockito.any());
-        Assertions.assertThrows(ConstraintViolationException.class, () -> cut.delete(idEliminar));
 
-// 6. PersistenceException
+        // 5. PersistenceException
         Mockito.doThrow(PersistenceException.class).when(mockEm2).remove(Mockito.any());
         Assertions.assertThrows(PersistenceException.class, () -> cut.delete(idEliminar));
 

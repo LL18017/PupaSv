@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
  *
  * @author mjlopez
  */
-@Entity
 @Table(name = &quot;combodetallepk&quot;)
 @Embeddable
 public class ComboDetallePK implements Serializable {
@@ -27,57 +26,57 @@ public class ComboDetallePK implements Serializable {
     @Column(name = &quot;id_producto&quot;)
     private long idProducto;
 
-<span class="fc" id="L30">    public ComboDetallePK() {</span>
-<span class="fc" id="L31">    }</span>
+<span class="fc" id="L29">    public ComboDetallePK() {</span>
+<span class="fc" id="L30">    }</span>
 
-<span class="fc" id="L33">    public ComboDetallePK(long idCombo, long idProducto) {</span>
-<span class="fc" id="L34">        this.idCombo = idCombo;</span>
-<span class="fc" id="L35">        this.idProducto = idProducto;</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L32">    public ComboDetallePK(long idCombo, long idProducto) {</span>
+<span class="fc" id="L33">        this.idCombo = idCombo;</span>
+<span class="fc" id="L34">        this.idProducto = idProducto;</span>
+<span class="fc" id="L35">    }</span>
 
     public long getIdCombo() {
-<span class="nc" id="L39">        return idCombo;</span>
+<span class="nc" id="L38">        return idCombo;</span>
     }
 
     public void setIdCombo(long idCombo) {
-<span class="nc" id="L43">        this.idCombo = idCombo;</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L42">        this.idCombo = idCombo;</span>
+<span class="fc" id="L43">    }</span>
 
     public long getIdProducto() {
-<span class="nc" id="L47">        return idProducto;</span>
+<span class="nc" id="L46">        return idProducto;</span>
     }
 
     public void setIdProducto(long idProducto) {
-<span class="nc" id="L51">        this.idProducto = idProducto;</span>
-<span class="nc" id="L52">    }</span>
+<span class="fc" id="L50">        this.idProducto = idProducto;</span>
+<span class="fc" id="L51">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L56">        int hash = 0;</span>
-<span class="nc" id="L57">        hash += (int) idCombo;</span>
-<span class="nc" id="L58">        hash += (int) idProducto;</span>
-<span class="nc" id="L59">        return hash;</span>
+<span class="nc" id="L55">        int hash = 0;</span>
+<span class="nc" id="L56">        hash += (int) idCombo;</span>
+<span class="nc" id="L57">        hash += (int) idProducto;</span>
+<span class="nc" id="L58">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (!(object instanceof ComboDetallePK)) {</span>
-<span class="nc" id="L66">            return false;</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (!(object instanceof ComboDetallePK)) {</span>
+<span class="nc" id="L65">            return false;</span>
         }
-<span class="nc" id="L68">        ComboDetallePK other = (ComboDetallePK) object;</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (this.idCombo != other.idCombo) {</span>
-<span class="nc" id="L70">            return false;</span>
+<span class="fc" id="L67">        ComboDetallePK other = (ComboDetallePK) object;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (this.idCombo != other.idCombo) {</span>
+<span class="fc" id="L69">            return false;</span>
         }
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (this.idProducto != other.idProducto) {</span>
-<span class="nc" id="L73">            return false;</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (this.idProducto != other.idProducto) {</span>
+<span class="nc" id="L72">            return false;</span>
         }
-<span class="nc" id="L75">        return true;</span>
+<span class="fc" id="L74">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="fc" id="L80">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetallePK[ idCombo=&quot; + idCombo + &quot;, idProducto=&quot; + idProducto + &quot; ]&quot;;</span>
+<span class="fc" id="L79">        return &quot;com.mycompany.extreciondeentities.entities.ComboDetallePK[ idCombo=&quot; + idCombo + &quot;, idProducto=&quot; + idProducto + &quot; ]&quot;;</span>
     }
     
 }

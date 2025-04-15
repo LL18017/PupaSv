@@ -56,7 +56,7 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
     public ProductoDetalle findById(Integer idTipoProducto, Long idProducto) {
 <span class="pc bpc" id="L57" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0)</span>
 <span class="fc" id="L58">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0)</span>
+<span class="fc bfc" id="L59" title="All 4 branches covered.">        if (idProducto == null || idProducto &lt;= 0)</span>
 <span class="fc" id="L60">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos o menor a cero&quot;);</span>
         try {
 <span class="fc" id="L62">            Producto producto = em.find(Producto.class, idProducto);</span>
@@ -94,7 +94,7 @@ public class ProductoDetalleBean extends AbstractDataAccess&lt;ProductoDetalle&g
 <span class="pc bpc" id="L94" title="1 of 4 branches missed.">        if (idTipoProducto == null || idTipoProducto &lt;= 0) {</span>
 <span class="fc" id="L95">            throw new IllegalArgumentException(&quot;idTipoProducto no pueden ser nulos  o menor o igual a cero&quot;);</span>
         }
-<span class="pc bpc" id="L97" title="1 of 4 branches missed.">        if (idProducto == null || idProducto &lt;= 0) {</span>
+<span class="fc bfc" id="L97" title="All 4 branches covered.">        if (idProducto == null || idProducto &lt;= 0) {</span>
 <span class="fc" id="L98">            throw new IllegalArgumentException(&quot;idProducto no pueden ser nulos o menor o igual a cero&quot;);</span>
         }
         try {

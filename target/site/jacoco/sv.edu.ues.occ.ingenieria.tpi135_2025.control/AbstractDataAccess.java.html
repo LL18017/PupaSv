@@ -96,8 +96,8 @@ public abstract class AbstractDataAccess&lt;T&gt; {
 <span class="fc bfc" id="L96" title="All 2 branches covered.">        if (id == null) {</span>
 <span class="fc" id="L97">            throw new IllegalArgumentException(&quot;parametro no valido&quot;);</span>
         }
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (Long.parseLong(id.toString()) &lt;= 0) {</span>
-<span class="nc" id="L100">            throw new IllegalArgumentException(&quot;parametro no puede ser menor a cero&quot;);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc" id="L100">            throw new IllegalArgumentException(&quot;parametro no puede ser menor a cero&quot;);</span>
         }
 <span class="fc" id="L102">        em = getEntityManager();</span>
 <span class="fc bfc" id="L103" title="All 2 branches covered.">        if (em == null) {</span>
@@ -229,7 +229,7 @@ public abstract class AbstractDataAccess&lt;T&gt; {
 <span class="fc bfc" id="L229" title="All 2 branches covered.">        if (registro == null) {</span>
 <span class="fc" id="L230">            throw new IllegalArgumentException(&quot;El registro no puede ser nulo&quot;);</span>
         }
-<span class="pc bpc" id="L232" title="1 of 4 branches missed.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc bfc" id="L232" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
 <span class="fc" id="L233">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
         }
 <span class="fc" id="L235">        em = getEntityManager();</span>
@@ -263,7 +263,7 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws ConstraintViolationException si existe problemas de restricion con base de datos
      */
     public void delete(Object id) {
-<span class="pc bpc" id="L266" title="1 of 4 branches missed.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc bfc" id="L266" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
 <span class="fc" id="L267">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
         }
 <span class="fc" id="L269">        EntityManager em = null;</span>
@@ -273,8 +273,8 @@ public abstract class AbstractDataAccess&lt;T&gt; {
         }
         try {
 <span class="fc" id="L275">            T registro = (T) em.find(tipoDato, id);</span>
-<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            if (registro == null) {</span>
-<span class="nc" id="L277">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">            if (registro == null) {</span>
+<span class="fc" id="L277">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
             }
 <span class="fc" id="L279">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
 <span class="fc" id="L280">            CriteriaDelete&lt;T&gt; cd = cb.createCriteriaDelete(this.tipoDato);</span>
@@ -282,8 +282,8 @@ public abstract class AbstractDataAccess&lt;T&gt; {
 <span class="fc" id="L282">            cd.where(cb.equal(raiz, registro));</span>
 <span class="fc" id="L283">            em.createQuery(cd).executeUpdate();</span>
 <span class="fc" id="L284">            return;</span>
-<span class="nc" id="L285">        } catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L286">            throw e;</span>
+<span class="fc" id="L285">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L286">            throw e;</span>
 <span class="fc" id="L287">        } catch (PersistenceException e) {</span>
 <span class="fc" id="L288">            throw new PersistenceException(e);</span>
         }

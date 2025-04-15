@@ -33,8 +33,9 @@ import jakarta.persistence.Table;
 public class Combo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id 
+    @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;id_combo&quot;)
     private Long idCombo;
     @Column(name = &quot;nombre&quot;)
@@ -46,76 +47,76 @@ public class Combo implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;combo&quot;)
     private List&lt;ComboDetalle&gt; comboDetalleList;
 
-<span class="fc" id="L49">    public Combo() {</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L50">    public Combo() {</span>
+<span class="fc" id="L51">    }</span>
 
-<span class="nc" id="L52">    public Combo(Long idCombo) {</span>
-<span class="nc" id="L53">        this.idCombo = idCombo;</span>
-<span class="nc" id="L54">    }</span>
+<span class="fc" id="L53">    public Combo(Long idCombo) {</span>
+<span class="fc" id="L54">        this.idCombo = idCombo;</span>
+<span class="fc" id="L55">    }</span>
 
     public Long getIdCombo() {
-<span class="nc" id="L57">        return idCombo;</span>
+<span class="fc" id="L58">        return idCombo;</span>
     }
 
     public void setIdCombo(Long idCombo) {
-<span class="nc" id="L61">        this.idCombo = idCombo;</span>
-<span class="nc" id="L62">    }</span>
+<span class="fc" id="L62">        this.idCombo = idCombo;</span>
+<span class="fc" id="L63">    }</span>
 
     public String getNombre() {
-<span class="nc" id="L65">        return nombre;</span>
+<span class="fc" id="L66">        return nombre;</span>
     }
 
     public void setNombre(String nombre) {
-<span class="nc" id="L69">        this.nombre = nombre;</span>
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L70">        this.nombre = nombre;</span>
+<span class="fc" id="L71">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L73">        return activo;</span>
+<span class="fc" id="L74">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="nc" id="L77">        this.activo = activo;</span>
-<span class="nc" id="L78">    }</span>
+<span class="fc" id="L78">        this.activo = activo;</span>
+<span class="fc" id="L79">    }</span>
 
     public String getDescripcionPublica() {
-<span class="nc" id="L81">        return descripcionPublica;</span>
+<span class="fc" id="L82">        return descripcionPublica;</span>
     }
 
     public void setDescripcionPublica(String descripcionPublica) {
-<span class="nc" id="L85">        this.descripcionPublica = descripcionPublica;</span>
-<span class="nc" id="L86">    }</span>
+<span class="nc" id="L86">        this.descripcionPublica = descripcionPublica;</span>
+<span class="nc" id="L87">    }</span>
 
     public List&lt;ComboDetalle&gt; getComboDetalleList() {
-<span class="nc" id="L89">        return comboDetalleList;</span>
+<span class="fc" id="L90">        return comboDetalleList;</span>
     }
 
     public void setComboDetalleList(List&lt;ComboDetalle&gt; comboDetalleList) {
-<span class="nc" id="L93">        this.comboDetalleList = comboDetalleList;</span>
-<span class="nc" id="L94">    }</span>
+<span class="fc" id="L94">        this.comboDetalleList = comboDetalleList;</span>
+<span class="fc" id="L95">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L98">        int hash = 0;</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
-<span class="nc" id="L100">        return hash;</span>
+<span class="fc" id="L99">        int hash = 0;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
+<span class="fc" id="L101">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (!(object instanceof Combo)) {</span>
-<span class="nc" id="L107">            return false;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (!(object instanceof Combo)) {</span>
+<span class="nc" id="L108">            return false;</span>
         }
-<span class="nc" id="L109">        Combo other = (Combo) object;</span>
-<span class="nc bnc" id="L110" title="All 8 branches missed.">        if ((this.idCombo == null &amp;&amp; other.idCombo != null) || (this.idCombo != null &amp;&amp; !this.idCombo.equals(other.idCombo))) {</span>
-<span class="nc" id="L111">            return false;</span>
+<span class="fc" id="L110">        Combo other = (Combo) object;</span>
+<span class="pc bpc" id="L111" title="5 of 8 branches missed.">        if ((this.idCombo == null &amp;&amp; other.idCombo != null) || (this.idCombo != null &amp;&amp; !this.idCombo.equals(other.idCombo))) {</span>
+<span class="nc" id="L112">            return false;</span>
         }
-<span class="nc" id="L113">        return true;</span>
+<span class="fc" id="L114">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L118">        return &quot;com.mycompany.extreciondeentities.entities.Combo[ idCombo=&quot; + idCombo + &quot; ]&quot;;</span>
+<span class="fc" id="L119">        return &quot;com.mycompany.extreciondeentities.entities.Combo[ idCombo=&quot; + idCombo + &quot; ]&quot;;</span>
     }
     
 }

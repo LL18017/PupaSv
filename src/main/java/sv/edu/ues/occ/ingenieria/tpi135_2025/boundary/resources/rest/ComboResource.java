@@ -43,21 +43,7 @@ public class ComboResource extends GeneralRest implements Serializable {
                     .header(Headers.TOTAL_RECORD, total)
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Collections.singletonMap("error", e.getMessage()))
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
         } catch (Exception e) {
-            e.printStackTrace(); // para ver el tipo exacto
-            Throwable cause = e.getCause();
-            System.out.println("Causa: " + cause);
-            if (cause instanceof IllegalArgumentException) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Collections.singletonMap("error", cause.getMessage()))
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
             return responseExcepcions(e, null);
         }
 
