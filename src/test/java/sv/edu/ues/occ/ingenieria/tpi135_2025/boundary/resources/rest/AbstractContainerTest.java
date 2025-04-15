@@ -35,9 +35,10 @@ public abstract class AbstractContainerTest {
     Integer first=0;
     Integer max=10;
 
-    static String ruta = "/home/gmoran/IdeaProjects/PupaSv/target//PupaSv-1.0-SNAPSHOT.war";
-    static String dbName = "tipicos_tpi135_2025";
-    static String dbPassword = "abc123";
+
+    static String ruta = "/home/mjlopez/Escritorio/PupaSv/target/PupaSv-1.0-SNAPSHOT.war";
+    static String dbName = "Tipicos";
+    static String dbPassword = "12345";
     static String dbUser = "postgres";
     static int dbPort = 5432;
 
