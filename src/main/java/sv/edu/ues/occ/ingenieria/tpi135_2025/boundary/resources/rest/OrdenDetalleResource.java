@@ -298,10 +298,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
         if (orden == null || orden.getIdOrden() == null) {
             throw new IllegalArgumentException("La orden es requerida");
         }
-
         List<OrdenDetalle> ordenDetalles = new ArrayList<>();
-
-        // Manejar productos
         if (productos != null && !productos.isEmpty()) {
             if (cantidadProductos == null || cantidadProductos.size() != productos.size()) {
                 throw new IllegalArgumentException("La lista de cantidades de productos no coincide con la lista de productos");
@@ -333,8 +330,6 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 ordenDetalles.add(detalle);
             }
         }
-
-        // Manejar combos
         if (combos != null && !combos.isEmpty()) {
             if (cantidadCombo == null || cantidadCombo.size() != combos.size()) {
                 throw new IllegalArgumentException("La lista de cantidades de combos no coincide con la lista de combos");

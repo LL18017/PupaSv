@@ -71,15 +71,15 @@ public class Combo implements Serializable {
 <span class="fc" id="L71">    }</span>
 
     public Boolean getActivo() {
-<span class="fc" id="L74">        return activo;</span>
+<span class="nc" id="L74">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="fc" id="L78">        this.activo = activo;</span>
-<span class="fc" id="L79">    }</span>
+<span class="nc" id="L78">        this.activo = activo;</span>
+<span class="nc" id="L79">    }</span>
 
     public String getDescripcionPublica() {
-<span class="fc" id="L82">        return descripcionPublica;</span>
+<span class="nc" id="L82">        return descripcionPublica;</span>
     }
 
     public void setDescripcionPublica(String descripcionPublica) {
@@ -87,18 +87,18 @@ public class Combo implements Serializable {
 <span class="nc" id="L87">    }</span>
 
     public List&lt;ComboDetalle&gt; getComboDetalleList() {
-<span class="fc" id="L90">        return comboDetalleList;</span>
+<span class="nc" id="L90">        return comboDetalleList;</span>
     }
 
     public void setComboDetalleList(List&lt;ComboDetalle&gt; comboDetalleList) {
-<span class="fc" id="L94">        this.comboDetalleList = comboDetalleList;</span>
-<span class="fc" id="L95">    }</span>
+<span class="nc" id="L94">        this.comboDetalleList = comboDetalleList;</span>
+<span class="nc" id="L95">    }</span>
 
     @Override
     public int hashCode() {
-<span class="fc" id="L99">        int hash = 0;</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
-<span class="fc" id="L101">        return hash;</span>
+<span class="nc" id="L99">        int hash = 0;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
+<span class="nc" id="L101">        return hash;</span>
     }
 
     @Override
@@ -116,7 +116,7 @@ public class Combo implements Serializable {
 
     @Override
     public String toString() {
-<span class="fc" id="L119">        return &quot;com.mycompany.extreciondeentities.entities.Combo[ idCombo=&quot; + idCombo + &quot; ]&quot;;</span>
+<span class="nc" id="L119">        return &quot;com.mycompany.extreciondeentities.entities.Combo[ idCombo=&quot; + idCombo + &quot; ]&quot;;</span>
     }
     
 }

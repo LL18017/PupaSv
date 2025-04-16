@@ -39,16 +39,16 @@ public class ComboDetallePK implements Serializable {
     }
 
     public void setIdCombo(long idCombo) {
-<span class="fc" id="L42">        this.idCombo = idCombo;</span>
-<span class="fc" id="L43">    }</span>
+<span class="nc" id="L42">        this.idCombo = idCombo;</span>
+<span class="nc" id="L43">    }</span>
 
     public long getIdProducto() {
 <span class="nc" id="L46">        return idProducto;</span>
     }
 
     public void setIdProducto(long idProducto) {
-<span class="fc" id="L50">        this.idProducto = idProducto;</span>
-<span class="fc" id="L51">    }</span>
+<span class="nc" id="L50">        this.idProducto = idProducto;</span>
+<span class="nc" id="L51">    }</span>
 
     @Override
     public int hashCode() {
@@ -65,8 +65,8 @@ public class ComboDetallePK implements Serializable {
 <span class="nc" id="L65">            return false;</span>
         }
 <span class="fc" id="L67">        ComboDetallePK other = (ComboDetallePK) object;</span>
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (this.idCombo != other.idCombo) {</span>
-<span class="fc" id="L69">            return false;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (this.idCombo != other.idCombo) {</span>
+<span class="nc" id="L69">            return false;</span>
         }
 <span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (this.idProducto != other.idProducto) {</span>
 <span class="nc" id="L72">            return false;</span>

@@ -68,8 +68,8 @@ public class TipoProducto implements Serializable {
     }
 
     public void setIdTipoProducto(Integer idTipoProducto) {
-<span class="fc" id="L71">        this.idTipoProducto = idTipoProducto;</span>
-<span class="fc" id="L72">    }</span>
+<span class="nc" id="L71">        this.idTipoProducto = idTipoProducto;</span>
+<span class="nc" id="L72">    }</span>
 
     public String getNombre() {
 <span class="fc" id="L75">        return nombre;</span>
@@ -80,20 +80,20 @@ public class TipoProducto implements Serializable {
 <span class="fc" id="L80">    }</span>
 
     public Boolean getActivo() {
-<span class="fc" id="L83">        return activo;</span>
+<span class="nc" id="L83">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="fc" id="L87">        this.activo = activo;</span>
-<span class="fc" id="L88">    }</span>
+<span class="nc" id="L87">        this.activo = activo;</span>
+<span class="nc" id="L88">    }</span>
 
     public String getObservaciones() {
-<span class="fc" id="L91">        return observaciones;</span>
+<span class="nc" id="L91">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="fc" id="L95">        this.observaciones = observaciones;</span>
-<span class="fc" id="L96">    }</span>
+<span class="nc" id="L95">        this.observaciones = observaciones;</span>
+<span class="nc" id="L96">    }</span>
 
     public List&lt;ProductoDetalle&gt; getProductoDetalleList() {
 <span class="nc" id="L99">        return productoDetalleList;</span>
@@ -105,9 +105,9 @@ public class TipoProducto implements Serializable {
 
     @Override
     public int hashCode() {
-<span class="fc" id="L108">        int hash = 0;</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        hash += (idTipoProducto != null ? idTipoProducto.hashCode() : 0);</span>
-<span class="fc" id="L110">        return hash;</span>
+<span class="nc" id="L108">        int hash = 0;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        hash += (idTipoProducto != null ? idTipoProducto.hashCode() : 0);</span>
+<span class="nc" id="L110">        return hash;</span>
     }
 
     @Override

@@ -3,7 +3,9 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ProductoDetalle.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboDetalleBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipicosApp.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/control/DatosMixtosDTO.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResource.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenDetalleResource.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractDataAccess.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoBean.class
