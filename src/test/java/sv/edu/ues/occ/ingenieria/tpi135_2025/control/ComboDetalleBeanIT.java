@@ -44,6 +44,7 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
     public void create() {
         System.out.println("ComboDetalle testIT create");
         ComboDetalle nuevo = new ComboDetalle();
+
         ComboDetallePK pk = new ComboDetallePK(1003L, 1003L); // valores daban conflictos
         nuevo.setComboDetallePK(pk);
         nuevo.setCantidad(7);
@@ -53,7 +54,7 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
             Assertions.assertDoesNotThrow(() -> cut.create(nuevo));
             cut.em.getTransaction().commit();
             //ID creado para usar en futuras pruebas
-            idCreadoEnPrueba = pk; // aqui me esta generando error
+            idCreadoEnPrueba = pk;
             // Validar que fue persistido
             ComboDetalle persistido = cut.em.find(ComboDetalle.class, pk);
             Assertions.assertNotNull(persistido, "El ComboDetalle no fue persistido.");

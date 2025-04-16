@@ -459,7 +459,6 @@ INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, NULL);
 
-
 INSERT INTO public.producto VALUES (1001, 'coca', true, NULL);
 INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL);
 INSERT INTO public.producto VALUES (1003, 'pupusas', true, NULL);
@@ -479,7 +478,6 @@ INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
 INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
-
 
 INSERT INTO public.combo VALUES (1001, 'superCombo', true, NULL);
 INSERT INTO public.combo VALUES (1002, 'megaCombo', true, NULL);

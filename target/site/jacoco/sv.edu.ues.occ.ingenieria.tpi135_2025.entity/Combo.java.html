@@ -71,15 +71,15 @@ public class Combo implements Serializable {
 <span class="fc" id="L71">    }</span>
 
     public Boolean getActivo() {
-<span class="nc" id="L74">        return activo;</span>
+<span class="fc" id="L74">        return activo;</span>
     }
 
     public void setActivo(Boolean activo) {
-<span class="nc" id="L78">        this.activo = activo;</span>
-<span class="nc" id="L79">    }</span>
+<span class="fc" id="L78">        this.activo = activo;</span>
+<span class="fc" id="L79">    }</span>
 
     public String getDescripcionPublica() {
-<span class="nc" id="L82">        return descripcionPublica;</span>
+<span class="fc" id="L82">        return descripcionPublica;</span>
     }
 
     public void setDescripcionPublica(String descripcionPublica) {
@@ -87,31 +87,31 @@ public class Combo implements Serializable {
 <span class="nc" id="L87">    }</span>
 
     public List&lt;ComboDetalle&gt; getComboDetalleList() {
-<span class="nc" id="L90">        return comboDetalleList;</span>
+<span class="fc" id="L90">        return comboDetalleList;</span>
     }
 
     public void setComboDetalleList(List&lt;ComboDetalle&gt; comboDetalleList) {
-<span class="nc" id="L94">        this.comboDetalleList = comboDetalleList;</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L94">        this.comboDetalleList = comboDetalleList;</span>
+<span class="fc" id="L95">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L99">        int hash = 0;</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
-<span class="nc" id="L101">        return hash;</span>
+<span class="fc" id="L99">        int hash = 0;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        hash += (idCombo != null ? idCombo.hashCode() : 0);</span>
+<span class="fc" id="L101">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (!(object instanceof Combo)) {</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (!(object instanceof Combo)) {</span>
 <span class="nc" id="L108">            return false;</span>
         }
-<span class="nc" id="L110">        Combo other = (Combo) object;</span>
-<span class="nc bnc" id="L111" title="All 8 branches missed.">        if ((this.idCombo == null &amp;&amp; other.idCombo != null) || (this.idCombo != null &amp;&amp; !this.idCombo.equals(other.idCombo))) {</span>
+<span class="fc" id="L110">        Combo other = (Combo) object;</span>
+<span class="pc bpc" id="L111" title="5 of 8 branches missed.">        if ((this.idCombo == null &amp;&amp; other.idCombo != null) || (this.idCombo != null &amp;&amp; !this.idCombo.equals(other.idCombo))) {</span>
 <span class="nc" id="L112">            return false;</span>
         }
-<span class="nc" id="L114">        return true;</span>
+<span class="fc" id="L114">        return true;</span>
     }
 
     @Override
