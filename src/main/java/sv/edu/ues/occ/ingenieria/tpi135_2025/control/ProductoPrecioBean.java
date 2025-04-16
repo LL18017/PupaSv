@@ -41,6 +41,10 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
     }
 
 
+    /**
+     * Devuelve el nombre del parámetro por el cual se ordenarán los resultados por defecto.
+     * @return el nombre del campo usado para ordenar: "idProductoPrecio".
+     */
     @Override
     public String orderParameterQuery() {
         return "idProductoPrecio";
@@ -62,17 +66,26 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
         throw new IllegalArgumentException("idProducto no puede ser nullo o menor que 0");
     }
 
+    /**
+     * Cuenta cuántos registros de ProductoPrecio existen asociados a un producto específico.
+     *
+     * @param idProducto el identificador del producto para el cual se desea contar los precios.
+     *                   No puede ser nulo ni menor que 0.
+     * @return la cantidad de registros de ProductoPrecio asociados al producto.
+     * @throws IllegalArgumentException si el idProducto es nulo o menor que 0.
+     * @throws IllegalStateException si ocurre un error al ejecutar la consulta en la base de datos.
+     */
     public Long countByIdProducto(Long idProducto) {
-        if (idProducto != null) {
-            try {
-                return em.createNamedQuery("ProductoPrecio.countByIdTipoProductoAndIdProducto", Long.class)
-                        .setParameter("idProducto", idProducto)
-                        .getSingleResult();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                throw new IllegalStateException("error al acceder al repositorio ", e);
-            }
+        if (idProducto == null || idProducto < 0) {
+            throw new IllegalArgumentException("idProducto no puede ser nulo o menor que 0");
         }
-        throw new IllegalArgumentException("idProducto no puede ser nullo o menor que 0");
+        try {
+            return em.createNamedQuery("ProductoPrecio.countByIdTipoProductoAndIdProducto", Long.class)
+                    .setParameter("idProducto", idProducto)
+                    .getSingleResult();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("error al acceder al repositorio ", e);
+        }
     }
 }

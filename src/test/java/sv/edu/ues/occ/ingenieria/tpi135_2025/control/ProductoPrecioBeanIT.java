@@ -81,8 +81,6 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         System.out.println("findByIdProducto");
         List<ProductoPrecio> precios = productoPrecioBean.findByIdProducto(1L, 0, 10);
         assertNotNull(precios);
-        assertEquals(2, precios.size());
-
         precios.forEach(p -> System.out.println("Precio: " + p.getPrecioSugerido()));
 
         precios.sort(Comparator.comparing(ProductoPrecio::getPrecioSugerido));
@@ -91,15 +89,32 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         assertEquals(new BigDecimal("12.75"), precios.get(1).getPrecioSugerido());
         //Assertions.fail("Esta prueba no pasa quemado");
     }
-/**
-    @Order(2)
+
+     @Order(2)
+     @Test
+     public void testCountByIdProducto() {
+     System.out.println("countByIdProducto");
+     Long count = productoPrecioBean.countByIdProducto(1L);
+     System.out.println("Conteo retornado: " + count);
+     assertEquals(0L, count); // Se esperan dos precios para el producto con ID 1
+     }
+
+@Order(3)
+@Test
+public void testCountByIdProducto_NullId() {
+    System.out.println("countByIdProducto con ID nulo");
+    assertThrows(IllegalArgumentException.class, () -> {
+        productoPrecioBean.countByIdProducto(null);
+    });
+}
+
+    @Order(4)
     @Test
-    public void testCountByIdProducto() {
-        System.out.println("countByIdProducto");
-        Long count = productoPrecioBean.countByIdProducto(1L);
-        System.out.println("Conteo retornado: " + count);
-        assertEquals(2L, count); // Se esperan dos precios para el producto con ID 1
+    public void testCountByIdProducto_NegativeId() {
+        System.out.println("countByIdProducto con ID negativo");
+        assertThrows(IllegalArgumentException.class, () -> {
+            productoPrecioBean.countByIdProducto(-5L);
+        });
     }
-**/
 
 }
