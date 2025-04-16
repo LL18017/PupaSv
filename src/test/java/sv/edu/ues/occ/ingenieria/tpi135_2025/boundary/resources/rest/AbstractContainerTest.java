@@ -35,7 +35,6 @@ public abstract class AbstractContainerTest {
     Integer first=0;
     Integer max=10;
 
-
     static String ruta = "/home/mjlopez/Escritorio/PupaSv/target/PupaSv-1.0-SNAPSHOT.war";
     static String dbName = "Tipicos";
     static String dbPassword = "12345";
@@ -63,5 +62,4 @@ public abstract class AbstractContainerTest {
             .withEnv("DB_PORT", String.valueOf(dbPort))
             .withEnv("DB_HOST", "db16_tpi")
             .dependsOn(postgres);
-
 }

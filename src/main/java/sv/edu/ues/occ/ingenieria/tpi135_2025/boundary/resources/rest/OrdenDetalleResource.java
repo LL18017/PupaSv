@@ -6,6 +6,8 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
@@ -14,9 +16,11 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path("ordenDetalle")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,39 +29,53 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @Inject
     OrdenDetalleBean odBean;
 
+    private EntityManager em;
+
     /**
-     * Metodo que devueleve un rango de datos de tipo OrdenDetalle sin importar el idOrden
-     * @param first la pocicion del primer dat
-     * @param max la cantidad de datos que se desea obtener
-     * @return una lista de tipo T si no definel los parametros entonces
-     * devuelve los primeros 20 registros
+     * Método que devuelve un rango de datos de tipo OrdenDetalle.
+     * Si no se especifican los parámetros 'first' y 'max', se devolverán los primeros 20 registros.
+     *
+     * @param first La posición del primer dato a obtener (índice de inicio para la paginación).
+     * @param max La cantidad máxima de registros a obtener.
+     * @return Una lista de objetos de tipo OrdenDetalle, o los primeros 20 registros si no se definen los parámetros.
      */
-    @Path("productoPrecio/ordenDetalle")
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/GET /v1/ordenDetalle?idOrden=1&first=0&max=20
+    @Path("")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(
-            @QueryParam("first")
-            @DefaultValue("0") int first,
-            @QueryParam("max")
-            @DefaultValue("20") int max
-    ) {
-
+    public Response findRange(@QueryParam("idOrden") Long idOrden,
+                              @QueryParam("first") @DefaultValue("0") int first,
+                              @QueryParam("max") @DefaultValue("20") int max) {
         try {
-            if ((first >= 0 && max >= 0 && max <=50) ) {
-
-                List<OrdenDetalle> encontrados= odBean.findRange(first,max);
-                long total=odBean.count();
-                Response.ResponseBuilder builder = Response.ok(encontrados).
-                        header(Headers.TOTAL_RECORD, total).
-                        type(MediaType.APPLICATION_JSON);
-                return builder.build();
-            }else{
-                return Response.status(400).header(Headers.WRONG_PARAMETER," first: "+ first+",max: "+max  ).header("wrong parameter : max","s").build();
+            if (idOrden == null) {
+                return Response.status(400).
+                        entity("El parametro 'idOrden' es obligatorio")
+                        .build();
             }
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
-            return Response.status(500).entity(e.getMessage()).build();
+            if (first < 0 || max < 0){
+                return Response.status(400)
+                        .entity("Los parametros 'first' y 'max' deben ser mayores o iguales a 0.")
+                        .build();
+            }
+            if (max > 50){
+                return Response.status(400)
+                        .entity("El parametro 'max' no puede ser mayor a 50.")
+                        .build();
+            }
+            List<OrdenDetalle> encontrados = odBean.findRangeByIdOrden(idOrden, first, max);
+            Long total= odBean.countByIdOrden(idOrden);
+
+            return Response.ok(encontrados)
+                    .header(Headers.TOTAL_RECORD, total)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }catch (Exception e){
+            Logger.getLogger(OrdenDetalleResource.class.getName()).log(Level.SEVERE, null, e);
+            return Response.status(500)
+                    .entity("Hubo un prloblema al proceder la solicitud"+e.getMessage())
+                    .build();
         }
+
     }
 
 
@@ -72,11 +90,12 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      * devuelve los primeros 20 registros
      */
 
-    @Path("{idOrden}/productoPrecio/ordenDetalle")
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}
+    @Path("orden/{idOrden}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRangeByIdOrden(@QueryParam("first") int first,
-                                          @QueryParam("max") int max,
-                                          @PathParam("idOrden") Long idOrden) {
+                                       @QueryParam("max") int max,
+                                       @PathParam("idOrden") Long idOrden) {
         try {
             if (first >= 0 && max >= 0 && max <= 50) {
 
@@ -104,7 +123,8 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      * encuentra ningun registro con el id especificado 400 si se envia mal una
      * parametro
      */
-    @Path("{idOrden}/productoPrecio/{idProductoPrecio}/ordenDetalle")
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
+    @Path("orden/{idOrden}/productoPrecio/{idProductoPrecio}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findByIdOrdenAndIdProductoPrecio(
@@ -119,7 +139,9 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                     Response.ResponseBuilder builder = Response.ok(encontrado);
                     return builder.build();
                 }
-                return Response.status(404).header(Headers.NOT_FOUND_ID, "idOrden: "+idOrden + " , idProducto: "+idOrden).build();
+                return Response.status(404)
+                        .header(Headers.NOT_FOUND_ID, "idOrden: " + idOrden + " , idProducto: " + idProductoPrecio)
+                        .build();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 return Response.status(500).entity(e.getMessage()).build();
@@ -140,7 +162,8 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path("{idOrden}/productoPrecio/{idProductoPrecio}/ordenDetall")
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
+    @Path("orden/{idOrden}/productoPrecio/{idProductoPrecio}/")
     public Response delete(@PathParam("idOrden") Long idOrden, @PathParam("idProductoPrecio") Long idProductoPrecio, @Context UriInfo uriInfo) {
 
         if (idOrden != null && idProductoPrecio != null) {
@@ -149,8 +172,8 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 odBean.delete(id);
                 return Response.status(200).build();
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldnt be deleted").build();
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al eliminar: " + e.getMessage(), e);
+                return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldn't be deleted").build();
             }
         }
         return Response.status(500).header(Headers.WRONG_PARAMETER,"idOrden: "+ idOrden +" ,idProductoPrecio: "+idProductoPrecio).build();
@@ -164,6 +187,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -173,7 +197,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
 
             try {
                 odBean.update(registro,pBean);
-               if (registro.getOrdenDetallePK().getIdProductoPrecio()!= 0 && registro.getOrdenDetallePK().getIdOrden() != 0) {
+                if (registro.getOrdenDetallePK().getIdProductoPrecio()!= 0 && registro.getOrdenDetallePK().getIdOrden() != 0) {
                     return Response.status(200).build();
                 }
                 return Response.status(500).header(Headers.PROCESS_ERROR, "Record couldnt be updated").build();
@@ -181,30 +205,41 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 return Response.status(500).entity(e.getMessage()).build();
             }
-       }
-       return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
-   }
+        }
+        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();
+    }
 
+
+    //
     @GET
+    @Path("producto")
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{idOrden}/producto/{idProducto}/cantidad/{cantidad}/ordenDetalle")
-    public Response generarOrdenDetalleProducto(@PathParam("idOrden") Long idOrden,
-                                                @PathParam("idProducto") Long idProdcuto,
-                                                @PathParam("cantidad")Integer cantidad){
+    //esta URL ES CONFUSA HACELA MEJOR CON QUERY PARAMS
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/producto?orden=1&producto=5&cantidad=3
+    public Response generarOrdenDetalleProducto(
+            @QueryParam("orden") @DefaultValue("0") Long idOrden,
+            @QueryParam("producto") @DefaultValue("0") Long idProducto,
+            @QueryParam("cantidad") @DefaultValue("0") Integer cantidad) {
         try {
-            Orden orden= new Orden();
+            if (idOrden == 0 || idProducto == 0 || cantidad == 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Todos los parámetros son obligatorios y deben ser mayores a cero.")
+                        .build();
+            }
+            Orden orden = new Orden();
             orden.setIdOrden(idOrden);
+            Producto producto = new Producto();
+            producto.setIdProducto(idProducto);
 
-            Producto producto=new Producto();
-            producto.setIdProducto(idProdcuto);
-
-            OrdenDetalle generado=odBean.generarOrdenDetalleProducto(orden,producto,cantidad);
+            OrdenDetalle generado = odBean.generarOrdenDetalleProducto(orden, producto, cantidad);
             return Response.ok(generado).build();
-        }catch (Exception e){
+
+        } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return responseExcepcions(e,null);
+            return responseExcepcions(e, null);
         }
     }
+
 
     /**
      * Genera una lista de objetos OrdenDetalle a partir de un Combo seleccionado,
@@ -220,64 +255,26 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{idOrden}/combo/{idCombo}/cantidad/{cantidadCombo}/ordenDetalleCombo")
-    public Response generarOrdenDetalleDesdeCombo(@PathParam("idOrden") Long idOrden,
-                                                  @PathParam("idCombo") Long idCombo,
-                                                  @PathParam("cantidadCombo") Integer cantidadCombo){
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/combo?orden=1&combo=2&cantidad=3
+    @Path("combo")
+    public Response generarOrdenDetalleDesdeCombo(
+            @QueryParam("orden") @DefaultValue("0") Long idOrden,
+            @QueryParam("combo") @DefaultValue("0") Long idCombo,
+            @QueryParam("cantidad") @DefaultValue("1") Integer cantidadCombo) {
         try {
-            Orden orden= new Orden();
-            orden.setIdOrden(idOrden);
-            Combo combo=new Combo();
-            combo.setIdCombo(idCombo);
-
-            List<OrdenDetalle> lista=odBean.generarOrdenDetalleDesdeCombo(orden,combo,cantidadCombo);
-            if (lista==null || lista.isEmpty()){
-                return Response.status(Response.Status.NO_CONTENT).build();
-            }
-            return Response.ok(lista).build();
-        }catch (Exception e){
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return responseExcepcions(e,null);
-        }
-    }
-
-    /**
-     * Genera una lista combinada de objetos OrdenDetalle a partir de productos y combos seleccionados.
-     *
-     * Este método permite construir múltiples detalles de una orden en una sola llamada,
-     * utilizando productos individuales y combos, con cantidades específicas para cada grupo.
-     *
-     * @param datos Objeto JSON que contiene el id de la orden, listas de ids de productos y combos,
-     *              y cantidades respectivas.
-     * @return Lista de OrdenDetalle generados, o 204 si no se pudo generar ningún detalle.
-     */
-
-    public Response generarOrdeDetalleMixto(DatosMixtosDTO datos) {
-        try {
-            if (datos == null || datos.getIdOrden() == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("La orden es requerida").build();
+            if (idOrden == 0 || idCombo == 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Los parámetros 'orden' y 'combo' son obligatorios y deben ser mayores a cero.")
+                        .build();
             }
             Orden orden = new Orden();
-            orden.setIdOrden(datos.getIdOrden());
+            orden.setIdOrden(idOrden);
 
-            List<Producto> productos = new ArrayList<>();
-            if (datos.getIdProductos() != null) {
-                for (Long isProd : datos.getIdProductos()) {
-                    Producto producto = new Producto();
-                    producto.setIdProducto(isProd);
-                    productos.add(producto);
-                }
-            }
-            List<Combo> combos = new ArrayList<>();
-            if (datos.getIdCombos() != null) {
-                for (Long isCombo : datos.getIdCombos()) {
-                    Combo combo = new Combo();
-                    combo.setIdCombo(isCombo);
-                    combos.add(combo);
-                }
-            }
-            List<OrdenDetalle> lista = odBean.generarOrdenDetalleMixto(orden, productos, combos,
-                    datos.getCantidadProductos(), datos.getCantidadCombo());
+            Combo combo = new Combo();
+            combo.setIdCombo(idCombo);
+
+            List<OrdenDetalle> lista = odBean.generarOrdenDetalleDesdeCombo(orden, combo, cantidadCombo);
+
             if (lista == null || lista.isEmpty()) {
                 return Response.status(Response.Status.NO_CONTENT).build();
             }
@@ -288,7 +285,103 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Genera una lista combinada de objetos OrdenDetalle a partir de productos y combos seleccionados.
+     *
+     * Este método permite construir múltiples detalles de una orden en una sola llamada,
+     * utilizando productos individuales y combos, con cantidades específicas para cada grupo.
+     * @return Lista de OrdenDetalle generados, o 204 si no se pudo generar ningún detalle.
+     */
+
+    public List<OrdenDetalle> generarOrdenDetalleMixto(Orden orden, List<Producto> productos, List<Combo> combos,
+                                                       List<Integer> cantidadProductos, List<Integer> cantidadCombo) {
+        if (orden == null || orden.getIdOrden() == null) {
+            throw new IllegalArgumentException("La orden es requerida");
+        }
+
+        List<OrdenDetalle> ordenDetalles = new ArrayList<>();
+
+        // Manejar productos
+        if (productos != null && !productos.isEmpty()) {
+            if (cantidadProductos == null || cantidadProductos.size() != productos.size()) {
+                throw new IllegalArgumentException("La lista de cantidades de productos no coincide con la lista de productos");
+            }
+            for (int i = 0; i < productos.size(); i++) {
+                Producto producto = productos.get(i);
+                Integer cantidad = cantidadProductos.get(i);
+                if (producto == null || producto.getIdProducto() == null) {
+                    continue;
+                }
+                ProductoPrecio precio = null;
+                try {
+                    precio = em.createNamedQuery("ProductoPrecio.findByIdProducto", ProductoPrecio.class)
+                            .setParameter("idProducto", producto.getIdProducto())
+                            .setMaxResults(1)
+                            .getSingleResult();
+                } catch (NoResultException e) {
+                    continue;
+                }
+                if (precio == null) {
+                    continue;
+                }
+
+                OrdenDetalle detalle = new OrdenDetalle();
+                detalle.setOrden(orden);
+                detalle.setProductoPrecio(precio);
+                detalle.setCantidad(cantidad);
+                detalle.setPrecio(precio.getPrecioSugerido());
+                ordenDetalles.add(detalle);
+            }
+        }
+
+        // Manejar combos
+        if (combos != null && !combos.isEmpty()) {
+            if (cantidadCombo == null || cantidadCombo.size() != combos.size()) {
+                throw new IllegalArgumentException("La lista de cantidades de combos no coincide con la lista de combos");
+            }
+            for (int i = 0; i < combos.size(); i++) {
+                Combo combo = combos.get(i);
+                Integer cantidad = cantidadCombo.get(i);
+
+                if (combo == null || combo.getIdCombo() == null) {
+                    continue;
+                }
+                List<ComboDetalle> comboDetalles = em.createNamedQuery("ComboDetalle.findByIdCombo", ComboDetalle.class)
+                        .setParameter("idCombo", combo.getIdCombo())
+                        .getResultList();
+                if (comboDetalles == null || comboDetalles.isEmpty()) {
+                    continue;
+                }
+
+                for (ComboDetalle comboDetalle : comboDetalles) {
+                    Producto producto = comboDetalle.getProducto();
+                    if (producto == null || producto.getIdProducto() == null) {
+                        continue;
+                    }
+                    ProductoPrecio precio = null;
+                    try {
+                        precio = em.createNamedQuery("ProductoPrecio.findByIdProducto", ProductoPrecio.class)
+                                .setParameter("idProducto", producto.getIdProducto())
+                                .setMaxResults(1)
+                                .getSingleResult();
+                    } catch (NoResultException e) {
+                        continue;
+                    }
+                    if (precio == null) {
+                        continue;
+                    }
+                    int cantidadFinal = comboDetalle.getCantidad() * cantidad;
+
+                    OrdenDetalle detalle = new OrdenDetalle();
+                    detalle.setOrden(orden);
+                    detalle.setProductoPrecio(precio);
+                    detalle.setCantidad(cantidadFinal);
+                    detalle.setPrecio(precio.getPrecioSugerido());
+                    ordenDetalles.add(detalle);
+                }
+            }
+        }
+        return ordenDetalles;
+    }
+
 }
-
-
-

@@ -100,7 +100,7 @@ public class OrdenDetalleBeanIT extends AbstractContainerTest {
         productoPrecio2.setIdProductoPrecio(11L);
 
         TypedQuery<ProductoPrecio> productoPrecioQuery1 = mock(TypedQuery.class);
-        when(em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)).thenReturn(productoPrecioQuery1);
+        when(em.createNamedQuery("ProductoPrecio.findByIdProducto", ProductoPrecio.class)).thenReturn(productoPrecioQuery1);
         when(productoPrecioQuery1.setParameter(anyString(), any())).thenReturn(productoPrecioQuery1);
         when(productoPrecioQuery1.setMaxResults(anyInt())).thenReturn(productoPrecioQuery1);
         when(productoPrecioQuery1.getSingleResult()).thenReturn(productoPrecio1).thenReturn(productoPrecio2);
@@ -113,6 +113,7 @@ public class OrdenDetalleBeanIT extends AbstractContainerTest {
         assertEquals(2, ordenDetalles.get(1).getCantidad());
         //Assertions.fail("no pasa ");
     }
+
 
     @Order(3)
     @Test
@@ -131,7 +132,8 @@ public class OrdenDetalleBeanIT extends AbstractContainerTest {
 
         List<OrdenDetalle> ordenDetalles = ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, combo, cantidadCombo);
 
-        assertNull(ordenDetalles);
+        assertNotNull(ordenDetalles);
+        assertEquals(0, ordenDetalles.size());
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 

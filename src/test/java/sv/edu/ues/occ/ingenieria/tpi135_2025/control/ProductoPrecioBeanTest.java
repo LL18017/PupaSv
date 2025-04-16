@@ -61,6 +61,18 @@ class ProductoPrecioBeanTest {
     }
 
     @Test
+    void testSetEntityManager() {
+        System.out.println("test setEntityManager");
+        ProductoPrecioBean bean = new ProductoPrecioBean();
+        EntityManager emMock = Mockito.mock(EntityManager.class);
+        bean.setEntityManager(emMock);
+        assertEquals(emMock, bean.getEntityManager());
+        //fail("Esta prueba no pasa quemado");
+    }
+
+
+
+    @Test
     void findByIdProducto() {
         System.out.println("test findByIdProducto");
         Long idProducto = 1001L;//ya establecido en DB

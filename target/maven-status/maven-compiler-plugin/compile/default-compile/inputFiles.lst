@@ -28,6 +28,7 @@
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBean.java
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBean.java
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoResouce.java
+/home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/DatosMixtosDTO.java
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoPrecioBean.java
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboResource.java
 /home/gmoran/IdeaProjects/PupaSv/src/main/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoResource.java

@@ -6,11 +6,10 @@ public class DatosMixtosDTO {
     private Long idOrden;
     private List<Long> idProductos;
     private List<Long> idCombos;
-    private Integer cantidadProductos;
-    private Integer cantidadCombo;
+    private List<Integer> cantidadProductos;
+    private List<Integer> cantidadCombo;
 
     // Getters y Setters
-
     public Long getIdOrden() {
         return idOrden;
     }
@@ -35,19 +34,19 @@ public class DatosMixtosDTO {
         this.idCombos = idCombos;
     }
 
-    public Integer getCantidadProductos() {
+    public List<Integer> getCantidadProductos() {
         return cantidadProductos;
     }
 
-    public void setCantidadProductos(Integer cantidadProductos) {
+    public void setCantidadProductos(List<Integer> cantidadProductos) {
         this.cantidadProductos = cantidadProductos;
     }
 
-    public Integer getCantidadCombo() {
+    public List<Integer> getCantidadCombo() {
         return cantidadCombo;
     }
 
-    public void setCantidadCombo(Integer cantidadCombo) {
+    public void setCantidadCombo(List<Integer> cantidadCombo) {
         this.cantidadCombo = cantidadCombo;
     }
 }

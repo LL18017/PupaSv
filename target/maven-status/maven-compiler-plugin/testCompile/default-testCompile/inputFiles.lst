@@ -18,6 +18,7 @@
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ResourceTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioResourceIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResourceSI.java
+/home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenDetalleResourceSI.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/resources/JakartaEE10ResourceTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboResourceIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/TipoProductoBeanIT.java
@@ -25,5 +26,6 @@
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBeanTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboBeanIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResourceSI.java
+/home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/DatosMixtosDTOTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/AbstractContainerTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanTest.java

@@ -6,6 +6,8 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
@@ -14,50 +16,66 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path(&quot;ordenDetalle&quot;)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-<span class="nc" id="L24">public class OrdenDetalleResource extends GeneralRest implements Serializable {</span>
+<span class="nc" id="L28">public class OrdenDetalleResource extends GeneralRest implements Serializable {</span>
     @Inject
     OrdenDetalleBean odBean;
 
+    private EntityManager em;
+
     /**
-     * Metodo que devueleve un rango de datos de tipo OrdenDetalle sin importar el idOrden
-     * @param first la pocicion del primer dat
-     * @param max la cantidad de datos que se desea obtener
-     * @return una lista de tipo T si no definel los parametros entonces
-     * devuelve los primeros 20 registros
+     * Método que devuelve un rango de datos de tipo OrdenDetalle.
+     * Si no se especifican los parámetros 'first' y 'max', se devolverán los primeros 20 registros.
+     *
+     * @param first La posición del primer dato a obtener (índice de inicio para la paginación).
+     * @param max La cantidad máxima de registros a obtener.
+     * @return Una lista de objetos de tipo OrdenDetalle, o los primeros 20 registros si no se definen los parámetros.
      */
-    @Path(&quot;productoPrecio/ordenDetalle&quot;)
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/GET /v1/ordenDetalle?idOrden=1&amp;first=0&amp;max=20
+    @Path(&quot;&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(
-            @QueryParam(&quot;first&quot;)
-            @DefaultValue(&quot;0&quot;) int first,
-            @QueryParam(&quot;max&quot;)
-            @DefaultValue(&quot;20&quot;) int max
-    ) {
-
+    public Response findRange(@QueryParam(&quot;idOrden&quot;) Long idOrden,
+                              @QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) int first,
+                              @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) int max) {
         try {
-<span class="nc bnc" id="L46" title="All 6 branches missed.">            if ((first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;=50) ) {</span>
-
-<span class="nc" id="L48">                List&lt;OrdenDetalle&gt; encontrados= odBean.findRange(first,max);</span>
-<span class="nc" id="L49">                long total=odBean.count();</span>
-<span class="nc" id="L50">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L51">                        header(Headers.TOTAL_RECORD, total).</span>
-<span class="nc" id="L52">                        type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L53">                return builder.build();</span>
-            }else{
-<span class="nc" id="L55">                return Response.status(400).header(Headers.WRONG_PARAMETER,&quot; first: &quot;+ first+&quot;,max: &quot;+max  ).header(&quot;wrong parameter : max&quot;,&quot;s&quot;).build();</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            if (idOrden == null) {</span>
+<span class="nc" id="L51">                return Response.status(400).</span>
+<span class="nc" id="L52">                        entity(&quot;El parametro 'idOrden' es obligatorio&quot;)</span>
+<span class="nc" id="L53">                        .build();</span>
             }
-<span class="nc" id="L57">        }catch (Exception e) {</span>
-<span class="nc" id="L58">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L59">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">            if (first &lt; 0 || max &lt; 0){</span>
+<span class="nc" id="L56">                return Response.status(400)</span>
+<span class="nc" id="L57">                        .entity(&quot;Los parametros 'first' y 'max' deben ser mayores o iguales a 0.&quot;)</span>
+<span class="nc" id="L58">                        .build();</span>
+            }
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (max &gt; 50){</span>
+<span class="nc" id="L61">                return Response.status(400)</span>
+<span class="nc" id="L62">                        .entity(&quot;El parametro 'max' no puede ser mayor a 50.&quot;)</span>
+<span class="nc" id="L63">                        .build();</span>
+            }
+<span class="nc" id="L65">            List&lt;OrdenDetalle&gt; encontrados = odBean.findRangeByIdOrden(idOrden, first, max);</span>
+<span class="nc" id="L66">            Long total= odBean.countByIdOrden(idOrden);</span>
+
+<span class="nc" id="L68">            return Response.ok(encontrados)</span>
+<span class="nc" id="L69">                    .header(Headers.TOTAL_RECORD, total)</span>
+<span class="nc" id="L70">                    .type(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L71">                    .build();</span>
+<span class="nc" id="L72">        }catch (Exception e){</span>
+<span class="nc" id="L73">            Logger.getLogger(OrdenDetalleResource.class.getName()).log(Level.SEVERE, null, e);</span>
+<span class="nc" id="L74">            return Response.status(500)</span>
+<span class="nc" id="L75">                    .entity(&quot;Hubo un prloblema al proceder la solicitud&quot;+e.getMessage())</span>
+<span class="nc" id="L76">                    .build();</span>
         }
+
     }
 
 
@@ -72,26 +90,27 @@ import java.util.logging.Logger;
      * devuelve los primeros 20 registros
      */
 
-    @Path(&quot;{idOrden}/productoPrecio/ordenDetalle&quot;)
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}
+    @Path(&quot;orden/{idOrden}&quot;)
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRangeByIdOrden(@QueryParam(&quot;first&quot;) int first,
-                                          @QueryParam(&quot;max&quot;) int max,
-                                          @PathParam(&quot;idOrden&quot;) Long idOrden) {
+                                       @QueryParam(&quot;max&quot;) int max,
+                                       @PathParam(&quot;idOrden&quot;) Long idOrden) {
         try {
-<span class="nc bnc" id="L81" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
+<span class="nc bnc" id="L100" title="All 6 branches missed.">            if (first &gt;= 0 &amp;&amp; max &gt;= 0 &amp;&amp; max &lt;= 50) {</span>
 
-<span class="nc" id="L83">                List&lt;OrdenDetalle&gt; encontrados = odBean.findRangeByIdOrden(idOrden, first,max);</span>
-<span class="nc" id="L84">                long total = odBean.countByIdOrden(idOrden);</span>
-<span class="nc" id="L85">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
-<span class="nc" id="L86">                        header(Headers.TOTAL_RECORD, total).</span>
-<span class="nc" id="L87">                        type(MediaType.APPLICATION_JSON);</span>
-<span class="nc" id="L88">                return builder.build();</span>
+<span class="nc" id="L102">                List&lt;OrdenDetalle&gt; encontrados = odBean.findRangeByIdOrden(idOrden, first,max);</span>
+<span class="nc" id="L103">                long total = odBean.countByIdOrden(idOrden);</span>
+<span class="nc" id="L104">                Response.ResponseBuilder builder = Response.ok(encontrados).</span>
+<span class="nc" id="L105">                        header(Headers.TOTAL_RECORD, total).</span>
+<span class="nc" id="L106">                        type(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L107">                return builder.build();</span>
             } else {
-<span class="nc" id="L90">                return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;first: &quot;+first+&quot; max :&quot; +max +&quot; , idOrden&quot;+ idOrden).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
+<span class="nc" id="L109">                return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;first: &quot;+first+&quot; max :&quot; +max +&quot; , idOrden&quot;+ idOrden).header(&quot;wrong parameter : max&quot;, &quot;s&quot;).build();</span>
             }
-<span class="nc" id="L92">        } catch (Exception e) {</span>
-<span class="nc" id="L93">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
-<span class="nc" id="L94">            return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L111">        } catch (Exception e) {</span>
+<span class="nc" id="L112">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());</span>
+<span class="nc" id="L113">            return Response.status(500).entity(e.getMessage()).build();</span>
         }
     }
 
@@ -104,28 +123,31 @@ import java.util.logging.Logger;
      * encuentra ningun registro con el id especificado 400 si se envia mal una
      * parametro
      */
-    @Path(&quot;{idOrden}/productoPrecio/{idProductoPrecio}/ordenDetalle&quot;)
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
+    @Path(&quot;orden/{idOrden}/productoPrecio/{idProductoPrecio}&quot;)
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findByIdOrdenAndIdProductoPrecio(
             @PathParam(&quot;idOrden&quot;) Long idOrden,
             @PathParam(&quot;idProductoPrecio&quot;) Long idProductoPrecio
     ) {
-<span class="nc bnc" id="L114" title="All 4 branches missed.">        if (idOrden != null &amp;&amp; idProductoPrecio != null) {</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        if (idOrden != null &amp;&amp; idProductoPrecio != null) {</span>
             try {
 
-<span class="nc" id="L117">                OrdenDetalle encontrado = odBean.findByIdOrdenAndIdPrecioProducto(idOrden,idProductoPrecio);</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">                if (encontrado != null) {</span>
-<span class="nc" id="L119">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
-<span class="nc" id="L120">                    return builder.build();</span>
+<span class="nc" id="L137">                OrdenDetalle encontrado = odBean.findByIdOrdenAndIdPrecioProducto(idOrden,idProductoPrecio);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                if (encontrado != null) {</span>
+<span class="nc" id="L139">                    Response.ResponseBuilder builder = Response.ok(encontrado);</span>
+<span class="nc" id="L140">                    return builder.build();</span>
                 }
-<span class="nc" id="L122">                return Response.status(404).header(Headers.NOT_FOUND_ID, &quot;idOrden: &quot;+idOrden + &quot; , idProducto: &quot;+idOrden).build();</span>
-<span class="nc" id="L123">            } catch (Exception e) {</span>
-<span class="nc" id="L124">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L125">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L142">                return Response.status(404)</span>
+<span class="nc" id="L143">                        .header(Headers.NOT_FOUND_ID, &quot;idOrden: &quot; + idOrden + &quot; , idProducto: &quot; + idProductoPrecio)</span>
+<span class="nc" id="L144">                        .build();</span>
+<span class="nc" id="L145">            } catch (Exception e) {</span>
+<span class="nc" id="L146">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L147">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
         }
-<span class="nc" id="L128">        return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;id :&quot;+ idOrden).build();</span>
+<span class="nc" id="L150">        return Response.status(400).header(Headers.WRONG_PARAMETER,&quot;id :&quot;+ idOrden).build();</span>
     }
 
     /**
@@ -140,20 +162,21 @@ import java.util.logging.Logger;
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Path(&quot;{idOrden}/productoPrecio/{idProductoPrecio}/ordenDetall&quot;)
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
+    @Path(&quot;orden/{idOrden}/productoPrecio/{idProductoPrecio}/&quot;)
     public Response delete(@PathParam(&quot;idOrden&quot;) Long idOrden, @PathParam(&quot;idProductoPrecio&quot;) Long idProductoPrecio, @Context UriInfo uriInfo) {
 
-<span class="nc bnc" id="L146" title="All 4 branches missed.">        if (idOrden != null &amp;&amp; idProductoPrecio != null) {</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">        if (idOrden != null &amp;&amp; idProductoPrecio != null) {</span>
             try {
-<span class="nc" id="L148">                OrdenDetallePK id=new OrdenDetallePK(idOrden,idProductoPrecio);</span>
-<span class="nc" id="L149">                odBean.delete(id);</span>
-<span class="nc" id="L150">                return Response.status(200).build();</span>
-<span class="nc" id="L151">            } catch (Exception e) {</span>
-<span class="nc" id="L152">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L153">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldnt be deleted&quot;).build();</span>
+<span class="nc" id="L171">                OrdenDetallePK id=new OrdenDetallePK(idOrden,idProductoPrecio);</span>
+<span class="nc" id="L172">                odBean.delete(id);</span>
+<span class="nc" id="L173">                return Response.status(200).build();</span>
+<span class="nc" id="L174">            } catch (Exception e) {</span>
+<span class="nc" id="L175">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, &quot;Error al eliminar: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L176">                return Response.status(422).header(Headers.PROCESS_ERROR, &quot;Record couldn't be deleted&quot;).build();</span>
             }
         }
-<span class="nc" id="L156">        return Response.status(500).header(Headers.WRONG_PARAMETER,&quot;idOrden: &quot;+ idOrden +&quot; ,idProductoPrecio: &quot;+idProductoPrecio).build();</span>
+<span class="nc" id="L179">        return Response.status(500).header(Headers.WRONG_PARAMETER,&quot;idOrden: &quot;+ idOrden +&quot; ,idProductoPrecio: &quot;+idProductoPrecio).build();</span>
     }
 
     /**
@@ -164,47 +187,59 @@ import java.util.logging.Logger;
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(OrdenDetalle registro, @Context UriInfo uriInfo) {
 
-<span class="nc bnc" id="L172" title="All 6 branches missed.">        if (registro != null &amp;&amp; registro.getOrdenDetallePK().getIdOrden()!= 0 &amp;&amp; registro.getOrdenDetallePK().getIdProductoPrecio()!= 0) {</span>
+<span class="nc bnc" id="L196" title="All 6 branches missed.">        if (registro != null &amp;&amp; registro.getOrdenDetallePK().getIdOrden()!= 0 &amp;&amp; registro.getOrdenDetallePK().getIdProductoPrecio()!= 0) {</span>
 
             try {
-<span class="nc" id="L175">                odBean.update(registro,pBean);</span>
-<span class="nc bnc" id="L176" title="All 4 branches missed.">               if (registro.getOrdenDetallePK().getIdProductoPrecio()!= 0 &amp;&amp; registro.getOrdenDetallePK().getIdOrden() != 0) {</span>
-<span class="nc" id="L177">                    return Response.status(200).build();</span>
+<span class="nc" id="L199">                odBean.update(registro,pBean);</span>
+<span class="nc bnc" id="L200" title="All 4 branches missed.">                if (registro.getOrdenDetallePK().getIdProductoPrecio()!= 0 &amp;&amp; registro.getOrdenDetallePK().getIdOrden() != 0) {</span>
+<span class="nc" id="L201">                    return Response.status(200).build();</span>
                 }
-<span class="nc" id="L179">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
-<span class="nc" id="L180">            } catch (Exception e) {</span>
-<span class="nc" id="L181">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L182">                return Response.status(500).entity(e.getMessage()).build();</span>
+<span class="nc" id="L203">                return Response.status(500).header(Headers.PROCESS_ERROR, &quot;Record couldnt be updated&quot;).build();</span>
+<span class="nc" id="L204">            } catch (Exception e) {</span>
+<span class="nc" id="L205">                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L206">                return Response.status(500).entity(e.getMessage()).build();</span>
             }
-       }
-<span class="nc" id="L185">       return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
-   }
+        }
+<span class="nc" id="L209">        return Response.status(500).header(Headers.WRONG_PARAMETER, registro).build();</span>
+    }
 
+
+    //
     @GET
+    @Path(&quot;producto&quot;)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(&quot;{idOrden}/producto/{idProducto}/cantidad/{cantidad}/ordenDetalle&quot;)
-    public Response generarOrdenDetalleProducto(@PathParam(&quot;idOrden&quot;) Long idOrden,
-                                                @PathParam(&quot;idProducto&quot;) Long idProdcuto,
-                                                @PathParam(&quot;cantidad&quot;)Integer cantidad){
+    //esta URL ES CONFUSA HACELA MEJOR CON QUERY PARAMS
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/producto?orden=1&amp;producto=5&amp;cantidad=3
+    public Response generarOrdenDetalleProducto(
+            @QueryParam(&quot;orden&quot;) @DefaultValue(&quot;0&quot;) Long idOrden,
+            @QueryParam(&quot;producto&quot;) @DefaultValue(&quot;0&quot;) Long idProducto,
+            @QueryParam(&quot;cantidad&quot;) @DefaultValue(&quot;0&quot;) Integer cantidad) {
         try {
-<span class="nc" id="L195">            Orden orden= new Orden();</span>
-<span class="nc" id="L196">            orden.setIdOrden(idOrden);</span>
+<span class="nc bnc" id="L224" title="All 6 branches missed.">            if (idOrden == 0 || idProducto == 0 || cantidad == 0) {</span>
+<span class="nc" id="L225">                return Response.status(Response.Status.BAD_REQUEST)</span>
+<span class="nc" id="L226">                        .entity(&quot;Todos los parámetros son obligatorios y deben ser mayores a cero.&quot;)</span>
+<span class="nc" id="L227">                        .build();</span>
+            }
+<span class="nc" id="L229">            Orden orden = new Orden();</span>
+<span class="nc" id="L230">            orden.setIdOrden(idOrden);</span>
+<span class="nc" id="L231">            Producto producto = new Producto();</span>
+<span class="nc" id="L232">            producto.setIdProducto(idProducto);</span>
 
-<span class="nc" id="L198">            Producto producto=new Producto();</span>
-<span class="nc" id="L199">            producto.setIdProducto(idProdcuto);</span>
+<span class="nc" id="L234">            OrdenDetalle generado = odBean.generarOrdenDetalleProducto(orden, producto, cantidad);</span>
+<span class="nc" id="L235">            return Response.ok(generado).build();</span>
 
-<span class="nc" id="L201">            OrdenDetalle generado=odBean.generarOrdenDetalleProducto(orden,producto,cantidad);</span>
-<span class="nc" id="L202">            return Response.ok(generado).build();</span>
-<span class="nc" id="L203">        }catch (Exception e){</span>
-<span class="nc" id="L204">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L205">            return responseExcepcions(e,null);</span>
+<span class="nc" id="L237">        } catch (Exception e) {</span>
+<span class="nc" id="L238">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L239">            return responseExcepcions(e, null);</span>
         }
     }
+
 
     /**
      * Genera una lista de objetos OrdenDetalle a partir de un Combo seleccionado,
@@ -220,24 +255,33 @@ import java.util.logging.Logger;
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(&quot;{idOrden}/combo/{idCombo}/cantidad/{cantidadCombo}/ordenDetalleCombo&quot;)
-    public Response generarOrdenDetalleDesdeCombo(@PathParam(&quot;idOrden&quot;) Long idOrden,
-                                                  @PathParam(&quot;idCombo&quot;) Long idCombo,
-                                                  @PathParam(&quot;cantidadCombo&quot;) Integer cantidadCombo){
+    //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/combo?orden=1&amp;combo=2&amp;cantidad=3
+    @Path(&quot;combo&quot;)
+    public Response generarOrdenDetalleDesdeCombo(
+            @QueryParam(&quot;orden&quot;) @DefaultValue(&quot;0&quot;) Long idOrden,
+            @QueryParam(&quot;combo&quot;) @DefaultValue(&quot;0&quot;) Long idCombo,
+            @QueryParam(&quot;cantidad&quot;) @DefaultValue(&quot;1&quot;) Integer cantidadCombo) {
         try {
-<span class="nc" id="L228">            Orden orden= new Orden();</span>
-<span class="nc" id="L229">            orden.setIdOrden(idOrden);</span>
-<span class="nc" id="L230">            Combo combo=new Combo();</span>
-<span class="nc" id="L231">            combo.setIdCombo(idCombo);</span>
-
-<span class="nc" id="L233">            List&lt;OrdenDetalle&gt; lista=odBean.generarOrdenDetalleDesdeCombo(orden,combo,cantidadCombo);</span>
-<span class="nc bnc" id="L234" title="All 4 branches missed.">            if (lista==null || lista.isEmpty()){</span>
-<span class="nc" id="L235">                return Response.status(Response.Status.NO_CONTENT).build();</span>
+<span class="nc bnc" id="L265" title="All 4 branches missed.">            if (idOrden == 0 || idCombo == 0) {</span>
+<span class="nc" id="L266">                return Response.status(Response.Status.BAD_REQUEST)</span>
+<span class="nc" id="L267">                        .entity(&quot;Los parámetros 'orden' y 'combo' son obligatorios y deben ser mayores a cero.&quot;)</span>
+<span class="nc" id="L268">                        .build();</span>
             }
-<span class="nc" id="L237">            return Response.ok(lista).build();</span>
-<span class="nc" id="L238">        }catch (Exception e){</span>
-<span class="nc" id="L239">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L240">            return responseExcepcions(e,null);</span>
+<span class="nc" id="L270">            Orden orden = new Orden();</span>
+<span class="nc" id="L271">            orden.setIdOrden(idOrden);</span>
+
+<span class="nc" id="L273">            Combo combo = new Combo();</span>
+<span class="nc" id="L274">            combo.setIdCombo(idCombo);</span>
+
+<span class="nc" id="L276">            List&lt;OrdenDetalle&gt; lista = odBean.generarOrdenDetalleDesdeCombo(orden, combo, cantidadCombo);</span>
+
+<span class="nc bnc" id="L278" title="All 4 branches missed.">            if (lista == null || lista.isEmpty()) {</span>
+<span class="nc" id="L279">                return Response.status(Response.Status.NO_CONTENT).build();</span>
+            }
+<span class="nc" id="L281">            return Response.ok(lista).build();</span>
+<span class="nc" id="L282">        } catch (Exception e) {</span>
+<span class="nc" id="L283">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="nc" id="L284">            return responseExcepcions(e, null);</span>
         }
     }
 
@@ -246,50 +290,99 @@ import java.util.logging.Logger;
      *
      * Este método permite construir múltiples detalles de una orden en una sola llamada,
      * utilizando productos individuales y combos, con cantidades específicas para cada grupo.
-     *
-     * @param datos Objeto JSON que contiene el id de la orden, listas de ids de productos y combos,
-     *              y cantidades respectivas.
      * @return Lista de OrdenDetalle generados, o 204 si no se pudo generar ningún detalle.
      */
 
-    public Response generarOrdeDetalleMixto(DatosMixtosDTO datos) {
-        try {
-<span class="nc bnc" id="L257" title="All 4 branches missed.">            if (datos == null || datos.getIdOrden() == null) {</span>
-<span class="nc" id="L258">                return Response.status(Response.Status.BAD_REQUEST).entity(&quot;La orden es requerida&quot;).build();</span>
-            }
-<span class="nc" id="L260">            Orden orden = new Orden();</span>
-<span class="nc" id="L261">            orden.setIdOrden(datos.getIdOrden());</span>
-
-<span class="nc" id="L263">            List&lt;Producto&gt; productos = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">            if (datos.getIdProductos() != null) {</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">                for (Long isProd : datos.getIdProductos()) {</span>
-<span class="nc" id="L266">                    Producto producto = new Producto();</span>
-<span class="nc" id="L267">                    producto.setIdProducto(isProd);</span>
-<span class="nc" id="L268">                    productos.add(producto);</span>
-<span class="nc" id="L269">                }</span>
-            }
-<span class="nc" id="L271">            List&lt;Combo&gt; combos = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L272" title="All 2 branches missed.">            if (datos.getIdCombos() != null) {</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">                for (Long isCombo : datos.getIdCombos()) {</span>
-<span class="nc" id="L274">                    Combo combo = new Combo();</span>
-<span class="nc" id="L275">                    combo.setIdCombo(isCombo);</span>
-<span class="nc" id="L276">                    combos.add(combo);</span>
-<span class="nc" id="L277">                }</span>
-            }
-<span class="nc" id="L279">            List&lt;OrdenDetalle&gt; lista = odBean.generarOrdenDetalleMixto(orden, productos, combos,</span>
-<span class="nc" id="L280">                    datos.getCantidadProductos(), datos.getCantidadCombo());</span>
-<span class="nc bnc" id="L281" title="All 4 branches missed.">            if (lista == null || lista.isEmpty()) {</span>
-<span class="nc" id="L282">                return Response.status(Response.Status.NO_CONTENT).build();</span>
-            }
-<span class="nc" id="L284">            return Response.ok(lista).build();</span>
-<span class="nc" id="L285">        } catch (Exception e) {</span>
-<span class="nc" id="L286">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
-<span class="nc" id="L287">            return responseExcepcions(e, null);</span>
+    public List&lt;OrdenDetalle&gt; generarOrdenDetalleMixto(Orden orden, List&lt;Producto&gt; productos, List&lt;Combo&gt; combos,
+                                                       List&lt;Integer&gt; cantidadProductos, List&lt;Integer&gt; cantidadCombo) {
+<span class="nc bnc" id="L298" title="All 4 branches missed.">        if (orden == null || orden.getIdOrden() == null) {</span>
+<span class="nc" id="L299">            throw new IllegalArgumentException(&quot;La orden es requerida&quot;);</span>
         }
+
+<span class="nc" id="L302">        List&lt;OrdenDetalle&gt; ordenDetalles = new ArrayList&lt;&gt;();</span>
+
+        // Manejar productos
+<span class="nc bnc" id="L305" title="All 4 branches missed.">        if (productos != null &amp;&amp; !productos.isEmpty()) {</span>
+<span class="nc bnc" id="L306" title="All 4 branches missed.">            if (cantidadProductos == null || cantidadProductos.size() != productos.size()) {</span>
+<span class="nc" id="L307">                throw new IllegalArgumentException(&quot;La lista de cantidades de productos no coincide con la lista de productos&quot;);</span>
+            }
+<span class="nc bnc" id="L309" title="All 2 branches missed.">            for (int i = 0; i &lt; productos.size(); i++) {</span>
+<span class="nc" id="L310">                Producto producto = productos.get(i);</span>
+<span class="nc" id="L311">                Integer cantidad = cantidadProductos.get(i);</span>
+<span class="nc bnc" id="L312" title="All 4 branches missed.">                if (producto == null || producto.getIdProducto() == null) {</span>
+<span class="nc" id="L313">                    continue;</span>
+                }
+<span class="nc" id="L315">                ProductoPrecio precio = null;</span>
+                try {
+<span class="nc" id="L317">                    precio = em.createNamedQuery(&quot;ProductoPrecio.findByIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="nc" id="L318">                            .setParameter(&quot;idProducto&quot;, producto.getIdProducto())</span>
+<span class="nc" id="L319">                            .setMaxResults(1)</span>
+<span class="nc" id="L320">                            .getSingleResult();</span>
+<span class="nc" id="L321">                } catch (NoResultException e) {</span>
+<span class="nc" id="L322">                    continue;</span>
+<span class="nc" id="L323">                }</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                if (precio == null) {</span>
+<span class="nc" id="L325">                    continue;</span>
+                }
+
+<span class="nc" id="L328">                OrdenDetalle detalle = new OrdenDetalle();</span>
+<span class="nc" id="L329">                detalle.setOrden(orden);</span>
+<span class="nc" id="L330">                detalle.setProductoPrecio(precio);</span>
+<span class="nc" id="L331">                detalle.setCantidad(cantidad);</span>
+<span class="nc" id="L332">                detalle.setPrecio(precio.getPrecioSugerido());</span>
+<span class="nc" id="L333">                ordenDetalles.add(detalle);</span>
+            }
+        }
+
+        // Manejar combos
+<span class="nc bnc" id="L338" title="All 4 branches missed.">        if (combos != null &amp;&amp; !combos.isEmpty()) {</span>
+<span class="nc bnc" id="L339" title="All 4 branches missed.">            if (cantidadCombo == null || cantidadCombo.size() != combos.size()) {</span>
+<span class="nc" id="L340">                throw new IllegalArgumentException(&quot;La lista de cantidades de combos no coincide con la lista de combos&quot;);</span>
+            }
+<span class="nc bnc" id="L342" title="All 2 branches missed.">            for (int i = 0; i &lt; combos.size(); i++) {</span>
+<span class="nc" id="L343">                Combo combo = combos.get(i);</span>
+<span class="nc" id="L344">                Integer cantidad = cantidadCombo.get(i);</span>
+
+<span class="nc bnc" id="L346" title="All 4 branches missed.">                if (combo == null || combo.getIdCombo() == null) {</span>
+<span class="nc" id="L347">                    continue;</span>
+                }
+<span class="nc" id="L349">                List&lt;ComboDetalle&gt; comboDetalles = em.createNamedQuery(&quot;ComboDetalle.findByIdCombo&quot;, ComboDetalle.class)</span>
+<span class="nc" id="L350">                        .setParameter(&quot;idCombo&quot;, combo.getIdCombo())</span>
+<span class="nc" id="L351">                        .getResultList();</span>
+<span class="nc bnc" id="L352" title="All 4 branches missed.">                if (comboDetalles == null || comboDetalles.isEmpty()) {</span>
+<span class="nc" id="L353">                    continue;</span>
+                }
+
+<span class="nc bnc" id="L356" title="All 2 branches missed.">                for (ComboDetalle comboDetalle : comboDetalles) {</span>
+<span class="nc" id="L357">                    Producto producto = comboDetalle.getProducto();</span>
+<span class="nc bnc" id="L358" title="All 4 branches missed.">                    if (producto == null || producto.getIdProducto() == null) {</span>
+<span class="nc" id="L359">                        continue;</span>
+                    }
+<span class="nc" id="L361">                    ProductoPrecio precio = null;</span>
+                    try {
+<span class="nc" id="L363">                        precio = em.createNamedQuery(&quot;ProductoPrecio.findByIdProducto&quot;, ProductoPrecio.class)</span>
+<span class="nc" id="L364">                                .setParameter(&quot;idProducto&quot;, producto.getIdProducto())</span>
+<span class="nc" id="L365">                                .setMaxResults(1)</span>
+<span class="nc" id="L366">                                .getSingleResult();</span>
+<span class="nc" id="L367">                    } catch (NoResultException e) {</span>
+<span class="nc" id="L368">                        continue;</span>
+<span class="nc" id="L369">                    }</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">                    if (precio == null) {</span>
+<span class="nc" id="L371">                        continue;</span>
+                    }
+<span class="nc" id="L373">                    int cantidadFinal = comboDetalle.getCantidad() * cantidad;</span>
+
+<span class="nc" id="L375">                    OrdenDetalle detalle = new OrdenDetalle();</span>
+<span class="nc" id="L376">                    detalle.setOrden(orden);</span>
+<span class="nc" id="L377">                    detalle.setProductoPrecio(precio);</span>
+<span class="nc" id="L378">                    detalle.setCantidad(cantidadFinal);</span>
+<span class="nc" id="L379">                    detalle.setPrecio(precio.getPrecioSugerido());</span>
+<span class="nc" id="L380">                    ordenDetalles.add(detalle);</span>
+<span class="nc" id="L381">                }</span>
+            }
+        }
+<span class="nc" id="L384">        return ordenDetalles;</span>
     }
 
 }
-
-
-
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

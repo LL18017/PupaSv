@@ -2,12 +2,15 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/AbstractContainerT
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/TipoProductoResourceSI$1.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/AbstractContainerTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanTest.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/control/DatosMixtosDTOTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ComboResourceIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoDetalleResourceSI$1.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/GenericResourceForTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboDetalleBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/TipoProductoBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResourceSI$2.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoPrecioBeanIT.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenDetalleResourceSI.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ComboBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanIT.class

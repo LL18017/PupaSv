@@ -7,10 +7,12 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,17 +60,30 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         
         return null;
     }
+
+    /**
+     * Método modificado para realizar la búsqueda con paginación.
+     * Este método obtiene un rango de `OrdenDetalle` para una orden específica, utilizando
+     * la paginación con los parámetros `first` y `max`.
+     * Impacto en otros métodos:
+     * Este método se basa en la consulta OrdenDetalle.findByIdOrden, que ya debería estar definida en las Named Queries
+     * en tu entidad `OrdenDetalle`. La paginación se maneja mediante setFirstResult(first) y`setMaxResults(max).
+     * No debería afectar otros métodos a menos que también utilicen esta misma consulta, pero en general no hay dependencia directa.
+     *
+     * @param idOrden Identificador de la orden para filtrar los detalles.
+     * @param first El índice del primer resultado a devolver.
+     * @param max La cantidad máxima de resultados a devolver.
+     * @return Una lista de objetos `OrdenDetalle` dentro del rango especificado.
+     */
     public List<OrdenDetalle> findRangeByIdOrden(Long idOrden,int first , int max) {
         try {
-            return em.createNamedQuery("OrdenDetalle.findByIdOrden",OrdenDetalle.class)
-                    .setParameter("idOrden", idOrden)
-                    .setFirstResult(first)
-                    .setMaxResults(max)
-                    .getResultList();
-        } catch (Exception e) {
+            return em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)
+                    .setParameter("idOrden",idOrden)
+                    .setFirstResult(first).setMaxResults(max).
+                    getResultList();
+        }catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
         }
-
         return List.of();
     }
     public Long countByIdOrden(Long idOrden) {
@@ -132,53 +147,53 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * @param cantidadCombo Cantidad de combos a aplicar (por defecto 1 si es nulo o menor a 1).
      * @return Lista de objetos OrdenDetalle generados, o null si hay error o combo sin productos.
      */
-    public  List<OrdenDetalle> generarOrdenDetalleDesdeCombo(Orden orden, Combo combo, Integer cantidadCombo) {
-        if(orden==null || orden.getIdOrden()==null){
+    public List<OrdenDetalle> generarOrdenDetalleDesdeCombo(Orden orden, Combo combo, Integer cantidadCombo) {
+        if (orden == null || orden.getIdOrden() == null) {
             throw new IllegalArgumentException("La orden es invalida o no tiene ID");
         }
-        if(combo==null || combo.getIdCombo()==null){
-            throw new IllegalArgumentException("La combo es invalida o no tiene ID");
+        if (combo == null || combo.getIdCombo() == null) {
+            throw new IllegalArgumentException("El combo es invalido o no tiene ID"); // Corregido "La" a "El"
         }
-        if(cantidadCombo==null || cantidadCombo<1){
-            cantidadCombo=1;//por defecto se asigna uno
+        if (cantidadCombo == null || cantidadCombo < 1) {
+            cantidadCombo = 1;
         }
 
-        //Buscarlos detalles del combo
-        List<ComboDetalle> comboDetalles=em.createNamedQuery("ComboDetalle.findByIdCombo",ComboDetalle.class)
+        List<ComboDetalle> comboDetalles = em.createNamedQuery("ComboDetalle.findByIdCombo", ComboDetalle.class)
                 .setParameter("idCombo", combo.getIdCombo())
                 .getResultList();
-        if(comboDetalles==null || comboDetalles.isEmpty()){
-            return null;//No hay productos
+        if (comboDetalles == null || comboDetalles.isEmpty()) {
+            return Collections.emptyList(); // Devuelve una lista vacía, no null, para evitar NullPointerExceptions
         }
-        List<OrdenDetalle> ordenDetalles=new ArrayList<>();
-
+        List<OrdenDetalle> ordenDetalles = new ArrayList<>();
         for (ComboDetalle comboDetalle : comboDetalles) {
-            Producto producto=comboDetalle.getProducto();
-
-            if (producto==null || producto.getIdProducto()==null) {
-                continue;//Si el producto no es válido, lo ignoramos
+            Producto producto = comboDetalle.getProducto();
+            if (producto == null || producto.getIdProducto() == null) {
+                continue;
             }
-
-            ProductoPrecio precio=em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)
-                    .setParameter("idProducto",producto.getIdProducto())
-                    .setMaxResults(1)
-                    .getSingleResult();
-            if (precio==null) {
-                continue;//No tiene precio, no se agrega a la orden
+            ProductoPrecio precio = null;
+            try {
+                precio = em.createNamedQuery("ProductoPrecio.findByIdProducto", ProductoPrecio.class)
+                        .setParameter("idProducto", producto.getIdProducto())
+                        .setMaxResults(1)
+                        .getSingleResult();
+            } catch (NoResultException e) {
+                continue;
             }
-            // Calcular la cantidad total del producto = cantidad del producto en el combo * cantidad del combo
-            int cantidadFinal=comboDetalle.getCantidad() * cantidadCombo;
+            if (precio == null) {
+                continue;
+            }
+            int cantidadFinal = comboDetalle.getCantidad() * cantidadCombo;
 
-            // Crear el OrdenDetalle individual
-            OrdenDetalle detalle=new OrdenDetalle();
-            detalle.setOrden(orden);
+            OrdenDetalle detalle = new OrdenDetalle();
+            detalle.setOrden(orden); // Aquí se asigna la orden
             detalle.setProductoPrecio(precio);
             detalle.setCantidad(cantidadFinal);
-
+            detalle.setPrecio(precio.getPrecioSugerido());
             ordenDetalles.add(detalle);
         }
         return ordenDetalles;
     }
+
 
 
     /**
@@ -266,6 +281,5 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         // Retornar la lista combinada de detalles generados
         return detallesGenerados;
     }
-
 
 }
