@@ -47,6 +47,7 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         producto1.setIdProducto(1L);
         producto1.setNombre("Producto 1");
         em.persist(producto1);
+        System.out.println("EL ID DEL PRODUCTO: " + producto1.getIdProducto());
 
         Producto producto2 = new Producto();
         producto2.setIdProducto(2L);
@@ -65,12 +66,6 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         precio2.setPrecioSugerido(new BigDecimal("12.75"));
         em.persist(precio2);
 
-        ProductoPrecio precio3 = new ProductoPrecio();
-        precio3.setIdProductoPrecio(3L);
-        precio3.setIdProducto(producto2);
-        precio3.setPrecioSugerido(new BigDecimal("20.00"));
-        em.persist(precio3);
-
         em.flush();
         em.getTransaction().commit();
     }
@@ -84,29 +79,44 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         precios.forEach(p -> System.out.println("Precio: " + p.getPrecioSugerido()));
 
         precios.sort(Comparator.comparing(ProductoPrecio::getPrecioSugerido));
-
+        System.out.println(precios.size());
+        assertFalse(precios.isEmpty());
         assertEquals(new BigDecimal("10.50"), precios.get(0).getPrecioSugerido());
         assertEquals(new BigDecimal("12.75"), precios.get(1).getPrecioSugerido());
+
+        /**
+         if (!precios.isEmpty()) {
+         assertEquals(new BigDecimal("10.50"), precios.get(0).getPrecioSugerido());
+         if (precios.size() > 1) {
+         assertEquals(new BigDecimal("12.75"), precios.get(1).getPrecioSugerido());
+         } else {
+         fail("Se esperaba al menos dos precios para el producto con ID 1");
+         }
+         } else {
+         fail("No se encontraron precios para el producto con ID 1");
+         }
+         **/
         //Assertions.fail("Esta prueba no pasa quemado");
+
     }
 
-     @Order(2)
-     @Test
-     public void testCountByIdProducto() {
-     System.out.println("countByIdProducto");
-     Long count = productoPrecioBean.countByIdProducto(1L);
-     System.out.println("Conteo retornado: " + count);
-     assertEquals(0L, count); // Se esperan dos precios para el producto con ID 1
-     }
+    @Order(2)
+    @Test
+    public void testCountByIdProducto() {
+        System.out.println("countByIdProducto");
+        Long count = productoPrecioBean.countByIdProducto(1L);
+        System.out.println("Conteo retornado: " + count);
+        assertEquals(0L, count);
+    }
 
-@Order(3)
-@Test
-public void testCountByIdProducto_NullId() {
-    System.out.println("countByIdProducto con ID nulo");
-    assertThrows(IllegalArgumentException.class, () -> {
-        productoPrecioBean.countByIdProducto(null);
-    });
-}
+    @Order(3)
+    @Test
+    public void testCountByIdProducto_NullId() {
+        System.out.println("countByIdProducto con ID nulo");
+        assertThrows(IllegalArgumentException.class, () -> {
+            productoPrecioBean.countByIdProducto(null);
+        });
+    }
 
     @Order(4)
     @Test

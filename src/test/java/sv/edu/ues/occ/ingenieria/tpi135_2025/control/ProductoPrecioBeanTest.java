@@ -12,7 +12,10 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import java.util.Arrays;
 import java.util.List;
 
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 class ProductoPrecioBeanTest {
     List<ProductoPrecio> LIST_Producto_TEST = Arrays.asList(new ProductoPrecio[]{
@@ -72,6 +75,7 @@ class ProductoPrecioBeanTest {
 
 
 
+
     @Test
     void findByIdProducto() {
         System.out.println("test findByIdProducto");
@@ -84,7 +88,7 @@ class ProductoPrecioBeanTest {
         Mockito.when(mockTp.setMaxResults(max)).thenReturn(mockTp);
         Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
         Mockito.when(mockTp.getResultList()).thenReturn(this.LIST_Producto_TEST);
-       List<ProductoPrecio> resultados = cut.findByIdProducto(idProducto, first, max);
+        List<ProductoPrecio> resultados = cut.findByIdProducto(idProducto, first, max);
         assertNotNull(resultados);
         assertEquals(esperado.size(), resultados.size());
 
@@ -96,7 +100,7 @@ class ProductoPrecioBeanTest {
         //fallo de entity
         cut2.em = mockEm;
         Mockito.when(mockEm.createNamedQuery("ProductoPrecio.findByIdTipoProductoAndIdProducto",ProductoPrecio.class)).thenReturn(mockTp2);
-       Mockito.doThrow(IllegalStateException.class).when(mockTp2).setParameter("idProducto",idProducto);
+        Mockito.doThrow(IllegalStateException.class).when(mockTp2).setParameter("idProducto",idProducto);
         Assertions.assertThrows(IllegalStateException.class, () -> cut2.findByIdProducto(idProducto,first,max));
 
 

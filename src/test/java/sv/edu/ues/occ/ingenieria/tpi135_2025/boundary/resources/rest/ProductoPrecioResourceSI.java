@@ -1,150 +1,163 @@
 
-/**
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
-
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 
+@Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductoPrecioResourceSI extends AbstractContainerTest{
-    private static Client cliente;
-    private static Jsonb jsonb;
-    private static jakarta.ws.rs.client.WebTarget target;
 
-    private static Long idCreado;
-    private static Integer idTipoProductoCreado;
+    private Client client;
+    private WebTarget target;
+    private Long createdId;
+    private Long idProducto = 1001l;
+    private Long noexisteIdProducto = 999l;
 
-
-    OffsetDateTime offsetDateTime = OffsetDateTime.now();  // Este es tu OffsetDateTime
-    Date date = Date.from(offsetDateTime.toInstant());
 
     @BeforeAll
-    public static void inicializar() {
+    public void inicializar() {
         cliente = ClientBuilder.newClient();
-        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/",servidorDeAplicaion.getHost(),
-                servidorDeAplicaion.getMappedPort(9080)));
-        jsonb = JsonbBuilder.create();
-
-        // Crear TipoProducto para relacionar
-        var tipoProducto = new TipoProducto();
-        tipoProducto.setNombre("TipoTest");
-        tipoProducto.setActivo(true);
-        tipoProducto.setObservaciones("Observación test");
-
-        Response r = target.path("tipo-producto")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(jsonb.toJson(tipoProducto)));
-
-        assertEquals(201, r.getStatus());
-        TipoProducto creado = r.readEntity(TipoProducto.class);
-        idTipoProductoCreado = creado.getIdTipoProducto();
-        assertNotNull(idTipoProductoCreado);
+        target = cliente.target(String.format("http://%s:%d/PupaSv-1.0-SNAPSHOT/v1/productoPrecio", servidorDeAplicaion.getHost(), servidorDeAplicaion.getMappedPort(9080)));
     }
 
+    @AfterAll
+    public void finalizar() {
+        if (client != null) {
+            client.close();
+        }
+    }
+
+    @Order(1)
     @Test
-    public void testCrearProductoPrecio() {
+    void testCrearProductoPrecio() {
         System.out.println("testCrearProductoPrecio");
-        ProductoPrecio precio = new ProductoPrecio();
-        precio.setIdProducto(new Producto(1001L));
-        precio.setPrecioSugerido(BigDecimal.valueOf(100.0));
-        Date fechaDesde = Date.from(OffsetDateTime.now().toInstant());
-        Date fechaHasta = Date.from(OffsetDateTime.now().plusDays(30).toInstant());
+        Map<String, Object> nuevoPrecio = new HashMap<>();
+        nuevoPrecio.put("precioSugerido", 25.50);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        nuevoPrecio.put("fechaDesde", LocalDate.now().format(formatter));
+        Map<String, Object> producto = new HashMap<>();
+        producto.put("idProducto", idProducto);
+        nuevoPrecio.put("producto", producto);
 
-        precio.setFechaDesde(fechaDesde);
-        precio.setFechaHasta(fechaHasta);
-        Response response = target
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(precio, MediaType.APPLICATION_JSON));
-        Assert.assertEquals(201, response.getStatus());
-        Assert.assertNotNull(response.getLocation());
-        fail("Esta prueba no pasa quemado");
+        Response response = target.request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(nuevoPrecio, MediaType.APPLICATION_JSON));
+        /**
+         String logs = servidorDeAplicaion.getLogs();
+         System.out.println("--- LOGS DEL CONTENEDOR ---");
+         System.out.println(logs);
+         System.out.println("--- FIN DE LOS LOGS ---");
+
+         **/
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+
+        // Extraer el ID de la cabecera "Location"
+        String location = response.getHeaderString("Location");
+        assertNotNull(location);
+        String[] parts = location.split("/");
+        createdId = Long.parseLong(parts[parts.length - 1]);
+        assertTrue(createdId > 0);
+        System.out.println("testCrearProductoPrecio - createdId: " + createdId);
     }
 
 
-    @Test
     @Order(2)
-    public void testObtenerPorId() {
-        System.out.println("");
-        Response r = target.path("producto-precio/{id}")
-                .resolveTemplate("id", idCreado)
+    @Test
+    void testObtenerProductoPrecioPorIdExistente() {
+        System.out.println("testObtenerProductoPrecioPorIdExistente");
+        Response response = target.path(createdId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertEquals(200, r.getStatus());
-        ProductoPrecio obtenido = r.readEntity(ProductoPrecio.class);
-        assertEquals(idCreado, obtenido.getIdProductoPrecio());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        Map<String, Object> precio = response.readEntity(Map.class);
+        assertNotNull(precio);
+        assertEquals(createdId.longValue(), ((Number) precio.get("idProductoPrecio")).longValue());
+        // fail("Esta prueba no pasa quemado");
     }
+
 
     @Test
     @Order(3)
-    public void testActualizar() {
-        Response rGet = target.path("producto-precio/{id}")
-                .resolveTemplate("id", idCreado)
-                .request(MediaType.APPLICATION_JSON)
+    void testObtenerTodosProductoPrecios() {
+        System.out.println("testObtenerProductoPrecios");
+        Response response = target.request(MediaType.APPLICATION_JSON)
                 .get();
-        ProductoPrecio original = rGet.readEntity(ProductoPrecio.class);
-        original.setPrecioSugerido(BigDecimal.valueOf(3.99));
 
-        Response rPut = target.path("producto-precio/{id}")
-                .resolveTemplate("id", idCreado)
-                .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(jsonb.toJson(original)));
-
-        assertEquals(200, rPut.getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        List<Map<String, Object>> precios = (List<Map<String, Object>>) response.readEntity(List.class);
+        assertNotNull(precios);
+        assertTrue(precios.size() >= 1);
+        //fail("Esta prueba no pasa quemado");
     }
 
-    @Test
     @Order(4)
-    public void testEliminar() {
-        Response r = target.path("producto-precio/{id}")
-                .resolveTemplate("id", idCreado)
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
-
-        assertEquals(204, r.getStatus());
-    }
-
     @Test
-    @Order(5)
-    public void testNoEncontrado() {
-        Response r = target.path("producto-precio/{id}")
-                .resolveTemplate("id", 999999)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+    void testActualizarProductoPrecioExistente() {
+        System.out.println("testActualizarProductoPrecioExistente - createdId: " + createdId);
+        Map<String, Object> precioActualizado = new HashMap<>();
+        precioActualizado.put("idProductoPrecio", createdId);
+        precioActualizado.put("precioSugerido", 30.00);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        precioActualizado.put("fechaDesde", LocalDate.now().plusDays(1).format(formatter));
+        Map<String, Object> producto = new HashMap<>();
+        producto.put("idProducto", idProducto);
+        precioActualizado.put("producto", producto);
 
-        assertEquals(404, r.getStatus());
+        Response response = target.path(createdId.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(precioActualizado, MediaType.APPLICATION_JSON));
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        // Puedes agregar más aserciones para verificar que los datos se actualizaron correctamente
     }
+    /**
+     @Test
+     @Order(5)
+     void testEliminarProductoPrecioExistente() {
+     System.out.println("testEliminarProductoPrecioExistente - createdId: " + createdId);
+     Response response = target.path(createdId.toString())
+     .request(MediaType.APPLICATION_JSON)
+     .delete();
+     assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+     Response getResponse = target.path(createdId.toString())
+     .request(MediaType.APPLICATION_JSON)
+     .get();
+     assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), getResponse.getStatus()); // Cambiado a 500
+     }
+     **/
 
     @Test
     @Order(6)
-    public void testContarPorProducto() {
-        Response r = target.path("producto-precio/contar-por-producto")
-                .queryParam("idTipoProducto", idTipoProductoCreado)
+    void testContarProductoPreciosPorProductoIdExistente() {
+        System.out.println("testContarProductoPreciosPorProductoIdExistente - idProducto: " + idProducto);
+        Response response = target.path("producto/" + idProducto + "/count")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertEquals(200, r.getStatus());
-        Long cantidad = r.readEntity(Long.class);
-        assertNotNull(cantidad);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        String count = response.readEntity(String.class);
+        assertNotNull(count);
+        assertTrue(Integer.parseInt(count) >= 0);
+        //fail("Esta prueba no pasa quemado");
     }
 }
-**/

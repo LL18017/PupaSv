@@ -13,6 +13,7 @@
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBeanIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoDetalleBeanIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenResourceSI.java
+/home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioResourceSI.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/ProductoBeanTest.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBeanIT.java
 /home/gmoran/IdeaProjects/PupaSv/src/test/java/sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ResourceTest.java

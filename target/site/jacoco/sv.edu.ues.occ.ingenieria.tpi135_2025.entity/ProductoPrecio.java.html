@@ -6,8 +6,11 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,15 +34,15 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = &quot;producto_precio&quot;)
 @NamedQueries({
-    @NamedQuery(name = &quot;ProductoPrecio.findAll&quot;, query = &quot;SELECT p FROM ProductoPrecio p&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByIdProductoPrecio&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProductoPrecio = :idProductoPrecio&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByFechaDesde&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.fechaDesde = :fechaDesde&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByFechaHasta&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.fechaHasta = :fechaHasta&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByPrecioSugerido&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByIdTipoProductoAndIdProducto&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.countByIdTipoProductoAndIdProducto&quot;, query = &quot;SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByPrecioSugerido&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido&quot;),
-    @NamedQuery(name = &quot;ProductoPrecio.findByIdProducto&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findAll&quot;, query = &quot;SELECT p FROM ProductoPrecio p&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByIdProductoPrecio&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProductoPrecio = :idProductoPrecio&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByFechaDesde&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.fechaDesde = :fechaDesde&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByFechaHasta&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.fechaHasta = :fechaHasta&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByPrecioSugerido&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByIdTipoProductoAndIdProducto&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.countByIdTipoProductoAndIdProducto&quot;, query = &quot;SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByPrecioSugerido&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido&quot;),
+        @NamedQuery(name = &quot;ProductoPrecio.findByIdProducto&quot;, query = &quot;SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto&quot;),
 
 })
 public class ProductoPrecio implements Serializable {
@@ -51,8 +54,8 @@ public class ProductoPrecio implements Serializable {
     @Column(name = &quot;id_producto_precio&quot;)
     private Long idProductoPrecio;
     @Column(name = &quot;fecha_desde&quot;)
-    @Temporal(TemporalType.DATE)
-    private Date fechaDesde;
+    @JsonbDateFormat(&quot;yyyy-MM-dd&quot;)
+    private LocalDate fechaDesde;
     @Column(name = &quot;fecha_hasta&quot;)
     @Temporal(TemporalType.DATE)
     private Date fechaHasta;
@@ -65,85 +68,86 @@ public class ProductoPrecio implements Serializable {
     @ManyToOne
     private Producto idProducto;
 
-<span class="fc" id="L68">    public ProductoPrecio() {</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L71">    public ProductoPrecio() {</span>
+<span class="fc" id="L72">    }</span>
 
-<span class="fc" id="L71">    public ProductoPrecio(Long idProductoPrecio) {</span>
-<span class="fc" id="L72">        this.idProductoPrecio = idProductoPrecio;</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L74">    public ProductoPrecio(Long idProductoPrecio) {</span>
+<span class="fc" id="L75">        this.idProductoPrecio = idProductoPrecio;</span>
+<span class="fc" id="L76">    }</span>
 
     public Long getIdProductoPrecio() {
-<span class="nc" id="L76">        return idProductoPrecio;</span>
+<span class="nc" id="L79">        return idProductoPrecio;</span>
     }
 
     public void setIdProductoPrecio(Long idProductoPrecio) {
-<span class="fc" id="L80">        this.idProductoPrecio = idProductoPrecio;</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L83">        this.idProductoPrecio = idProductoPrecio;</span>
+<span class="fc" id="L84">    }</span>
 
-    public Date getFechaDesde() {
-<span class="nc" id="L84">        return fechaDesde;</span>
+
+    public LocalDate getFechaDesde() { // Cambiar el tipo de retorno
+<span class="nc" id="L88">        return fechaDesde;</span>
     }
 
-    public void setFechaDesde(Date fechaDesde) {
-<span class="nc" id="L88">        this.fechaDesde = fechaDesde;</span>
-<span class="nc" id="L89">    }</span>
+    public void setFechaDesde(LocalDate fechaDesde) { // Cambiar el tipo del parámetro
+<span class="nc" id="L92">        this.fechaDesde = fechaDesde;</span>
+<span class="nc" id="L93">    }</span>
 
     public Date getFechaHasta() {
-<span class="nc" id="L92">        return fechaHasta;</span>
+<span class="nc" id="L96">        return fechaHasta;</span>
     }
 
     public void setFechaHasta(Date fechaHasta) {
-<span class="nc" id="L96">        this.fechaHasta = fechaHasta;</span>
-<span class="nc" id="L97">    }</span>
+<span class="nc" id="L100">        this.fechaHasta = fechaHasta;</span>
+<span class="nc" id="L101">    }</span>
 
     public BigDecimal getPrecioSugerido() {
-<span class="fc" id="L100">        return precioSugerido;</span>
+<span class="fc" id="L104">        return precioSugerido;</span>
     }
 
     public void setPrecioSugerido(BigDecimal precioSugerido) {
-<span class="fc" id="L104">        this.precioSugerido = precioSugerido;</span>
-<span class="fc" id="L105">    }</span>
+<span class="fc" id="L108">        this.precioSugerido = precioSugerido;</span>
+<span class="fc" id="L109">    }</span>
 
     public List&lt;OrdenDetalle&gt; getOrdenDetalleList() {
-<span class="nc" id="L108">        return ordenDetalleList;</span>
+<span class="nc" id="L112">        return ordenDetalleList;</span>
     }
 
     public void setOrdenDetalleList(List&lt;OrdenDetalle&gt; ordenDetalleList) {
-<span class="nc" id="L112">        this.ordenDetalleList = ordenDetalleList;</span>
-<span class="nc" id="L113">    }</span>
+<span class="nc" id="L116">        this.ordenDetalleList = ordenDetalleList;</span>
+<span class="nc" id="L117">    }</span>
 
     public Producto getIdProducto() {
-<span class="nc" id="L116">        return idProducto;</span>
+<span class="nc" id="L120">        return idProducto;</span>
     }
 
     public void setIdProducto(Producto idProducto) {
-<span class="fc" id="L120">        this.idProducto = idProducto;</span>
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L124">        this.idProducto = idProducto;</span>
+<span class="fc" id="L125">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L125">        int hash = 0;</span>
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        hash += (idProductoPrecio != null ? idProductoPrecio.hashCode() : 0);</span>
-<span class="nc" id="L127">        return hash;</span>
+<span class="nc" id="L129">        int hash = 0;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        hash += (idProductoPrecio != null ? idProductoPrecio.hashCode() : 0);</span>
+<span class="nc" id="L131">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (!(object instanceof ProductoPrecio)) {</span>
-<span class="nc" id="L134">            return false;</span>
-        }
-<span class="fc" id="L136">        ProductoPrecio other = (ProductoPrecio) object;</span>
-<span class="pc bpc" id="L137" title="2 of 8 branches missed.">        if ((this.idProductoPrecio == null &amp;&amp; other.idProductoPrecio != null) || (this.idProductoPrecio != null &amp;&amp; !this.idProductoPrecio.equals(other.idProductoPrecio))) {</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (!(object instanceof ProductoPrecio)) {</span>
 <span class="nc" id="L138">            return false;</span>
         }
-<span class="fc" id="L140">        return true;</span>
+<span class="fc" id="L140">        ProductoPrecio other = (ProductoPrecio) object;</span>
+<span class="pc bpc" id="L141" title="2 of 8 branches missed.">        if ((this.idProductoPrecio == null &amp;&amp; other.idProductoPrecio != null) || (this.idProductoPrecio != null &amp;&amp; !this.idProductoPrecio.equals(other.idProductoPrecio))) {</span>
+<span class="nc" id="L142">            return false;</span>
+        }
+<span class="fc" id="L144">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L145">        return &quot;com.mycompany.extreciondeentities.entities.ProductoPrecio[ idProductoPrecio=&quot; + idProductoPrecio + &quot; ]&quot;;</span>
+<span class="nc" id="L149">        return &quot;com.mycompany.extreciondeentities.entities.ProductoPrecio[ idProductoPrecio=&quot; + idProductoPrecio + &quot; ]&quot;;</span>
     }
-    
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -36,6 +36,7 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
         return em;
     }
 
+
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
@@ -88,4 +89,7 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
             throw new IllegalStateException("error al acceder al repositorio ", e);
         }
     }
+
+
+
 }

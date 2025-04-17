@@ -6,8 +6,11 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,15 +34,15 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "producto_precio")
 @NamedQueries({
-    @NamedQuery(name = "ProductoPrecio.findAll", query = "SELECT p FROM ProductoPrecio p"),
-    @NamedQuery(name = "ProductoPrecio.findByIdProductoPrecio", query = "SELECT p FROM ProductoPrecio p WHERE p.idProductoPrecio = :idProductoPrecio"),
-    @NamedQuery(name = "ProductoPrecio.findByFechaDesde", query = "SELECT p FROM ProductoPrecio p WHERE p.fechaDesde = :fechaDesde"),
-    @NamedQuery(name = "ProductoPrecio.findByFechaHasta", query = "SELECT p FROM ProductoPrecio p WHERE p.fechaHasta = :fechaHasta"),
-    @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
-    @NamedQuery(name = "ProductoPrecio.findByIdTipoProductoAndIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
-    @NamedQuery(name = "ProductoPrecio.countByIdTipoProductoAndIdProducto", query = "SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
-    @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
-    @NamedQuery(name = "ProductoPrecio.findByIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
+        @NamedQuery(name = "ProductoPrecio.findAll", query = "SELECT p FROM ProductoPrecio p"),
+        @NamedQuery(name = "ProductoPrecio.findByIdProductoPrecio", query = "SELECT p FROM ProductoPrecio p WHERE p.idProductoPrecio = :idProductoPrecio"),
+        @NamedQuery(name = "ProductoPrecio.findByFechaDesde", query = "SELECT p FROM ProductoPrecio p WHERE p.fechaDesde = :fechaDesde"),
+        @NamedQuery(name = "ProductoPrecio.findByFechaHasta", query = "SELECT p FROM ProductoPrecio p WHERE p.fechaHasta = :fechaHasta"),
+        @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
+        @NamedQuery(name = "ProductoPrecio.findByIdTipoProductoAndIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
+        @NamedQuery(name = "ProductoPrecio.countByIdTipoProductoAndIdProducto", query = "SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
+        @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
+        @NamedQuery(name = "ProductoPrecio.findByIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
 
 })
 public class ProductoPrecio implements Serializable {
@@ -51,8 +54,8 @@ public class ProductoPrecio implements Serializable {
     @Column(name = "id_producto_precio")
     private Long idProductoPrecio;
     @Column(name = "fecha_desde")
-    @Temporal(TemporalType.DATE)
-    private Date fechaDesde;
+    @JsonbDateFormat("yyyy-MM-dd")
+    private LocalDate fechaDesde;
     @Column(name = "fecha_hasta")
     @Temporal(TemporalType.DATE)
     private Date fechaHasta;
@@ -80,11 +83,12 @@ public class ProductoPrecio implements Serializable {
         this.idProductoPrecio = idProductoPrecio;
     }
 
-    public Date getFechaDesde() {
+
+    public LocalDate getFechaDesde() { // Cambiar el tipo de retorno
         return fechaDesde;
     }
 
-    public void setFechaDesde(Date fechaDesde) {
+    public void setFechaDesde(LocalDate fechaDesde) { // Cambiar el tipo del parámetro
         this.fechaDesde = fechaDesde;
     }
 
@@ -144,5 +148,5 @@ public class ProductoPrecio implements Serializable {
     public String toString() {
         return "com.mycompany.extreciondeentities.entities.ProductoPrecio[ idProductoPrecio=" + idProductoPrecio + " ]";
     }
-    
+
 }
