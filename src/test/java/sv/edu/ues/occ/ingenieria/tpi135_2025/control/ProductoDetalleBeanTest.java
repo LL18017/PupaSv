@@ -63,7 +63,7 @@ class ProductoDetalleBeanTest {
 
     @Test
     void getEntityManager() {
-        System.out.println(" ProductoDetalletest getEntityManager");
+        System.out.println("ProductoDetalle test getEntityManager");
         Mockito.when(cut2.getEntityManager()).thenReturn(mockEm);
 
         EntityManager em = cut2.getEntityManager();

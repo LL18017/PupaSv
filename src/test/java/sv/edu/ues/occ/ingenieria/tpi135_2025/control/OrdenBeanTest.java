@@ -51,7 +51,6 @@ public class OrdenBeanTest {
         // Caso 1: EntityManager nulo
         Assertions.assertThrows(IllegalStateException.class, () -> cut.findAll());
 
-
         // Caso 2: Flujo normal
         cut.em = mockEm;
         Mockito.when(mockEm.getCriteriaBuilder()).thenReturn(mockCb);
@@ -93,10 +92,12 @@ public class OrdenBeanTest {
 
         // Caso 1: id nulo
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findById(null));
-        // Caso 2: EntityManager nulo
+        // Caso 2: id menor que 0
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findById(-90));
+        // Caso 3: EntityManager nulo
         Assertions.assertThrows(IllegalStateException.class, () -> cut.findById(idBuscado));
 
-        // Caso 2: Flujo normal
+        // Caso 4: Flujo normal
         cut.em = mockEm;
         Mockito.when(mockEm.find(Orden.class, idBuscado)).thenReturn(Buscado);
         Orden Respuesta = cut.findById(idBuscado);
@@ -178,6 +179,9 @@ public class OrdenBeanTest {
         //violacion de reglas
         Mockito.doThrow(ConstraintViolationException.class).when(mockEm2).persist(ordenCreada);
         Assertions.assertThrows(ConstraintViolationException.class, () -> cut.create(ordenCreada));
+        //violacion de reglaserror en la base d e datos
+        Mockito.doThrow(PersistenceException.class).when(mockEm2).persist(ordenCreada);
+        Assertions.assertThrows(PersistenceException.class, () -> cut.create(ordenCreada));
 
 //        Assertions.fail("fallo exitosamnete");
     }
@@ -289,6 +293,10 @@ public class OrdenBeanTest {
         Mockito.when(mockCb.createCriteriaDelete(Orden.class)).thenReturn(mockCd);
         Mockito.when(mockCd.from(Orden.class)).thenReturn(mockR);
         Mockito.when(mockEm.createQuery(mockCd)).thenReturn(mockTq);
+
+        //registro no existe
+        Mockito.when(mockEm.find(Orden.class, 112233L)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.delete(112233L));
 
         // Aseguramos que executeUpdate no haga nada (se ejecute sin lanzar excepciones)
         Mockito.when(mockTq.executeUpdate()).thenReturn(1);

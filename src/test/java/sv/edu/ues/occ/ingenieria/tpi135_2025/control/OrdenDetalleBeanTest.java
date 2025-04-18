@@ -1,14 +1,13 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,51 +16,44 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class OrdenDetalleBeanTest {
-    @InjectMocks
-    private OrdenDetalleBean ordenDetalleBean;
 
-    @Mock
-    private EntityManager em;
-
-    @Mock
-    TypedQuery<ProductoPrecio> queryProductoPrecio;
-    @Mock
-    private TypedQuery<OrdenDetalle> queryMock;
-
-    @Mock
-    private TypedQuery<ComboDetalle> comboDetalleQuery;
-
-    @Mock
-    private TypedQuery<Long> queryLongMock;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testConstructor() {
-        System.out.println("Test de Constructor");
+        System.out.println("OrdenDetalle Test de Constructor");
         assertNotNull(new OrdenDetalleBean());
         //Assertions.fail("Esta prueba no pasa quemado ");
     }
+
     @Test
     public void testOrderParameterQuery() {
-        System.out.println("Test de OrderParameterQuery");
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        System.out.println("OrdenDetalle Test de OrderParameterQuery");
         assertEquals("idOrdenDetalle", ordenDetalleBean.orderParameterQuery());
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 
     @Test
     public void testGetEntityManager() {
-        System.out.println("Test de getEntityManager");
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        ordenDetalleBean.em = em;
+        System.out.println("OrdenDetalle Test de getEntityManager");
         assertNotNull(ordenDetalleBean.getEntityManager());
         assertEquals(em, ordenDetalleBean.getEntityManager());
         //Assertions.fail("Esta prueba no pasa quemado ");
     }
 
     @Test
-    public void testSetEntityManager(){
-        System.out.println("Test de setEntityManager");
+    public void testSetEntityManager() {
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        System.out.println("OrdenDetalle Test de setEntityManager");
         ordenDetalleBean.setEntityManager(em);
         assertEquals(em, ordenDetalleBean.getEntityManager());
         //Assertions.fail("Esta prueba no pasa quemado");
@@ -69,7 +61,11 @@ public class OrdenDetalleBeanTest {
 
     @Test
     public void testFindByIdOrdenAndIdPrecioProducto() {
-        System.out.println("Test de findByIdOrdenAndIdPrecioProducto");
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        ordenDetalleBean.em = em;
+        System.out.println("OrdenDetalle Test de findByIdOrdenAndIdPrecioProducto");
         OrdenDetalle detalleEsperado = new OrdenDetalle();
         when(em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)).thenReturn(queryMock);
         when(queryMock.setParameter(eq("idOrden"), anyLong())).thenReturn(queryMock);
@@ -79,30 +75,53 @@ public class OrdenDetalleBeanTest {
         OrdenDetalle resultado = ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L, 1L);
         assertNotNull(resultado);
         assertEquals(detalleEsperado, resultado);
+
+        //errores
+        TypedQuery tp = Mockito.spy(TypedQuery.class);
+        when(em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)).thenReturn(tp);
+        when(tp.setParameter(eq("idOrden"), anyLong())).thenReturn(tp);
+        when(tp.setParameter(eq("idProductoPrecio"), anyLong())).thenReturn(tp);
+        doThrow(NoResultException.class).when(tp).getSingleResult();
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L, 1L));
+        doThrow(PersistenceException.class).when(tp).getSingleResult();
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L, 1L));
         //Assertions.fail("Esta prueba no pasa quemado");
+
+
     }
 
     @Test
     public void findByIdOrdenAndIdPrecioProducto_noResult_returnsNull() {
+        System.out.println("OrdenDetalle Test de findByIdOrdenAndIdPrecioProducto_noResult_returnsNull");
         Long idOrden = 1L;
         Long idProductoPrecio = 2L;
 
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.spy(TypedQuery.class);
+        ordenDetalleBean.em = em;
         when(em.createNamedQuery(anyString(), org.mockito.ArgumentMatchers.<Class<OrdenDetalle>>any())).thenReturn(queryMock);
         when(queryMock.setParameter("idOrden", idOrden)).thenReturn(queryMock);
         when(queryMock.setParameter("idProductoPrecio", idProductoPrecio)).thenReturn(queryMock);
-        when(queryMock.getSingleResult()).thenThrow(new NoResultException());
+        doThrow(NoResultException.class).when(queryMock).getSingleResult();
 
-        OrdenDetalle result = ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio);
-        assertNull(result);
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio));
+        doThrow(PersistenceException.class).when(queryMock).getSingleResult();
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio));
+
+
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 
 
     @Test
     public void testFindRangeByIdOrden() {
-        System.out.println("Test de findRangeByIdOrden");
+        System.out.println("OrdenDetalle Test de findRangeByIdOrden");
         List<OrdenDetalle> mockList = List.of(new OrdenDetalle(), new OrdenDetalle());
-
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        ordenDetalleBean.em = em;
         when(em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)).thenReturn(queryMock);
         when(queryMock.setParameter("idOrden", 1L)).thenReturn(queryMock);
         when(queryMock.setFirstResult(0)).thenReturn(queryMock);
@@ -110,242 +129,290 @@ public class OrdenDetalleBeanTest {
         when(queryMock.getResultList()).thenReturn(mockList);
 
         List<OrdenDetalle> result = ordenDetalleBean.findRangeByIdOrden(1L, 0, 2);
-
-
         assertNotNull(result);
         assertEquals(2, result.size());
-       // fail("Esta prueba no pasa quemado");
+
+        TypedQuery tp = Mockito.mock(TypedQuery.class);
+        when(em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)).thenReturn(tp);
+        when(tp.setParameter("idOrden", 1L)).thenReturn(tp);
+        when(tp.setFirstResult(0)).thenReturn(tp);
+        when(tp.setMaxResults(2)).thenReturn(tp);
+        Mockito.doThrow(NoResultException.class).when(tp).getResultList();
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.findRangeByIdOrden(1L, 0, 2));
+        Mockito.doThrow(PersistenceException.class).when(tp).getResultList();
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.findRangeByIdOrden(1L, 0, 2));
+        // fail("Esta prueba no pasa quemado");
     }
 
     @Test
     public void findRangeByIdOrden_exceptionThrown_returnsNull() {
+        System.out.println("OrdenDetalle Test de findRangeByIdOrden_exceptionThrown_returnsNull");
         Long idOrden = 1L;
         int first = 0;
         int max = 10;
-        when(em.createNamedQuery(anyString(), org.mockito.ArgumentMatchers.<Class<OrdenDetalle>>any()))
-                .thenThrow(new RuntimeException("Simulated database error"));
-
-        List<OrdenDetalle> result = ordenDetalleBean.findRangeByIdOrden(idOrden, first, max);
-        assertTrue(result.isEmpty());
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        ordenDetalleBean.em = em;
+        Mockito.when(em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)).thenReturn(queryMock);
+        Mockito.when(queryMock.setParameter("idOrden", idOrden)).thenReturn(queryMock);
+        Mockito.when(queryMock.setFirstResult(first)).thenReturn(queryMock);
+        Mockito.when(queryMock.setMaxResults(max)).thenReturn(queryMock);
+        Mockito.doThrow(new NoResultException()).when(queryMock).getResultList();
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.findRangeByIdOrden(idOrden, first, max));
         //fail("Esta prueba no pasa quemado");;
     }
 
 
     @Test
     public void testCountByIdOrden() {
-        System.out.println("Test de countByIdOrden");
-        when(em.createNamedQuery("OrdenDetalle.countByIdOrden", Long.class)).thenReturn(queryLongMock);
-        when(queryLongMock.setParameter("idOrden", 1L)).thenReturn(queryLongMock);
-        when(queryLongMock.getSingleResult()).thenReturn(5L);
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        ordenDetalleBean.em = em;
+        System.out.println("OrdenDetalle Test de countByIdOrden");
+
+        when(em.createNamedQuery("OrdenDetalle.countByIdOrden", Long.class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idOrden", 1L)).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(5L);
 
         Long result = ordenDetalleBean.countByIdOrden(1L);
         assertEquals(Long.valueOf(5L), result);
+        TypedQuery tp = Mockito.mock(TypedQuery.class);
+        when(em.createNamedQuery("OrdenDetalle.countByIdOrden", Long.class)).thenReturn(tp);
+        when(tp.setParameter("idOrden", 1L)).thenReturn(tp);
+
+        doThrow(NoResultException.class).when(tp).getSingleResult();
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.countByIdOrden(1L));
+
+
+        doThrow(NonUniqueResultException.class).when(tp).getSingleResult();
+        Assertions.assertThrows(NonUniqueResultException.class, () -> ordenDetalleBean.countByIdOrden(1L));
+
+        Mockito.doThrow(PersistenceException.class).when(tp).getSingleResult();
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.countByIdOrden(1L));
+
+
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 
     @Test
     public void testGenerarOrdenDetalleProducto() {
-        System.out.println("Test de generarOrdenDetalleProducto");
-        Orden orden = new Orden();
-        orden.setIdOrden(1L);
+        System.out.println("OrdenDetalle test de GenerarOrdenDetalleDesdeCombo");
+        Long idProducto = 1L;
+        Long idOrden = 1L;
+        Integer cantidadCombo = 1;
 
-        Producto producto = new Producto();
-        producto.setIdProducto(1L);
+        ProductoPrecio productoPrecio1 = new ProductoPrecio();
+        productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(1.00));
+        Object[] detalle = new Object[]{productoPrecio1, 5};
 
-        ProductoPrecio precio = new ProductoPrecio();
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
 
-        when(em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setParameter("idProducto", 1L)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setMaxResults(1)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precio);
+        ordenDetalleBean.em = em;
 
-        OrdenDetalle result = ordenDetalleBean.generarOrdenDetalleProducto(orden, producto, 3);
-
-        assertNotNull(result);
-        assertEquals(orden, result.getOrden());
-        assertEquals(precio, result.getProductoPrecio());
-        assertEquals(3, result.getCantidad());
-        //Assertions.fail("Esta prueba no pasa quemado");
-    }
-
-    @Test
-    public void testGenerarOrdenDetalleProductoCantidadNula() {
-        System.out.println("Test de generarOrdenDetalleProductoCantidadNula");
-        Orden orden = new Orden();
-        orden.setIdOrden(1L);
-
-        Producto producto = new Producto();
-        producto.setIdProducto(1L);
-
-        ProductoPrecio precio = new ProductoPrecio();
-
-        when(em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setParameter("idProducto", 1L)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setMaxResults(1)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precio);
-
-        OrdenDetalle result = ordenDetalleBean.generarOrdenDetalleProducto(orden, producto, null);
-
-        assertNotNull(result);
-        assertEquals(1, result.getCantidad());
-        //Assertions.fail("Esta prueba no pasa quemado");
-    }
-
-    @Test
-    public void testGenerarOrdenDetalleProductoOrdenInvalida() {
-        System.out.println("Test de generarOrdenDetalleProductoOrdenInvalida");
-        Producto producto = new Producto();
-        producto.setIdProducto(1L);
-        assertThrows(IllegalArgumentException.class, () -> {
-            ordenDetalleBean.generarOrdenDetalleProducto(null, producto, 1);
-            //Assertions.fail("Esta prueba no pasa quemado");
+        // fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleProducto(null, idProducto, cantidadCombo);
         });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleProducto(idOrden, null, cantidadCombo);
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, null);
+        });
+
+        //flujo normal
+
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdProducto", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idProducto", idProducto)).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(detalle);
+
+        OrdenDetalle uno = new OrdenDetalle();
+        uno.setOrden(new Orden(idOrden));
+        ProductoPrecio precio = (ProductoPrecio) detalle[0];
+        uno.setPrecio(precio.getPrecioSugerido());
+        uno.setCantidad((Integer) detalle[1] * cantidadCombo);
+
+        Mockito.doNothing().when(em).persist(uno);
+        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, cantidadCombo));
+
+//        //precio invalidos desde db
+
+        detalle[0] = null;
+        when(queryMock.getSingleResult()).thenReturn(detalle);
+        Assertions.assertThrows(NullPointerException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, 2));
+//
+        //otros errores
+        detalle[0] = productoPrecio1;
+        doThrow(PersistenceException.class).when(em).persist(uno);
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, 2));
+        doThrow(EntityNotFoundException.class).when(em).persist(uno);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, 2));
+
+        //detalle no exxiste
+
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdProducto", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idProducto", 112233L)).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(null);
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, 112233L, 2));
+
+
     }
 
-    @Test
-    public void testGenerarOrdenDetalleProductoProductoInvalido() {
-        System.out.println("Test de generarOrdenDetalleProductoProductoProductoInvalido");
-        Orden orden = new Orden();
-        orden.setIdOrden(1L);
-        assertThrows(IllegalArgumentException.class, () -> {
-            ordenDetalleBean.generarOrdenDetalleProducto(orden, null, 1);
-        });
-        //Assertions.fail("Esta prueba no pasa quemado");
-    }
 
     @Test
     public void testGenerarOrdenDetalleDesdeCombo() {
-        System.out.println("test de GenerarOrdenDetalleDesdeCombo");
-        Orden orden = new Orden();
-        orden.setIdOrden(1L);
-        Combo combo = new Combo();
-        combo.setIdCombo(1L);
-        Producto producto1 = new Producto();
-        producto1.setIdProducto(100L);
-        ProductoPrecio precio1 = new ProductoPrecio();
-        precio1.setPrecioSugerido(java.math.BigDecimal.TEN);
-        ComboDetalle comboDetalle1 = new ComboDetalle();
-        comboDetalle1.setProducto(producto1);
-        comboDetalle1.setCantidad(2);
-        List<ComboDetalle> comboDetalles = List.of(comboDetalle1);
+        System.out.println("OrdenDetalle test de GenerarOrdenDetalleDesdeCombo");
+        Long idCombo = 1L;
+        Long idOrden = 1L;
+        Integer cantidadCombo = 1;
 
-        when(em.createNamedQuery(eq("ComboDetalle.findByIdCombo"), eq(ComboDetalle.class))).thenReturn(comboDetalleQuery);
-        when(comboDetalleQuery.setParameter(eq("idCombo"), eq(1L))).thenReturn(comboDetalleQuery);
-        when(comboDetalleQuery.getResultList()).thenReturn(comboDetalles);
+        List<Object[]> detalles = new ArrayList<>();
+        ProductoPrecio productoPrecio1 = new ProductoPrecio();
+        productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(1.00));
+        ProductoPrecio productoPrecio2 = new ProductoPrecio();
+        productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(0.80));
+        detalles.add(new Object[]{productoPrecio1, 20});
+        detalles.add(new Object[]{productoPrecio2, 3});
 
-        when(em.createNamedQuery(eq("ProductoPrecio.findByIdProducto"), eq(ProductoPrecio.class))).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setParameter(eq("idProducto"), eq(100L))).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setMaxResults(1)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precio1);
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
 
-        // Escenario 1: orden inválida
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(null, combo, 1));
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(new Orden(), combo, 1));
+        ordenDetalleBean.em = em;
 
-        // Escenario 2: combo inválido
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, null, 1));
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, new Combo(), 1));
+        // fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleDesdeCombo(null, idCombo, cantidadCombo);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, null, cantidadCombo);
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, null);
+        });
 
-        // Escenario 3: cantidadCombo nula
-        List<OrdenDetalle> resultadoCantidadNula = ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, combo, null);
-        assertNotNull(resultadoCantidadNula);
-        assertEquals(1, resultadoCantidadNula.size());
-        assertEquals(2, resultadoCantidadNula.get(0).getCantidad());
+        //flujo normal
 
-        // Escenario 4: combo sin productos
-        when(comboDetalleQuery.getResultList()).thenReturn(new ArrayList<>());
-        List<OrdenDetalle> resultadoSinProductos = ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, combo, 1);
-        assertNotNull(resultadoSinProductos);
-        assertEquals(0, resultadoSinProductos.size());
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idCombo", idCombo)).thenReturn(queryMock);
+        when(queryMock.getResultList()).thenReturn(detalles);
 
-        // Escenario 5: producto inválido (en ComboDetalle) - ya cubierto por la lógica de Producto nulo o sin ID en el método
+        OrdenDetalle uno = new OrdenDetalle();
+        uno.setOrden(new Orden(idOrden));
+        ProductoPrecio precio = (ProductoPrecio) detalles.get(0)[0];
+        uno.setPrecio(precio.getPrecioSugerido());
+        uno.setCantidad((Integer) detalles.get(0)[1] * cantidadCombo);
 
-        // Escenario 6: producto sin precio
-        when(comboDetalleQuery.getResultList()).thenReturn(comboDetalles);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(null);
-        List<OrdenDetalle> resultadoSinPrecio = ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, combo, 1);
-        assertNotNull(resultadoSinPrecio);
-        assertEquals(0, resultadoSinPrecio.size());
+        OrdenDetalle dos = new OrdenDetalle();
+        dos.setOrden(new Orden(idOrden));
+        precio = (ProductoPrecio) detalles.get(1)[0];
+        dos.setPrecio(precio.getPrecioSugerido());
+        dos.setCantidad((Integer) detalles.get(1)[1] * cantidadCombo);
 
-        // Escenario 7: éxito
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precio1);
-        List<OrdenDetalle> resultadoExito = ordenDetalleBean.generarOrdenDetalleDesdeCombo(orden, combo, 3);
-        assertNotNull(resultadoExito);
-        assertEquals(1, resultadoExito.size());
-        assertEquals(6, resultadoExito.get(0).getCantidad());
-        assertEquals(java.math.BigDecimal.TEN, resultadoExito.get(0).getPrecio());
-        assertEquals(orden, resultadoExito.get(0).getOrden());
-        assertEquals(precio1, resultadoExito.get(0).getProductoPrecio());
-        //Assertions.fail("Esta prueba no pasa quemado");
+        Mockito.doNothing().when(em).persist(uno);
+        Mockito.doNothing().when(em).persist(dos);
+        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, cantidadCombo));
+
+        //precio invalidos desde db
+
+        detalles.set(0, new Object[]{productoPrecio1, null});
+        when(queryMock.getResultList()).thenReturn(detalles);
+        Assertions.assertThrows(NullPointerException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
+
+        //otros errores
+        doThrow(PersistenceException.class).when(em).persist(uno);
+        detalles.set(0, new Object[]{productoPrecio1, 10});
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
+        doThrow(EntityNotFoundException.class).when(em).persist(uno);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
+
+        //detalle no exxiste
+
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idCombo", 112233L)).thenReturn(queryMock);
+        when(queryMock.getResultList()).thenReturn(null);
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, 112233L, 2));
+
+
     }
+
     @Test
-    void generarOrdenDetalleMixto_todosLosEscenarios() {
-        System.out.println("Test de generarOrdenDetalleMixto");
-        Orden orden = new Orden();
-        orden.setIdOrden(1L);
+    void generarOrdenDetalleMixto() {
+        System.out.println("OrdenDetalle Test de generarOrdenDetalleMixto");
 
-        Producto producto1 = new Producto();
-        producto1.setIdProducto(1L);
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        ordenDetalleBean.em = em;
 
-        Producto producto2 = new Producto();
-        producto2.setIdProducto(2L);
+        TypedQuery<Object[]> queryMock = Mockito.mock(TypedQuery.class);
 
-        ProductoPrecio precioProducto1 = new ProductoPrecio();
-        precioProducto1.setIdProductoPrecio(10L);
+        Long idOrden = 12348L;
 
-        ProductoPrecio precioProducto2 = new ProductoPrecio();
-        precioProducto2.setIdProductoPrecio(20L);
+        List<Object[]> productosList = new ArrayList<>();
+        productosList.add(new Object[]{1001L, -9});  // Coca x2
+        productosList.add(new Object[]{1002L, 4});  // Pepsi x4
 
-        Combo combo1 = new Combo();
-        combo1.setIdCombo(1L);
+        // Simulación de combos (comboId, cantidad de combos)
+        List<Object[]> comboList = new ArrayList<>();
+        comboList.add(new Object[]{1001L, 2});  // Combo x2
+        comboList.add(new Object[]{1002L, 3});  // Combo x2
 
-        ComboDetalle comboDetalle1 = new ComboDetalle();
-        comboDetalle1.setProducto(producto1);
-        comboDetalle1.setCantidad(2);
+        Producto coca = new Producto(1001L);
+        Producto pepsi = new Producto(1002L);
+        Producto pupusa = new Producto(1003L);
 
-        ComboDetalle comboDetalle2 = new ComboDetalle();
-        comboDetalle2.setProducto(producto2);
-        comboDetalle2.setCantidad(3);
+        ProductoPrecio precioCoca = new ProductoPrecio();
+        precioCoca.setPrecioSugerido(BigDecimal.valueOf(1.00));
+        precioCoca.setIdProducto(coca);
+        ProductoPrecio precioPepsi = new ProductoPrecio();
+        precioPepsi.setPrecioSugerido(BigDecimal.valueOf(0.80));
+        precioPepsi.setIdProducto(pepsi);
+        ProductoPrecio precioPupusa = new ProductoPrecio();
+        precioPupusa.setIdProducto(pupusa);
+        precioPupusa.setPrecioSugerido(BigDecimal.valueOf(1.50));
 
-        List<Producto> productos = new ArrayList<>();
-        productos.add(producto1);
+        //error de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(null, productosList, comboList));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, null, null));
 
-        List<Combo> combos = new ArrayList<>();
-        combos.add(combo1);
+        // flujo normal
+        when(em.createNamedQuery("ProductoPrecio.findProductoProductoProductoByIdProducto", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idProducto", 1001L)).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioCoca, coca});
 
-        when(em.createNamedQuery(eq("Producto.findByIdProducto"), eq(ProductoPrecio.class))).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setParameter(eq("idProducto"), eq(1L))).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.setMaxResults(1)).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precioProducto1);
+        when(queryMock.setParameter("idProducto", 1002L)).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioPepsi, pepsi});
 
-        when(em.createNamedQuery(eq("ComboDetalle.findByIdCombo"), eq(ComboDetalle.class))).thenReturn(comboDetalleQuery);
-        when(comboDetalleQuery.setParameter(eq("idCombo"), eq(1L))).thenReturn(comboDetalleQuery);
-        when(comboDetalleQuery.getResultList()).thenReturn(List.of(comboDetalle1, comboDetalle2));
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idCombo", 1001L)).thenReturn(queryMock);
+        when(queryMock.setParameter("idCombo", 1002L)).thenReturn(queryMock);
 
-        when(queryProductoPrecio.setParameter(eq("idProducto"), eq(2L))).thenReturn(queryProductoPrecio);
-        when(queryProductoPrecio.getSingleResult()).thenReturn(precioProducto2);
 
-        List<OrdenDetalle> resultado = ordenDetalleBean.generarOrdenDetalleMixto(orden, productos, combos, 2, 3);
-        assertEquals(3, resultado.size());
-        assertEquals(2, resultado.get(0).getCantidad());
-        assertEquals(6, resultado.get(1).getCantidad());
-        assertEquals(9, resultado.get(2).getCantidad());
+        List<Object[]> comboProductos = new ArrayList<>();
+        comboProductos.add(new Object[]{precioCoca, coca, 1});   // Coca x1 en combo
+        comboProductos.add(new Object[]{precioPepsi, pepsi, 1}); // Pepsi x1 en combo
+        comboProductos.add(new Object[]{precioPupusa, pupusa, 3}); // Pupusa x3 en combo
 
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(null, productos, combos, 2, 3));
-        assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(new Orden(), productos, combos, 2, 3));
+        when(queryMock.getResultList()).thenReturn(comboProductos);
+        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
 
-        resultado = ordenDetalleBean.generarOrdenDetalleMixto(orden, new ArrayList<>(), new ArrayList<>(), 2, 3);
-        assertEquals(0, resultado.size());
+        //errores
 
-        resultado = ordenDetalleBean.generarOrdenDetalleMixto(orden, productos, combos, null, null);
-        assertEquals(3, resultado.size());
-        assertEquals(1, resultado.get(0).getCantidad());
-        assertEquals(2, resultado.get(1).getCantidad());
-        assertEquals(3, resultado.get(2).getCantidad());
+        TypedQuery tp = Mockito.spy(TypedQuery.class);
+        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(tp);
+        when(tp.setParameter("idCombo", 1001L)).thenReturn(tp);
+        when(tp.setParameter("idCombo", 1002L)).thenReturn(tp);
 
-        when(queryProductoPrecio.getSingleResult()).thenReturn(null);
-        resultado = ordenDetalleBean.generarOrdenDetalleMixto(orden, productos, combos, 2, 3);
-        assertEquals(0, resultado.size());
-        //Assertions.fail("Esta prueba no pasa quemado");
+        doThrow(NoResultException.class).when(tp).getResultList();
+        assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+        doThrow(PersistenceException.class).when(tp).getResultList();
+        assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+
+
     }
+
 }

@@ -6,21 +6,17 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 /**
- *
  * @author mjlopez clase bean para control de la entidad OrdenDetalle
  */
 @LocalBean
@@ -37,6 +33,7 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
+
     @Override
     public EntityManager getEntityManager() {
         return em;
@@ -48,17 +45,17 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     }
 
 
-    public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden,Long idProductoPrecio) {
+    public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden, Long idProductoPrecio) {
         try {
-            return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden",OrdenDetalle.class)
+            return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)
                     .setParameter("idOrden", idOrden)
                     .setParameter("idProductoPrecio", idProductoPrecio)
                     .getSingleResult();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        } catch (NoResultException e) {
+            throw new NoResultException("No se encontro resultado con el id " + idOrden);
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al obtener el resultado", e);
         }
-        
-        return null;
     }
 
     /**
@@ -71,31 +68,35 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * No debería afectar otros métodos a menos que también utilicen esta misma consulta, pero en general no hay dependencia directa.
      *
      * @param idOrden Identificador de la orden para filtrar los detalles.
-     * @param first El índice del primer resultado a devolver.
-     * @param max La cantidad máxima de resultados a devolver.
+     * @param first   El índice del primer resultado a devolver.
+     * @param max     La cantidad máxima de resultados a devolver.
      * @return Una lista de objetos `OrdenDetalle` dentro del rango especificado.
      */
-    public List<OrdenDetalle> findRangeByIdOrden(Long idOrden,int first , int max) {
+    public List<OrdenDetalle> findRangeByIdOrden(Long idOrden, int first, int max) {
         try {
             return em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)
-                    .setParameter("idOrden",idOrden)
+                    .setParameter("idOrden", idOrden)
                     .setFirstResult(first).setMaxResults(max).
                     getResultList();
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        } catch (NoResultException e) {
+            throw new NoResultException("No se encontro resultado con el id " + idOrden);
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error en la base de datos", e);
         }
-        return List.of();
     }
+
     public Long countByIdOrden(Long idOrden) {
         try {
-            return em.createNamedQuery("OrdenDetalle.countByIdOrden",Long.class)
+            return em.createNamedQuery("OrdenDetalle.countByIdOrden", Long.class)
                     .setParameter("idOrden", idOrden)
                     .getSingleResult();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("no se ha devuelto un resultado unico");
+        } catch (NoResultException e) {
+            throw new NoResultException("No se encontro resultado con el id " + idOrden);
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error en la base de datos", e);
         }
-
-        return 0L;
     }
 
     /**
@@ -103,37 +104,47 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Busca el precio del producto por su idProducto.
      * No calcula subtotal (eso se realiza en otra clase/proceso).
      *
-     * @param orden Objeto Orden asociado (debe tener IdOrden).
-     * @param producto Objeto Producto a agregar (debe tener IdProducto).
-     * @param cantidad Cantidad de producto (si es nula o menor a 1, se asume 1 por defecto).
+     * @param idOrden          Objeto Orden asociado (debe tener IdOrden).
+     * @param idProducto       Objeto Producto a agregar (debe tener IdProducto).
+     * @param cantidadProducto Cantidad de producto (si es nula o menor a 1, se asume 1 por defecto).
      * @return Objeto OrdenDetalle generado o lanza excepción si los datos son inválidos.
      */
-    public OrdenDetalle generarOrdenDetalleProducto(Orden orden, Producto producto, Integer cantidad) {
-        if(orden==null || orden.getIdOrden()==null){
+    public void generarOrdenDetalleProducto(Long idOrden, Long idProducto, Integer cantidadProducto) {
+        if (idOrden == null) {
             throw new IllegalArgumentException("La orden es invalida o no tiene ID");
         }
 
-        if(producto==null || producto.getIdProducto()==null){
+        if (idProducto == null) {
             throw new IllegalArgumentException("La producto es invalida o no tiene ID");
         }
-        if(cantidad==null || cantidad<1){
-            cantidad=1;
+        if (cantidadProducto == null || cantidadProducto < 1) {
+            cantidadProducto = 1;
         }
-        ProductoPrecio productoPrecio=em.createNamedQuery("Producto.findByIdProducto",ProductoPrecio.class)
-                .setParameter("idProducto",producto.getIdProducto())
-                .setMaxResults(1)
-                .getSingleResult();
+        try {
+            Object[] detalle = em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdProducto", Object[].class)
+                    .setParameter("idProducto", idProducto)
+                    .getSingleResult();
+            if (detalle == null) {
+                throw new NoResultException("No se ha encontrado detalle para este producto : " + idProducto);
+            }
 
-        if(productoPrecio==null){
-            throw new IllegalArgumentException("La producto es invalida o no tiene precio");
+            ProductoPrecio precio = (ProductoPrecio) detalle[0];
+            OrdenDetalle ordenDetalle = new OrdenDetalle();
+            ordenDetalle.setPrecio(precio.getPrecioSugerido());
+            ordenDetalle.setCantidad(cantidadProducto);
+            ordenDetalle.setOrden(new Orden(idOrden));
+            em.persist(ordenDetalle);
+
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("no se ha encontrado un precio con este producto : " + idProducto);
+        } catch (NoResultException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error en la base de datos", e);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("los argumentos desde bd son invalidos" + e.getMessage());
         }
 
-        OrdenDetalle ordenDetalle = new OrdenDetalle();
-        ordenDetalle.setOrden(orden);
-        ordenDetalle.setProductoPrecio(productoPrecio);
-        ordenDetalle.setCantidad(cantidad);
-
-        return ordenDetalle;
     }
 
 
@@ -142,58 +153,54 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Cada OrdenDetalle representa un producto dentro del combo, multiplicado por la cantidad del combo.
      * No calcula subtotal.
      *
-     * @param orden Objeto Orden asociado.
-     * @param combo Objeto Combo a procesar.
+     * @param idOrden       Objeto Orden asociado.
+     * @param idCombo       Objeto Combo a procesar.
      * @param cantidadCombo Cantidad de combos a aplicar (por defecto 1 si es nulo o menor a 1).
-     * @return Lista de objetos OrdenDetalle generados, o null si hay error o combo sin productos.
      */
-    public List<OrdenDetalle> generarOrdenDetalleDesdeCombo(Orden orden, Combo combo, Integer cantidadCombo) {
-        if (orden == null || orden.getIdOrden() == null) {
+    public void generarOrdenDetalleDesdeCombo(Long idOrden, Long idCombo, Integer cantidadCombo) {
+        if (idOrden == null || idOrden <= 0) {
             throw new IllegalArgumentException("La orden es invalida o no tiene ID");
         }
-        if (combo == null || combo.getIdCombo() == null) {
+        if (idCombo == null || idCombo <= 0) {
             throw new IllegalArgumentException("El combo es invalido o no tiene ID"); // Corregido "La" a "El"
         }
         if (cantidadCombo == null || cantidadCombo < 1) {
             cantidadCombo = 1;
         }
 
-        List<ComboDetalle> comboDetalles = em.createNamedQuery("ComboDetalle.findByIdCombo", ComboDetalle.class)
-                .setParameter("idCombo", combo.getIdCombo())
-                .getResultList();
-        if (comboDetalles == null || comboDetalles.isEmpty()) {
-            return Collections.emptyList(); // Devuelve una lista vacía, no null, para evitar NullPointerExceptions
-        }
-        List<OrdenDetalle> ordenDetalles = new ArrayList<>();
-        for (ComboDetalle comboDetalle : comboDetalles) {
-            Producto producto = comboDetalle.getProducto();
-            if (producto == null || producto.getIdProducto() == null) {
-                continue;
+        try {
+            List<Object[]> detalle = em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)
+                    .setParameter("idCombo", idCombo)
+                    .getResultList();
+            if (detalle == null || detalle.isEmpty()) {
+                throw new NoResultException("No se ha encontrado detalle para este combo : " + idCombo);
             }
-            ProductoPrecio precio = null;
-            try {
-                precio = em.createNamedQuery("ProductoPrecio.findByIdProducto", ProductoPrecio.class)
-                        .setParameter("idProducto", producto.getIdProducto())
-                        .setMaxResults(1)
-                        .getSingleResult();
-            } catch (NoResultException e) {
-                continue;
-            }
-            if (precio == null) {
-                continue;
-            }
-            int cantidadFinal = comboDetalle.getCantidad() * cantidadCombo;
+            List<OrdenDetalle> ordenDetalles = new ArrayList<>();
+            for (Object[] d : detalle) {
 
-            OrdenDetalle detalle = new OrdenDetalle();
-            detalle.setOrden(orden); // Aquí se asigna la orden
-            detalle.setProductoPrecio(precio);
-            detalle.setCantidad(cantidadFinal);
-            detalle.setPrecio(precio.getPrecioSugerido());
-            ordenDetalles.add(detalle);
+                ProductoPrecio precio = (ProductoPrecio) d[0];
+                Integer cantidad = (Integer) d[1] * cantidadCombo; // o Long según tu modelo
+                OrdenDetalle ordenDetalle = new OrdenDetalle();
+                ordenDetalle.setPrecio(precio.getPrecioSugerido());
+                ordenDetalle.setCantidad(cantidad);
+                ordenDetalle.setOrden(new Orden(idOrden));
+                ordenDetalles.add(ordenDetalle);
+            }
+
+            for (OrdenDetalle ordenDetalle : ordenDetalles) {
+                em.persist(ordenDetalle);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("no se ha encontrado un detalle con este combo : " + idCombo);
+        } catch (NoResultException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error en la base de datos", e);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("los argumentos desde bd son invalidos" + e.getMessage());
         }
-        return ordenDetalles;
+
     }
-
 
 
     /**
@@ -201,85 +208,102 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Si se proporcionan ambos tipos de entrada, se generan OrdenDetalle para ambos.
      * No calcula subtotal, solo genera los detalles de la orden.
      *
-     * @param orden Objeto Orden asociado.
-     * @param productos Lista de productos individuales a agregar a la orden.
-     * @param combos Lista de combos a agregar a la orden.
-     * @param cantidadProductos Cantidad de productos individuales a agregar (por defecto 1 si es nulo o menor a 1).
-     * @param cantidadCombo Cantidad de combos a agregar (por defecto 1 si es nulo o menor a 1).
+     * @param idOrden           Objeto Orden asociado.
+     * @param productosList     Lista de productos individuales a agregar a la orden.
+     * @param comboList        Lista de combos a agregar a la orden.
      * @return Lista de objetos OrdenDetalle generados combinando productos individuales y productos de los combos.
      */
-    public List<OrdenDetalle> generarOrdenDetalleMixto(Orden orden, List<Producto> productos, List<Combo> combos, Integer cantidadProductos, Integer cantidadCombo) {
-        if (orden == null || orden.getIdOrden() == null) {
+    public void generarOrdenDetalleMixto(Long idOrden, List<Object[]> productosList,List<Object[]> comboList) {
+        if (idOrden == null) {
             throw new IllegalArgumentException("La orden es inválida o no tiene ID.");
         }
-        // Validar la cantidad de productos (por defecto 1)
-        if (cantidadProductos == null || cantidadProductos < 1) {
-            cantidadProductos = 1;
+
+        if ((productosList == null || productosList.isEmpty()) && (comboList == null || comboList.isEmpty())) {
+            throw new IllegalArgumentException("ambas listas estan vacias o nulas , debe de haber almenos una lista con objetos");
         }
-        // Validar la cantidad de combos (por defecto 1)
-        if (cantidadCombo == null || cantidadCombo < 1) {
-            cantidadCombo = 1;
-        }
-        // Lista para almacenar todos los detalles generados
-        List<OrdenDetalle> detallesGenerados = new ArrayList<>();
-        // 1. Procesar los productos individuales
-        if (productos != null && !productos.isEmpty()) {
-            for (Producto producto : productos) {
-                // Validar que el producto tenga un precio asignado
-                ProductoPrecio productoPrecio = em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)
-                        .setParameter("idProducto", producto.getIdProducto())
-                        .setMaxResults(1)
-                        .getSingleResult();
 
-                if (productoPrecio == null) {
-                    continue; // Si el producto no tiene precio, lo ignoramos
-                }
-                // Crear el OrdenDetalle para el producto
-                OrdenDetalle detalleProducto = new OrdenDetalle();
-                detalleProducto.setOrden(orden);
-                detalleProducto.setProductoPrecio(productoPrecio);
-                detalleProducto.setCantidad(cantidadProductos);
+        Map<Producto, Object[]> productoMap = new HashMap<>();
 
-                detallesGenerados.add(detalleProducto); // Agregar a la lista de detalles generados
-            }
-        }
-        // 2. Procesar los productos dentro de los combos
-        if (combos != null && !combos.isEmpty()) {
-            for (Combo combo : combos) {
-                // Obtener los detalles del combo (productos dentro del combo)
-                List<ComboDetalle> comboDetalles = em.createNamedQuery("ComboDetalle.findByIdCombo", ComboDetalle.class)
-                        .setParameter("idCombo", combo.getIdCombo())
-                        .getResultList();
+        try {
+            // Productos individuales
+            if (productosList != null && !productosList.isEmpty()) {
+                for (Object[] producto : productosList) {
+                    Long idProducto = (Long) producto[0];
+                    Integer cantidad = (Integer) producto[1];
+                    if (cantidad<1 || cantidad==null) {
+                        cantidad = 1;
+                    }
+                    Object[] resultado = em.createNamedQuery("ProductoPrecio.findProductoProductoProductoByIdProducto", Object[].class)
+                            .setParameter("idProducto", idProducto)
+                            .getSingleResult();
 
-                if (comboDetalles != null && !comboDetalles.isEmpty()) {
-                    for (ComboDetalle comboDetalle : comboDetalles) {
-                        Producto productoCombo = comboDetalle.getProducto();
-                        // Validar que el producto del combo tenga un precio asignado
-                        ProductoPrecio precioCombo = em.createNamedQuery("Producto.findByIdProducto", ProductoPrecio.class)
-                                .setParameter("idProducto", productoCombo.getIdProducto())
-                                .setMaxResults(1)
-                                .getSingleResult();
+                    ProductoPrecio precio = (ProductoPrecio) resultado[0];
+                    Producto prod = (Producto) resultado[1];
+                    if (productoMap.containsKey(prod)) {
+                        Object[] existente = productoMap.get(prod);
+                        Integer acumulada = (Integer) existente[2];
+                        existente[2] = acumulada + cantidad;
+                    } else {
 
-                        if (precioCombo == null) {
-                            continue; // Si el producto no tiene precio, lo ignoramos
-                        }
-
-                        // Calcular la cantidad final del producto = cantidad en combo * cantidad de combos
-                        int cantidadFinalCombo = comboDetalle.getCantidad() * cantidadCombo;
-
-                        // Crear el OrdenDetalle para el producto dentro del combo
-                        OrdenDetalle detalleCombo = new OrdenDetalle();
-                        detalleCombo.setOrden(orden);
-                        detalleCombo.setProductoPrecio(precioCombo);
-                        detalleCombo.setCantidad(cantidadFinalCombo);
-
-                        detallesGenerados.add(detalleCombo); // Agregar a la lista de detalles generados
+                        productoMap.put(prod, new Object[]{precio, prod, cantidad});
                     }
                 }
             }
+
+            // Productos desde combos
+            if (comboList != null && !comboList.isEmpty()) {
+                for (Object[] combo : comboList) {
+                    Long idCombo = (Long) combo[0];
+                    Integer cantidadDeCombo = (Integer) combo[1];
+
+                    List<Object[]> resultados = em.createNamedQuery(
+                                    "ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)
+                            .setParameter("idCombo", idCombo)
+                            .getResultList();
+
+                    for (Object[] r : resultados) {
+                        ProductoPrecio precio = (ProductoPrecio) r[0];
+                        Producto prod = (Producto) r[1];
+                        Integer cantidad = (Integer) r[2] * cantidadDeCombo;
+
+                        if (productoMap.containsKey(prod)) {
+                            Object[] existente = productoMap.get(prod);
+                            Integer acumulada = (Integer) existente[2];
+                            existente[2] = acumulada + cantidad;
+                        } else {
+                            productoMap.put(prod, new Object[]{precio, prod, cantidad});
+                        }
+                    }
+                }
+            }
+
+            // Convertir el Map a lista de OrdenDetalle
+            List<OrdenDetalle> detallesGenerados = new ArrayList<>();
+            for (Object[] detalle : productoMap.values()) {
+                ProductoPrecio precio = (ProductoPrecio) detalle[0];
+                Producto prod = (Producto) detalle[1];
+                Integer cantidad = (Integer) detalle[2];
+
+                OrdenDetalle od = new OrdenDetalle();
+                OrdenDetallePK pk = new OrdenDetallePK();
+                pk.setIdOrden(idOrden);
+                pk.setIdProductoPrecio(prod.getIdProducto());
+                od.setOrdenDetallePK(pk);
+                od.setCantidad(cantidad);
+                od.setPrecio(precio.getPrecioSugerido());
+
+                detallesGenerados.add(od);
+            }
+            for (OrdenDetalle ordenDetalle : detallesGenerados) {
+                em.persist(ordenDetalle);
+            }
+
+        } catch (NoResultException e) {
+            throw new NoResultException("no se encontrar detalles: " + e.getMessage());
+        } catch (PersistenceException e) {
+            throw new PersistenceException("error con la base de datos: " + e.getMessage());
         }
-        // Retornar la lista combinada de detalles generados
-        return detallesGenerados;
     }
+
 
 }

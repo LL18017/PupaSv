@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProductoPrecioResourceSI extends AbstractContainerTest{
+public class ProductoPrecioResourceSI extends AbstractContainerTest {
 
     private Client client;
     private WebTarget target;
@@ -50,7 +50,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
     @Order(1)
     @Test
     void testCrearProductoPrecio() {
-        System.out.println("testCrearProductoPrecio");
+        System.out.println("ProductoPrecio testSI CrearProductoPrecio");
         Map<String, Object> nuevoPrecio = new HashMap<>();
         nuevoPrecio.put("precioSugerido", 25.50);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -61,13 +61,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(nuevoPrecio, MediaType.APPLICATION_JSON));
-        /**
-         String logs = servidorDeAplicaion.getLogs();
-         System.out.println("--- LOGS DEL CONTENEDOR ---");
-         System.out.println(logs);
-         System.out.println("--- FIN DE LOS LOGS ---");
 
-         **/
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
         // Extraer el ID de la cabecera "Location"
@@ -76,14 +70,13 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
         String[] parts = location.split("/");
         createdId = Long.parseLong(parts[parts.length - 1]);
         assertTrue(createdId > 0);
-        System.out.println("testCrearProductoPrecio - createdId: " + createdId);
     }
 
 
     @Order(2)
     @Test
     void testObtenerProductoPrecioPorIdExistente() {
-        System.out.println("testObtenerProductoPrecioPorIdExistente");
+        System.out.println("ProductoPrecio testSI ObtenerProductoPrecioPorIdExistente");
         Response response = target.path(createdId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
@@ -99,7 +92,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
     @Test
     @Order(3)
     void testObtenerTodosProductoPrecios() {
-        System.out.println("testObtenerProductoPrecios");
+        System.out.println("ProductoPrecio testSI ObtenerProductoPrecios");
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -113,7 +106,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
     @Order(4)
     @Test
     void testActualizarProductoPrecioExistente() {
-        System.out.println("testActualizarProductoPrecioExistente - createdId: " + createdId);
+        System.out.println("ProductoPrecio testSI ActualizarProductoPrecioExistente - createdId: " + createdId);
         Map<String, Object> precioActualizado = new HashMap<>();
         precioActualizado.put("idProductoPrecio", createdId);
         precioActualizado.put("precioSugerido", 30.00);
@@ -130,26 +123,26 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest{
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         // Puedes agregar más aserciones para verificar que los datos se actualizaron correctamente
     }
-    /**
-     @Test
-     @Order(5)
-     void testEliminarProductoPrecioExistente() {
-     System.out.println("testEliminarProductoPrecioExistente - createdId: " + createdId);
-     Response response = target.path(createdId.toString())
-     .request(MediaType.APPLICATION_JSON)
-     .delete();
-     assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
-     Response getResponse = target.path(createdId.toString())
-     .request(MediaType.APPLICATION_JSON)
-     .get();
-     assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), getResponse.getStatus()); // Cambiado a 500
-     }
-     **/
+
+    @Test
+    @Order(5)
+    void testEliminarProductoPrecioExistente() {
+        System.out.println("testEliminarProductoPrecioExistente - createdId: " + createdId);
+        Response response = target.path(createdId.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .delete();
+
+        assertEquals(200, response.getStatus());
+        Response getResponse = target.path(createdId.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertEquals(404, getResponse.getStatus()); // Cambiado a 500
+    }
 
     @Test
     @Order(6)
     void testContarProductoPreciosPorProductoIdExistente() {
-        System.out.println("testContarProductoPreciosPorProductoIdExistente - idProducto: " + idProducto);
+        System.out.println("ProductoPrecio testSI ContarProductoPreciosPorProductoIdExistente");
         Response response = target.path("producto/" + idProducto + "/count")
                 .request(MediaType.APPLICATION_JSON)
                 .get();

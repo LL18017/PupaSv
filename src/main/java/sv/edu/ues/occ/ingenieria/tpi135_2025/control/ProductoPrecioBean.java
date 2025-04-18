@@ -51,16 +51,13 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
         return "idProductoPrecio";
     }
 
-    public List<ProductoPrecio> findByIdProducto(Long idProducto, int first, int max) {
+    public ProductoPrecio findByIdProducto(Long idProducto) {
         if (idProducto != null) {
             try {
                 return em.createNamedQuery("ProductoPrecio.findByIdTipoProductoAndIdProducto", ProductoPrecio.class)
                         .setParameter("idProducto", idProducto)
-                        .setFirstResult(first)
-                        .setMaxResults(max)
-                        .getResultList();
+                        .getSingleResult();
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 throw new IllegalStateException("error al acceder al repositorio ", e);
             }
         }

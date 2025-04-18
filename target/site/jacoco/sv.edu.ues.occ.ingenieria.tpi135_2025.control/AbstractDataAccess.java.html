@@ -148,9 +148,6 @@ public abstract class AbstractDataAccess&lt;T&gt; {
 <span class="fc" id="L148">            return query.getResultList();</span>
 <span class="fc" id="L149">        } catch (PersistenceException e) {</span>
 <span class="fc" id="L150">            throw new PersistenceException(&quot;error al aceder al la base de datos&quot;, e);</span>
-<span class="nc" id="L151">        } catch (Exception e) {</span>
-<span class="nc" id="L152">            Logger.getLogger(AbstractDataAccess.class.getName()).log(Level.SEVERE, null, e);</span>
-<span class="nc" id="L153">            throw new PersistenceException(&quot;error al aceder a la base de datos&quot;, e);</span>
         }
     }
 
@@ -164,21 +161,21 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws PersistenceException  si hay un error general con la base de datos.
      */
     public Long count() {
-<span class="fc" id="L167">        EntityManager em = getEntityManager();</span>
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L169">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
+<span class="fc" id="L164">        EntityManager em = getEntityManager();</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L166">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
         }
         try {
-<span class="fc" id="L172">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
-<span class="fc" id="L173">            CriteriaQuery&lt;Long&gt; cq = cb.createQuery(Long.class);</span>
-<span class="fc" id="L174">            Root&lt;T&gt; raiz = cq.from(this.tipoDato);</span>
-<span class="fc" id="L175">            cq.select(cb.count(raiz));</span>
+<span class="fc" id="L169">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
+<span class="fc" id="L170">            CriteriaQuery&lt;Long&gt; cq = cb.createQuery(Long.class);</span>
+<span class="fc" id="L171">            Root&lt;T&gt; raiz = cq.from(this.tipoDato);</span>
+<span class="fc" id="L172">            cq.select(cb.count(raiz));</span>
 
-<span class="fc" id="L177">            return em.createQuery(cq).getSingleResult();</span>
-<span class="fc" id="L178">        } catch (NonUniqueResultException e) {</span>
-<span class="fc" id="L179">            throw new NonUniqueResultException(&quot;El valor devuelto no es un resultado único&quot;);</span>
-<span class="fc" id="L180">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L181">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
+<span class="fc" id="L174">            return em.createQuery(cq).getSingleResult();</span>
+<span class="fc" id="L175">        } catch (NonUniqueResultException e) {</span>
+<span class="fc" id="L176">            throw new NonUniqueResultException(&quot;El valor devuelto no es un resultado único&quot;);</span>
+<span class="fc" id="L177">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L178">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
         }
     }
 
@@ -192,24 +189,24 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws ConstraintViolationException si la entidda no cumple con algun campo necesio para su persistencia
      */
     public void create(T registro) throws IllegalStateException, IllegalArgumentException {
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (registro == null) {</span>
-<span class="fc" id="L196">            throw new IllegalArgumentException(&quot;El registro no puede ser nulo&quot;);</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (registro == null) {</span>
+<span class="fc" id="L193">            throw new IllegalArgumentException(&quot;El registro no puede ser nulo&quot;);</span>
         }
-<span class="fc" id="L198">        EntityManager em = null;</span>
+<span class="fc" id="L195">        EntityManager em = null;</span>
         try {
-<span class="fc" id="L200">            em = getEntityManager();</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered.">            if (em == null) {</span>
-<span class="fc" id="L202">                throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
+<span class="fc" id="L197">            em = getEntityManager();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (em == null) {</span>
+<span class="fc" id="L199">                throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
             }
-<span class="fc" id="L204">            em.persist(registro);</span>
-<span class="fc" id="L205">        } catch (EntityExistsException e) {</span>
-<span class="fc" id="L206">            throw new EntityExistsException(&quot;la entidad ya existe en la base de datos&quot;, e);</span>
-<span class="fc" id="L207">        } catch (ConstraintViolationException e) {</span>
-<span class="fc" id="L208">            throw new ConstraintViolationException(&quot;La entidad no cuenta con todos los valores necesarios para persistir&quot;, e.getConstraintViolations());</span>
-<span class="nc" id="L209">        }catch (PersistenceException e) {</span>
-<span class="nc" id="L210">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
-<span class="fc" id="L211">        }</span>
-<span class="fc" id="L212">    }</span>
+<span class="fc" id="L201">            em.persist(registro);</span>
+<span class="fc" id="L202">        } catch (EntityExistsException e) {</span>
+<span class="fc" id="L203">            throw new EntityExistsException(&quot;la entidad ya existe en la base de datos&quot;, e);</span>
+<span class="fc" id="L204">        } catch (ConstraintViolationException e) {</span>
+<span class="fc" id="L205">            throw new ConstraintViolationException(&quot;La entidad no cuenta con todos los valores necesarios para persistir&quot;, e.getConstraintViolations());</span>
+<span class="fc" id="L206">        }catch (PersistenceException e) {</span>
+<span class="fc" id="L207">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
+<span class="fc" id="L208">        }</span>
+<span class="fc" id="L209">    }</span>
 
     /**
      * Actualiza un registro del repositorio.
@@ -224,31 +221,31 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      */
 
     public T update(T registro, Object id) throws IllegalStateException, IllegalArgumentException {
-<span class="fc" id="L227">        T modificado = null;</span>
-<span class="fc" id="L228">        EntityManager em = null;</span>
-<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (registro == null) {</span>
-<span class="fc" id="L230">            throw new IllegalArgumentException(&quot;El registro no puede ser nulo&quot;);</span>
+<span class="fc" id="L224">        T modificado = null;</span>
+<span class="fc" id="L225">        EntityManager em = null;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if (registro == null) {</span>
+<span class="fc" id="L227">            throw new IllegalArgumentException(&quot;El registro no puede ser nulo&quot;);</span>
         }
-<span class="fc bfc" id="L232" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
-<span class="fc" id="L233">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
+<span class="fc bfc" id="L229" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc" id="L230">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
         }
-<span class="fc" id="L235">        em = getEntityManager();</span>
-<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L237">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
+<span class="fc" id="L232">        em = getEntityManager();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L234">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
         }
         try {
-<span class="fc" id="L240">            T existente = (T) em.find(tipoDato, id);</span>
-<span class="fc bfc" id="L241" title="All 2 branches covered.">            if (existente == null) {</span>
-<span class="fc" id="L242">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
+<span class="fc" id="L237">            T existente = (T) em.find(tipoDato, id);</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">            if (existente == null) {</span>
+<span class="fc" id="L239">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
             }
-<span class="fc" id="L244">            modificado = em.merge(registro);</span>
-<span class="fc" id="L245">        } catch (EntityNotFoundException e) {</span>
-<span class="fc" id="L246">            throw e;</span>
-<span class="fc" id="L247">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L248">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
-<span class="fc" id="L249">        }</span>
+<span class="fc" id="L241">            modificado = em.merge(registro);</span>
+<span class="fc" id="L242">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L243">            throw e;</span>
+<span class="fc" id="L244">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L245">            throw new PersistenceException(&quot;Error al acceder a la base de datos&quot;, e);</span>
+<span class="fc" id="L246">        }</span>
 
-<span class="fc" id="L251">        return modificado;</span>
+<span class="fc" id="L248">        return modificado;</span>
     }
 
 
@@ -263,38 +260,38 @@ public abstract class AbstractDataAccess&lt;T&gt; {
      * @throws ConstraintViolationException si existe problemas de restricion con base de datos
      */
     public void delete(Object id) {
-<span class="fc bfc" id="L266" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
-<span class="fc" id="L267">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
+<span class="fc bfc" id="L263" title="All 4 branches covered.">        if (id == null || Long.parseLong(id.toString()) &lt;= 0) {</span>
+<span class="fc" id="L264">            throw new IllegalArgumentException(&quot;El registro debe poseer un id mayor que 0&quot;);</span>
         }
-<span class="fc" id="L269">        EntityManager em = null;</span>
-<span class="fc" id="L270">        em = getEntityManager();</span>
-<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (em == null) {</span>
-<span class="fc" id="L272">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
+<span class="fc" id="L266">        EntityManager em = null;</span>
+<span class="fc" id="L267">        em = getEntityManager();</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (em == null) {</span>
+<span class="fc" id="L269">            throw new IllegalStateException(&quot;Error al acceder al repositorio&quot;);</span>
         }
         try {
-<span class="fc" id="L275">            T registro = (T) em.find(tipoDato, id);</span>
-<span class="fc bfc" id="L276" title="All 2 branches covered.">            if (registro == null) {</span>
-<span class="fc" id="L277">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
+<span class="fc" id="L272">            T registro = (T) em.find(tipoDato, id);</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">            if (registro == null) {</span>
+<span class="fc" id="L274">                throw new EntityNotFoundException(&quot;El registro con el ID proporcionado no existe en la base de datos&quot;);</span>
             }
-<span class="fc" id="L279">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
-<span class="fc" id="L280">            CriteriaDelete&lt;T&gt; cd = cb.createCriteriaDelete(this.tipoDato);</span>
-<span class="fc" id="L281">            Root&lt;T&gt; raiz = cd.from(this.tipoDato);</span>
-<span class="fc" id="L282">            cd.where(cb.equal(raiz, registro));</span>
-<span class="fc" id="L283">            em.createQuery(cd).executeUpdate();</span>
-<span class="fc" id="L284">            return;</span>
-<span class="fc" id="L285">        } catch (EntityNotFoundException e) {</span>
-<span class="fc" id="L286">            throw e;</span>
-<span class="fc" id="L287">        } catch (PersistenceException e) {</span>
-<span class="fc" id="L288">            throw new PersistenceException(e);</span>
+<span class="fc" id="L276">            CriteriaBuilder cb = em.getCriteriaBuilder();</span>
+<span class="fc" id="L277">            CriteriaDelete&lt;T&gt; cd = cb.createCriteriaDelete(this.tipoDato);</span>
+<span class="fc" id="L278">            Root&lt;T&gt; raiz = cd.from(this.tipoDato);</span>
+<span class="fc" id="L279">            cd.where(cb.equal(raiz, registro));</span>
+<span class="fc" id="L280">            em.createQuery(cd).executeUpdate();</span>
+<span class="fc" id="L281">            return;</span>
+<span class="fc" id="L282">        } catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L283">            throw e;</span>
+<span class="fc" id="L284">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L285">            throw new PersistenceException(e);</span>
         }
     }
 
     public boolean verificarnull(Integer first, Integer max) {
-<span class="fc bfc" id="L293" title="All 4 branches covered.">        return first != null &amp;&amp; max != null;</span>
+<span class="fc bfc" id="L290" title="All 4 branches covered.">        return first != null &amp;&amp; max != null;</span>
     }
 
     public boolean verificarMayor(Integer first, Integer max) {
-<span class="fc bfc" id="L297" title="All 4 branches covered.">        return first &gt;= 0 &amp;&amp; max &gt; 0;</span>
+<span class="fc bfc" id="L294" title="All 4 branches covered.">        return first &gt;= 0 &amp;&amp; max &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

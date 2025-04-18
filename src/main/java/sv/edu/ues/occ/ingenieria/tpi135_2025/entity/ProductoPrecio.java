@@ -42,6 +42,7 @@ import jakarta.persistence.TemporalType;
         @NamedQuery(name = "ProductoPrecio.findByIdTipoProductoAndIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
         @NamedQuery(name = "ProductoPrecio.countByIdTipoProductoAndIdProducto", query = "SELECT COUNT(p) FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
         @NamedQuery(name = "ProductoPrecio.findByPrecioSugerido", query = "SELECT p FROM ProductoPrecio p WHERE p.precioSugerido = :precioSugerido"),
+        @NamedQuery(name = "ProductoPrecio.findProductoProductoProductoByIdProducto", query = "SELECT pp,pp.idProducto  FROM ProductoPrecio pp WHERE pp.idProducto.idProducto = :idProducto"),
         @NamedQuery(name = "ProductoPrecio.findByIdProducto", query = "SELECT p FROM ProductoPrecio p WHERE p.idProducto.idProducto = :idProducto"),
 
 })

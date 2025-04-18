@@ -113,12 +113,9 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     public Response delete(@PathParam("id") Long id) {
         try {
             productoPrecioBean.delete(id);
-            return Response.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.ok().build();
+        }  catch (Exception e) {
+            return responseExcepcions(e,id);
         }
     }
 
@@ -134,7 +131,7 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
                     .build();
         }
         try {
-            List<ProductoPrecio> precios=productoPrecioBean.findByIdProducto(idProducto,first,max);
+            ProductoPrecio precios=productoPrecioBean.findByIdProducto(idProducto);
             return Response.ok(precios).build();
         }catch (Exception e) {
             return responseExcepcions(e,idProducto);

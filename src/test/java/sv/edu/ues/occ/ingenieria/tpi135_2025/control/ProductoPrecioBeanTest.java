@@ -82,26 +82,22 @@ class ProductoPrecioBeanTest {
         Long idProducto = 1001L;//ya establecido en DB
         int first = 0;
         int max = 10;
-        List<ProductoPrecio> esperado = this.LIST_Producto_TEST;
         Mockito.when(mockEm.createNamedQuery("ProductoPrecio.findByIdTipoProductoAndIdProducto",ProductoPrecio.class)).thenReturn(mockTp);
-        Mockito.when(mockTp.setFirstResult(first)).thenReturn(mockTp);
-        Mockito.when(mockTp.setMaxResults(max)).thenReturn(mockTp);
         Mockito.when(mockTp.setParameter("idProducto", idProducto)).thenReturn(mockTp);
-        Mockito.when(mockTp.getResultList()).thenReturn(this.LIST_Producto_TEST);
-        List<ProductoPrecio> resultados = cut.findByIdProducto(idProducto, first, max);
+        Mockito.when(mockTp.getSingleResult()).thenReturn(this.LIST_Producto_TEST.get(0));
+        ProductoPrecio resultados = cut.findByIdProducto(idProducto);
         assertNotNull(resultados);
-        assertEquals(esperado.size(), resultados.size());
 
         //registro nulo
         assertThrows(IllegalArgumentException.class,()->{
-            cut.findByIdProducto(null, first, max);
+            cut.findByIdProducto(null);
         });
 
         //fallo de entity
         cut2.em = mockEm;
         Mockito.when(mockEm.createNamedQuery("ProductoPrecio.findByIdTipoProductoAndIdProducto",ProductoPrecio.class)).thenReturn(mockTp2);
         Mockito.doThrow(IllegalStateException.class).when(mockTp2).setParameter("idProducto",idProducto);
-        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findByIdProducto(idProducto,first,max));
+        Assertions.assertThrows(IllegalStateException.class, () -> cut2.findByIdProducto(idProducto));
 
 
     }

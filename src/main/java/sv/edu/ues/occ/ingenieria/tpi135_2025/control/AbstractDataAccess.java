@@ -148,9 +148,6 @@ public abstract class AbstractDataAccess<T> {
             return query.getResultList();
         } catch (PersistenceException e) {
             throw new PersistenceException("error al aceder al la base de datos", e);
-        } catch (Exception e) {
-            Logger.getLogger(AbstractDataAccess.class.getName()).log(Level.SEVERE, null, e);
-            throw new PersistenceException("error al aceder a la base de datos", e);
         }
     }
 

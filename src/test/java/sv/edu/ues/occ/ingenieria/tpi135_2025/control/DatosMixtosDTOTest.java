@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 class DatosMixtosDTOTest {
      @Test
      void testGettersAndSetters() {
+         System.out.println("DatosMixtosDTOTest testGettersAndSetters");
          DatosMixtosDTO dto = new DatosMixtosDTO();
 
          Long idOrden = 1L;

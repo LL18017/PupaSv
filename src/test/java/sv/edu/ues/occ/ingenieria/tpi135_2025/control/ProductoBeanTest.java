@@ -83,6 +83,9 @@ class ProductoBeanTest {
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(resultadoEsperado.size(), resultado.size());
 
+        //id Inexistente
+        Mockito.when(mockEm.find(TipoProducto.class, 112233)).thenReturn(null);
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.findRangeByIdTipoProductosAndActivo(112233, activo, first, max);});
 
         // Configurar el comportamiento de EntityManager y TypedQuery
         Mockito.when(mockEm.createNamedQuery("Producto.findActivosAndIdTipoProducto", Producto.class))
@@ -171,6 +174,10 @@ class ProductoBeanTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             cut.createProductoAndDetail(null, idTipoProducto);
         });
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cut.createProductoAndDetail(registro,-60);
+        });
         //fallo id inexistente
         Mockito.when(mockEm.find(TipoProducto.class, 112233)).thenReturn(null);
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
@@ -244,9 +251,10 @@ class ProductoBeanTest {
         Long idProductoEliminado = LIST_Producto_TEST.get(0).getIdProducto();
         Integer idTipoProdcuto=1;
 
-        // Test para registro nulo
+        // Test para idProducto nulo
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(null,idTipoProdcuto));
-
+        // Test para idTipoProducto nulo
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(idProductoEliminado,null));
         // Test para entidda inexistentes
         cut.em = mockEm;
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto")).thenReturn(mockTq);

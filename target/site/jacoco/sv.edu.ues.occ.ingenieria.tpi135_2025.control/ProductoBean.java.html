@@ -122,8 +122,8 @@ public class ProductoBean extends AbstractDataAccess&lt;Producto&gt; implements 
 <span class="pc bpc" id="L122" title="1 of 4 branches missed.">            if (registro == null || idTipoProducto == null) {</span>
 <span class="fc" id="L123">                throw new IllegalArgumentException(&quot;El registro y el idTipoProducto no pueden ser nulos&quot;);</span>
             }
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            if (idTipoProducto &lt;= 0) {</span>
-<span class="nc" id="L126">                throw new IllegalArgumentException(&quot;idTipoProducto no puede ser menor a cero&quot;);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            if (idTipoProducto &lt;= 0) {</span>
+<span class="fc" id="L126">                throw new IllegalArgumentException(&quot;idTipoProducto no puede ser menor a cero&quot;);</span>
             }
 <span class="fc" id="L128">            TipoProducto tp = em.find(TipoProducto.class, idTipoProducto);</span>
 <span class="fc bfc" id="L129" title="All 2 branches covered.">            if (tp == null) {</span>

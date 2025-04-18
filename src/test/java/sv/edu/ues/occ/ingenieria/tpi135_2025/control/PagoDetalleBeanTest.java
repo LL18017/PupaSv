@@ -24,10 +24,32 @@ class PagoDetalleBeanTest {
             new PagoDetalle(8L)
     });
 
+    @Test
+    void orderParameterQuery() {
+        PagoDetalleBean cut = new PagoDetalleBean();
+        System.out.println("PagoDetalle test orderParameterQuery");
+        String esperado = "idPagoDetalle";
+        String respuesta = cut.orderParameterQuery();
+        assertEquals(esperado, respuesta);
+
+//        fail("fallo exitosamente");
+    }
+
 
     @Test
+    void getEntityManager() {
+        PagoDetalleBean cut2 = Mockito.spy(PagoDetalleBean.class);
+        EntityManager mockEm = Mockito.mock(EntityManager.class);
+        System.out.println("PagoDetalle test getEntityManager");
+        Mockito.when(cut2.getEntityManager()).thenReturn(mockEm);
+
+        EntityManager em = cut2.getEntityManager();
+        assertEquals(em, mockEm);
+//        fail("fallo exitosamente");
+    }
+    @Test
     void findByIdPago() {
-        System.out.println("test findByIdPago");
+        System.out.println("PagoDetalle test findByIdPago");
         PagoDetalleBean cut = new PagoDetalleBean();
         PagoDetalle pd = new PagoDetalle();
         Long idPago = 2L;
@@ -74,7 +96,7 @@ class PagoDetalleBeanTest {
 
     @Test
     void countByIdPago() {
-        System.out.println("test countByIdPago");
+        System.out.println("PagoDetalle test countByIdPago");
         PagoDetalleBean cut = new PagoDetalleBean();
         PagoDetalle pd = new PagoDetalle();
         Long idPago = 2L;
@@ -120,7 +142,7 @@ class PagoDetalleBeanTest {
 
     @Test
     void calculoProducto() {
-        System.out.println("ProductoDetalle test calculoProducto");
+        System.out.println("PagoDetalle test calculoProducto");
         Producto producto = new Producto();
         PagoDetalleBean cut = new PagoDetalleBean();
         TypedQuery mockTp = Mockito.mock(TypedQuery.class);
@@ -169,7 +191,7 @@ class PagoDetalleBeanTest {
 
     @Test
     void calculoProductos() {
-        System.out.println("ProductoDetalle test calculoProductos");
+        System.out.println("PagoDetalle test calculoProductos");
         PagoDetalleBean cut = Mockito.spy(PagoDetalleBean.class);
         // Datos de prueba
         Producto producto1 = new Producto(1L);
@@ -218,7 +240,7 @@ class PagoDetalleBeanTest {
 
     @Test
     void calculoPorOrden() {
-        System.out.println("ProductoDetalle test calculoPorOrden");
+        System.out.println("PagoDetalle test calculoPorOrden");
         Orden orden = new Orden();
         PagoDetalleBean cut = new PagoDetalleBean();
         EntityManager mockEm = Mockito.mock(EntityManager.class);
@@ -273,7 +295,7 @@ class PagoDetalleBeanTest {
     }
     @Test
     void createDetalles() {
-        System.out.println("ProductoDetalle test createDetalles");
+        System.out.println("PagoDetalle test createDetalles");
         Long ordenId = 1L;
         Orden orden = new Orden();
         PagoDetalleBean cut = Mockito.spy(PagoDetalleBean.class);

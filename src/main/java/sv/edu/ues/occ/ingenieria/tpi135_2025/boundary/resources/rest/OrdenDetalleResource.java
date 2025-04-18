@@ -36,7 +36,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      * Si no se especifican los parámetros 'first' y 'max', se devolverán los primeros 20 registros.
      *
      * @param first La posición del primer dato a obtener (índice de inicio para la paginación).
-     * @param max La cantidad máxima de registros a obtener.
+     * @param max   La cantidad máxima de registros a obtener.
      * @return Una lista de objetos de tipo OrdenDetalle, o los primeros 20 registros si no se definen los parámetros.
      */
     //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/GET /v1/ordenDetalle?idOrden=1&first=0&max=20
@@ -52,42 +52,40 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                         entity("El parametro 'idOrden' es obligatorio")
                         .build();
             }
-            if (first < 0 || max < 0){
+            if (first < 0 || max < 0) {
                 return Response.status(400)
                         .entity("Los parametros 'first' y 'max' deben ser mayores o iguales a 0.")
                         .build();
             }
-            if (max > 50){
+            if (max > 50) {
                 return Response.status(400)
                         .entity("El parametro 'max' no puede ser mayor a 50.")
                         .build();
             }
             List<OrdenDetalle> encontrados = odBean.findRangeByIdOrden(idOrden, first, max);
-            Long total= odBean.countByIdOrden(idOrden);
+            Long total = odBean.countByIdOrden(idOrden);
 
             return Response.ok(encontrados)
                     .header(Headers.TOTAL_RECORD, total)
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.getLogger(OrdenDetalleResource.class.getName()).log(Level.SEVERE, null, e);
             return Response.status(500)
-                    .entity("Hubo un prloblema al proceder la solicitud"+e.getMessage())
+                    .entity("Hubo un prloblema al proceder la solicitud" + e.getMessage())
                     .build();
         }
 
     }
 
 
-
-
     /**
      * metodo que devueleve una rango de datos de tipo OrdenDetalle con relacion a un idOrden
-     * @param first la pocicion del primer dat
-     * @param max la cantidad de datos que se desea obtener
+     *
+     * @param first   la pocicion del primer dat
+     * @param max     la cantidad de datos que se desea obtener
+     * @param idOrden devuelve los primeros 20 registros
      * @return una lista de tipo T si no definel los parametros entonces
-     * @param idOrden
-     * devuelve los primeros 20 registros
      */
 
     //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}
@@ -99,14 +97,14 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
         try {
             if (first >= 0 && max >= 0 && max <= 50) {
 
-                List<OrdenDetalle> encontrados = odBean.findRangeByIdOrden(idOrden, first,max);
+                List<OrdenDetalle> encontrados = odBean.findRangeByIdOrden(idOrden, first, max);
                 long total = odBean.countByIdOrden(idOrden);
                 Response.ResponseBuilder builder = Response.ok(encontrados).
                         header(Headers.TOTAL_RECORD, total).
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             } else {
-                return Response.status(400).header(Headers.WRONG_PARAMETER,"first: "+first+" max :" +max +" , idOrden"+ idOrden).header("wrong parameter : max", "s").build();
+                return Response.status(400).header(Headers.WRONG_PARAMETER, "first: " + first + " max :" + max + " , idOrden" + idOrden).header("wrong parameter : max", "s").build();
             }
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
@@ -116,6 +114,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
 
     /**
      * Metodo para encontrar un registro especifico de producto dado su IdOrden y IdPrecio
+     *
      * @param idOrden
      * @param idProductoPrecio
      * @return un esatatus 200 se se encontro la entidad junto con dicha entidad
@@ -134,7 +133,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
         if (idOrden != null && idProductoPrecio != null) {
             try {
 
-                OrdenDetalle encontrado = odBean.findByIdOrdenAndIdPrecioProducto(idOrden,idProductoPrecio);
+                OrdenDetalle encontrado = odBean.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio);
                 if (encontrado != null) {
                     Response.ResponseBuilder builder = Response.ok(encontrado);
                     return builder.build();
@@ -147,15 +146,15 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 return Response.status(500).entity(e.getMessage()).build();
             }
         }
-        return Response.status(400).header(Headers.WRONG_PARAMETER,"id :"+ idOrden).build();
+        return Response.status(400).header(Headers.WRONG_PARAMETER, "id :" + idOrden).build();
     }
 
     /**
      * Borra un OrdenDetalle Especifico
      *
-     * @param idOrden id del Combo relacionado con ComboDetalle
+     * @param idOrden          id del Combo relacionado con ComboDetalle
      * @param idProductoPrecio id del Combo relacionado con ComboDetalle
-     * @param uriInfo info de url de donde se ha realizado la peticion
+     * @param uriInfo          info de url de donde se ha realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
      */
@@ -168,7 +167,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
 
         if (idOrden != null && idProductoPrecio != null) {
             try {
-                OrdenDetallePK id=new OrdenDetallePK(idOrden,idProductoPrecio);
+                OrdenDetallePK id = new OrdenDetallePK(idOrden, idProductoPrecio);
                 odBean.delete(id);
                 return Response.status(200).build();
             } catch (Exception e) {
@@ -176,14 +175,14 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 return Response.status(422).header(Headers.PROCESS_ERROR, "Record couldn't be deleted").build();
             }
         }
-        return Response.status(500).header(Headers.WRONG_PARAMETER,"idOrden: "+ idOrden +" ,idProductoPrecio: "+idProductoPrecio).build();
+        return Response.status(500).header(Headers.WRONG_PARAMETER, "idOrden: " + idOrden + " ,idProductoPrecio: " + idProductoPrecio).build();
     }
 
     /**
      * Actualiza el COmboDetalle de base de datos
      *
      * @param registro entidda a ser actualizada
-     * @param uriInfo info de url de donde se ha realizado la peticion
+     * @param uriInfo  info de url de donde se ha realizado la peticion
      * @return un status 200 si se actualizo la entidad , un 422 si hubo un
      * problema y 500 si falla el servidor
      */
@@ -193,11 +192,11 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(OrdenDetalle registro, @Context UriInfo uriInfo) {
 
-        if (registro != null && registro.getOrdenDetallePK().getIdOrden()!= 0 && registro.getOrdenDetallePK().getIdProductoPrecio()!= 0) {
+        if (registro != null && registro.getOrdenDetallePK().getIdOrden() != 0 && registro.getOrdenDetallePK().getIdProductoPrecio() != 0) {
 
             try {
-                odBean.update(registro,pBean);
-                if (registro.getOrdenDetallePK().getIdProductoPrecio()!= 0 && registro.getOrdenDetallePK().getIdOrden() != 0) {
+                odBean.update(registro, pBean);
+                if (registro.getOrdenDetallePK().getIdProductoPrecio() != 0 && registro.getOrdenDetallePK().getIdOrden() != 0) {
                     return Response.status(200).build();
                 }
                 return Response.status(500).header(Headers.PROCESS_ERROR, "Record couldnt be updated").build();
@@ -231,8 +230,8 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
             Producto producto = new Producto();
             producto.setIdProducto(idProducto);
 
-            OrdenDetalle generado = odBean.generarOrdenDetalleProducto(orden, producto, cantidad);
-            return Response.ok(generado).build();
+            odBean.generarOrdenDetalleProducto(1L, 1L, cantidad);
+            return Response.ok().build();
 
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -244,12 +243,12 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     /**
      * Genera una lista de objetos OrdenDetalle a partir de un Combo seleccionado,
      * asignado a una orden existente y multiplicado por una cantidad dada del combo.
-     *
+     * <p>
      * Este método no guarda los detalles generados en la base de datos,
      * solo construye la lista a partir de los productos que componen el combo.
      *
-     * @param idOrden ID de la orden a la cual se asociará el combo.
-     * @param idCombo ID del combo del cual se tomarán los productos.
+     * @param idOrden       ID de la orden a la cual se asociará el combo.
+     * @param idCombo       ID del combo del cual se tomarán los productos.
      * @param cantidadCombo Cantidad del combo (por defecto se asume 1 si es nulo o menor a 1).
      * @return Lista de objetos OrdenDetalle generados, o 204 si no hay productos válidos.
      */
@@ -273,12 +272,9 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
             Combo combo = new Combo();
             combo.setIdCombo(idCombo);
 
-            List<OrdenDetalle> lista = odBean.generarOrdenDetalleDesdeCombo(orden, combo, cantidadCombo);
+            odBean.generarOrdenDetalleDesdeCombo(orden.getIdOrden(), combo.getIdCombo(), cantidadCombo);
 
-            if (lista == null || lista.isEmpty()) {
-                return Response.status(Response.Status.NO_CONTENT).build();
-            }
-            return Response.ok(lista).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return responseExcepcions(e, null);
@@ -287,9 +283,10 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
 
     /**
      * Genera una lista combinada de objetos OrdenDetalle a partir de productos y combos seleccionados.
-     *
+     * <p>
      * Este método permite construir múltiples detalles de una orden en una sola llamada,
      * utilizando productos individuales y combos, con cantidades específicas para cada grupo.
+     *
      * @return Lista de OrdenDetalle generados, o 204 si no se pudo generar ningún detalle.
      */
 

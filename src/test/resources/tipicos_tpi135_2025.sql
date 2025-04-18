@@ -467,11 +467,12 @@ INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
 
 INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.00);
 INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',0.80);
-INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31',1.50);
 
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);
 INSERT INTO public.orden VALUES (12347, '2025-03-05', 'SS', true);
+INSERT INTO public.orden VALUES (12348, '2025-03-05', 'SS', true);
 
 
 INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);
