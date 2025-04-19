@@ -22,6 +22,7 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoDetalleResourc
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/JerseyTest.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBeanIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoDetalleResourceSI$1.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioResourceSI$1.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/GenericControlIT.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/ProductoPrecioResourceSI.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/OrdenDetalleBeanTest.class

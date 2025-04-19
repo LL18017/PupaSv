@@ -473,6 +473,8 @@ INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);
 INSERT INTO public.orden VALUES (12347, '2025-03-05', 'SS', true);
 INSERT INTO public.orden VALUES (12348, '2025-03-05', 'SS', true);
+INSERT INTO public.orden VALUES (12349, '2025-03-05', 'SS', true);
+INSERT INTO public.orden VALUES (123451, '2025-03-05', 'SS', true);
 
 
 INSERT INTO public.producto_detalle VALUES (1001,1001 ,true, NULL);

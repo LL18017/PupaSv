@@ -96,7 +96,7 @@
 //
 //
 //        //probar error de argumento IdProducto INEXISTENTE
-//        formatoPath = String.format("productoPrecio/%d", 123456);
+//        formatoPath = String.format("productoPrecio/%d", 112233L);
 //        respuesta = target.path(formatoPath).request(MediaType.APPLICATION_JSON).post(Entity.entity(registro, MediaType.APPLICATION_JSON));
 //        Assertions.assertEquals(404, respuesta.getStatus());
 //

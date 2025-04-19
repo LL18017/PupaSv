@@ -203,6 +203,8 @@ public abstract class AbstractDataAccess<T> {
             throw new EntityExistsException("la entidad ya existe en la base de datos", e);
         } catch (ConstraintViolationException e) {
             throw new ConstraintViolationException("La entidad no cuenta con todos los valores necesarios para persistir", e.getConstraintViolations());
+        }catch (NoResultException e){
+            throw new NoResultException("no se encontro la entidad");
         }catch (PersistenceException e) {
             throw new PersistenceException("Error al acceder a la base de datos", e);
         }

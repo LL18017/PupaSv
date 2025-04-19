@@ -31,6 +31,7 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "OrdenDetalle.findByIdProductoPrecio", query = "SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio"),
     @NamedQuery(name = "OrdenDetalle.findByCantidad", query = "SELECT o FROM OrdenDetalle o WHERE o.cantidad = :cantidad"),
     @NamedQuery(name = "OrdenDetalle.findByPrecio", query = "SELECT o FROM OrdenDetalle o WHERE o.precio = :precio"),
+    @NamedQuery(name = "OrdenDetalle.deleteOrdenDetalleByIdOrdenAndProductoPrecio",query = "DELETE FROM OrdenDetalle od WHERE od.orden.idOrden=:idOrden AND od.productoPrecio.idProductoPrecio=:idProductoPrecio"),
     @NamedQuery(name = "OrdenDetalle.findByPrecioProductoAndIdOrden",
             query = "SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio and o.ordenDetallePK.idOrden=:idOrden"),
     @NamedQuery(name = "OrdenDetalle.findByObservaciones", query = "SELECT o FROM OrdenDetalle o WHERE o.observaciones = :observaciones")})

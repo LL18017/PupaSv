@@ -67,20 +67,21 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
      }
      }
      **/
+    @Path("{idProducto}")
     @POST
-    public Response create(ProductoPrecio precio) {
-        if (precio == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("El cuerpo de la solicitud no puede estar vacio")
-                    .build();
-        }
+    public Response create(@PathParam("idProducto") Long idProducto, ProductoPrecio precio) {
         try {
-            productoPrecioBean.create(precio);
-            Map<String, Object> respuesta = new HashMap<>();
-            respuesta.put("idProductoPrecio", precio.getIdProductoPrecio());
-            return Response.created(uriInfo.getAbsolutePathBuilder().path(precio.getIdProductoPrecio().toString()).build())
-                    .entity(respuesta)
-                    .build();
+
+            String[] url=uriInfo.getAbsolutePath().toString().split("/");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < url.length - 1; i++) {
+                if (!url[i].isEmpty()) { // para evitar dobles slash iniciales
+                    sb.append("/").append(url[i]);
+                }
+            }
+            productoPrecioBean.create(precio,idProducto);
+            String urlNueva=sb.toString()+"/"+precio.getIdProductoPrecio();
+            return Response.created(URI.create(urlNueva)).build();
         } catch (Exception e) {
             return responseExcepcions(e, null);
         }

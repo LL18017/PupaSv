@@ -7,6 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 
@@ -44,6 +46,7 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
 
     /**
      * Devuelve el nombre del parámetro por el cual se ordenarán los resultados por defecto.
+     *
      * @return el nombre del campo usado para ordenar: "idProductoPrecio".
      */
     @Override
@@ -71,7 +74,7 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
      *                   No puede ser nulo ni menor que 0.
      * @return la cantidad de registros de ProductoPrecio asociados al producto.
      * @throws IllegalArgumentException si el idProducto es nulo o menor que 0.
-     * @throws IllegalStateException si ocurre un error al ejecutar la consulta en la base de datos.
+     * @throws IllegalStateException    si ocurre un error al ejecutar la consulta en la base de datos.
      */
     public Long countByIdProducto(Long idProducto) {
         if (idProducto == null || idProducto < 0) {
@@ -87,6 +90,24 @@ public class ProductoPrecioBean extends AbstractDataAccess<ProductoPrecio> imple
         }
     }
 
-
-
+    public void create(ProductoPrecio registro, Long idProducto) throws IllegalStateException, IllegalArgumentException {
+        if (idProducto == null) {
+            throw new IllegalArgumentException("idProducto no puede ser nulo o menor que 0");
+        }
+        if (idProducto <= 0) {
+            throw new IllegalArgumentException("idProducto no puede ser mayor que 0");
+        }
+        try {
+            Producto existe = em.find(Producto.class, idProducto);
+            if (existe == null) {
+                throw new EntityNotFoundException("no existe el producto");
+            }
+            registro.setIdProducto(new Producto(idProducto));
+            super.create(registro);
+        } catch (EntityNotFoundException e) {
+            throw e;
+        }catch (Exception e) {
+            throw e;
+        }
+    }
 }

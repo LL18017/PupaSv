@@ -2,52 +2,52 @@
 
 import java.util.List;
 
-<span class="fc" id="L5">public class DatosMixtosDTO {</span>
-    private Long idOrden;
-    private List&lt;Long&gt; idProductos;
-    private List&lt;Long&gt; idCombos;
-    private List&lt;Integer&gt; cantidadProductos;
-    private List&lt;Integer&gt; cantidadCombo;
+public class DatosMixtosDTO {
+    private Long idProductos;
+    private Integer cantidadProductos;
+    private Long idCombos;
+    private Integer cantidadCombo;
 
-    // Getters y Setters
-    public Long getIdOrden() {
-<span class="fc" id="L14">        return idOrden;</span>
-    }
+<span class="fc" id="L11">    public DatosMixtosDTO(Long idProductos, Integer cantidadProductos, Long idCombos, Integer cantidadCombo) {</span>
+<span class="fc" id="L12">        this.idProductos = idProductos;</span>
+<span class="fc" id="L13">        this.cantidadProductos = cantidadProductos;</span>
+<span class="fc" id="L14">        this.idCombos = idCombos;</span>
+<span class="fc" id="L15">        this.cantidadCombo = cantidadCombo;</span>
+<span class="fc" id="L16">    }</span>
 
-    public void setIdOrden(Long idOrden) {
-<span class="fc" id="L18">        this.idOrden = idOrden;</span>
-<span class="fc" id="L19">    }</span>
+<span class="nc" id="L18">    public DatosMixtosDTO() {</span>
+<span class="nc" id="L19">    }</span>
 
-    public List&lt;Long&gt; getIdProductos() {
+    public Long getIdProductos() {
 <span class="fc" id="L22">        return idProductos;</span>
     }
 
-    public void setIdProductos(List&lt;Long&gt; idProductos) {
-<span class="fc" id="L26">        this.idProductos = idProductos;</span>
-<span class="fc" id="L27">    }</span>
+    public void setIdProductos(Long idProductos) {
+<span class="nc" id="L26">        this.idProductos = idProductos;</span>
+<span class="nc" id="L27">    }</span>
 
-    public List&lt;Long&gt; getIdCombos() {
-<span class="fc" id="L30">        return idCombos;</span>
+    public Integer getCantidadCombo() {
+<span class="fc" id="L30">        return cantidadCombo;</span>
     }
 
-    public void setIdCombos(List&lt;Long&gt; idCombos) {
-<span class="fc" id="L34">        this.idCombos = idCombos;</span>
-<span class="fc" id="L35">    }</span>
+    public void setCantidadCombo(Integer cantidadCombo) {
+<span class="nc" id="L34">        this.cantidadCombo = cantidadCombo;</span>
+<span class="nc" id="L35">    }</span>
 
-    public List&lt;Integer&gt; getCantidadProductos() {
-<span class="fc" id="L38">        return cantidadProductos;</span>
+    public Long getIdCombos() {
+<span class="fc" id="L38">        return idCombos;</span>
     }
 
-    public void setCantidadProductos(List&lt;Integer&gt; cantidadProductos) {
-<span class="fc" id="L42">        this.cantidadProductos = cantidadProductos;</span>
-<span class="fc" id="L43">    }</span>
+    public void setIdCombos(Long idCombos) {
+<span class="nc" id="L42">        this.idCombos = idCombos;</span>
+<span class="nc" id="L43">    }</span>
 
-    public List&lt;Integer&gt; getCantidadCombo() {
-<span class="fc" id="L46">        return cantidadCombo;</span>
+    public Integer getCantidadProductos() {
+<span class="fc" id="L46">        return cantidadProductos;</span>
     }
 
-    public void setCantidadCombo(List&lt;Integer&gt; cantidadCombo) {
-<span class="fc" id="L50">        this.cantidadCombo = cantidadCombo;</span>
-<span class="fc" id="L51">    }</span>
+    public void setCantidadProductos(Integer cantidadProductos) {
+<span class="nc" id="L50">        this.cantidadProductos = cantidadProductos;</span>
+<span class="nc" id="L51">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -61,12 +61,17 @@ public class OrdenDetalleBeanTest {
 
     @Test
     public void testFindByIdOrdenAndIdPrecioProducto() {
+        System.out.println("OrdenDetalle Test de findByIdOrdenAndIdPrecioProducto");
         OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
         EntityManager em = Mockito.mock(EntityManager.class);
         TypedQuery queryMock = Mockito.mock(TypedQuery.class);
         ordenDetalleBean.em = em;
-        System.out.println("OrdenDetalle Test de findByIdOrdenAndIdPrecioProducto");
         OrdenDetalle detalleEsperado = new OrdenDetalle();
+        //fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(null,1L));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L,null));
+
+        //FLUJO NORMAL
         when(em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)).thenReturn(queryMock);
         when(queryMock.setParameter(eq("idOrden"), anyLong())).thenReturn(queryMock);
         when(queryMock.setParameter(eq("idProductoPrecio"), anyLong())).thenReturn(queryMock);
@@ -99,6 +104,11 @@ public class OrdenDetalleBeanTest {
         OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
         EntityManager em = Mockito.mock(EntityManager.class);
         TypedQuery queryMock = Mockito.spy(TypedQuery.class);
+        //fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(null,1L));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L,null));
+
+
         ordenDetalleBean.em = em;
         when(em.createNamedQuery(anyString(), org.mockito.ArgumentMatchers.<Class<OrdenDetalle>>any())).thenReturn(queryMock);
         when(queryMock.setParameter("idOrden", idOrden)).thenReturn(queryMock);
@@ -122,6 +132,12 @@ public class OrdenDetalleBeanTest {
         EntityManager em = Mockito.mock(EntityManager.class);
         TypedQuery queryMock = Mockito.mock(TypedQuery.class);
         ordenDetalleBean.em = em;
+
+        //fallo de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findRangeByIdOrden(null,0,10));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findRangeByIdOrden(1L,-90,10));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.findRangeByIdOrden(1L,0,-63));
+
         when(em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)).thenReturn(queryMock);
         when(queryMock.setParameter("idOrden", 1L)).thenReturn(queryMock);
         when(queryMock.setFirstResult(0)).thenReturn(queryMock);
@@ -203,7 +219,7 @@ public class OrdenDetalleBeanTest {
         Long idOrden = 1L;
         Integer cantidadCombo = 1;
 
-        ProductoPrecio productoPrecio1 = new ProductoPrecio();
+        ProductoPrecio productoPrecio1 = new ProductoPrecio(1L);
         productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(1.00));
         Object[] detalle = new Object[]{productoPrecio1, 5};
 
@@ -247,9 +263,10 @@ public class OrdenDetalleBeanTest {
 //
         //otros errores
         detalle[0] = productoPrecio1;
-        doThrow(PersistenceException.class).when(em).persist(uno);
+        Mockito.doThrow(PersistenceException.class).when(em).persist(Mockito.any(OrdenDetalle.class));
         Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, 2));
-        doThrow(EntityNotFoundException.class).when(em).persist(uno);
+        Mockito.doThrow(EntityNotFoundException.class).when(em).persist(Mockito.any(OrdenDetalle.class));
+
         Assertions.assertThrows(EntityNotFoundException.class, () -> ordenDetalleBean.generarOrdenDetalleProducto(idOrden, idProducto, 2));
 
         //detalle no exxiste
@@ -271,9 +288,9 @@ public class OrdenDetalleBeanTest {
         Integer cantidadCombo = 1;
 
         List<Object[]> detalles = new ArrayList<>();
-        ProductoPrecio productoPrecio1 = new ProductoPrecio();
+        ProductoPrecio productoPrecio1 = new ProductoPrecio(1L);
         productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(1.00));
-        ProductoPrecio productoPrecio2 = new ProductoPrecio();
+        ProductoPrecio productoPrecio2 = new ProductoPrecio(2L);
         productoPrecio1.setPrecioSugerido(BigDecimal.valueOf(0.80));
         detalles.add(new Object[]{productoPrecio1, 20});
         detalles.add(new Object[]{productoPrecio2, 3});
@@ -285,6 +302,7 @@ public class OrdenDetalleBeanTest {
         ordenDetalleBean.em = em;
 
         // fallo de argumentos
+        when(em.find(Orden.class,idOrden)).thenReturn(new Orden(idOrden));
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ordenDetalleBean.generarOrdenDetalleDesdeCombo(null, idCombo, cantidadCombo);
         });
@@ -323,16 +341,26 @@ public class OrdenDetalleBeanTest {
         when(queryMock.getResultList()).thenReturn(detalles);
         Assertions.assertThrows(NullPointerException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
 
+
+
+
         //otros errores
-        doThrow(PersistenceException.class).when(em).persist(uno);
+        EntityManager em2 = Mockito.spy(EntityManager.class);
+        ordenDetalleBean.em = em2;
+        when(em2.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+        when(queryMock.setParameter("idCombo", idCombo)).thenReturn(queryMock);
+        when(queryMock.getResultList()).thenReturn(detalles);
         detalles.set(0, new Object[]{productoPrecio1, 10});
+        doThrow(PersistenceException.class).when(em2).persist(Mockito.any(OrdenDetalle.class));
+
         Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
-        doThrow(EntityNotFoundException.class).when(em).persist(uno);
+        doThrow(EntityNotFoundException.class).when(em2).persist(Mockito.any(OrdenDetalle.class));
         Assertions.assertThrows(EntityNotFoundException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, idCombo, 2));
 
         //detalle no exxiste
 
-        when(em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+        when(em2.find(Orden.class,idOrden)).thenReturn(new Orden(idOrden));
+        when(em2.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
         when(queryMock.setParameter("idCombo", 112233L)).thenReturn(queryMock);
         when(queryMock.getResultList()).thenReturn(null);
         Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleDesdeCombo(idOrden, 112233L, 2));
@@ -348,7 +376,7 @@ public class OrdenDetalleBeanTest {
         EntityManager em = Mockito.mock(EntityManager.class);
         ordenDetalleBean.em = em;
 
-        TypedQuery<Object[]> queryMock = Mockito.mock(TypedQuery.class);
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
 
         Long idOrden = 12348L;
 
@@ -412,7 +440,84 @@ public class OrdenDetalleBeanTest {
         doThrow(PersistenceException.class).when(tp).getResultList();
         assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
 
+    }
+
+    @Test
+    void delete() {
+        System.out.println("OrdenDetalle Test delete");
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        ordenDetalleBean.em = em;
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        Long idOrden = 1001L;
+        Long idProductoPrecio = 1003L;
+
+        Mockito.when(em.find(Orden.class,112233L)).thenReturn(null);
+        Mockito.when(em.find(ProductoPrecio.class,112233L)).thenReturn(null);
+        Mockito.when(em.find(Orden.class,idOrden)).thenReturn(new Orden(idOrden));
+        Mockito.when(em.find(ProductoPrecio.class,idProductoPrecio)).thenReturn(new ProductoPrecio(idProductoPrecio));
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {ordenDetalleBean.delete(112233L, idProductoPrecio);});
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {ordenDetalleBean.delete(idOrden, 112233L);});
+
+
+        //flujo normal
+        when(em.createNamedQuery("OrdenDetalle.deleteOrdenDetalleByIdOrdenAndProductoPrecio")).thenReturn(queryMock);
+        when(queryMock.setParameter("idOrden", idOrden)).thenReturn(queryMock);
+        when(queryMock.setParameter("idProductoPrecio", idProductoPrecio)).thenReturn(queryMock);
+        when(queryMock.executeUpdate()).thenReturn(1);
+        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.delete(idOrden, idProductoPrecio));
+
+        TypedQuery tp = Mockito.spy(TypedQuery.class);
+        when(em.createNamedQuery("OrdenDetalle.deleteOrdenDetalleByIdOrdenAndProductoPrecio")).thenReturn(tp);
+        when(tp.setParameter("idOrden", idOrden)).thenReturn(tp);
+        when(tp.setParameter("idProductoPrecio", idProductoPrecio)).thenReturn(tp);
+
+        doThrow(PersistenceException.class).when(tp).executeUpdate();
+        assertThrows(PersistenceException.class, () -> ordenDetalleBean.delete(idOrden, idProductoPrecio));
+
 
     }
 
+    @Test
+    void update() {
+        System.out.println("OrdenDetalle Test update");
+        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+        EntityManager em = Mockito.mock(EntityManager.class);
+        ordenDetalleBean.em = em;
+        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        OrdenDetalle registro=new OrdenDetalle();
+        Long idOrden = 1001L;
+        Long idProductoPrecio = 1003L;
+
+
+        //error de argumentos
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {ordenDetalleBean.update(null,idOrden,idProductoPrecio);});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {ordenDetalleBean.update(registro,null,idProductoPrecio);});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {ordenDetalleBean.update(registro,idOrden,null);});
+
+        Mockito.when(em.find(Orden.class,112233L)).thenReturn(null);
+        Mockito.when(em.find(ProductoPrecio.class,112233L)).thenReturn(null);
+        Mockito.when(em.find(Orden.class,idOrden)).thenReturn(new Orden(idOrden));
+        Mockito.when(em.find(ProductoPrecio.class,idProductoPrecio)).thenReturn(new ProductoPrecio(idProductoPrecio));
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {ordenDetalleBean.update(registro,112233L, idProductoPrecio);});
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {ordenDetalleBean.update(registro,idOrden, 112233L);});
+
+
+        //flujo normal
+        registro.setOrdenDetallePK(new OrdenDetallePK(idOrden,idProductoPrecio));
+        when(em.merge(registro)).thenReturn(registro);
+        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.update(registro,idOrden, idProductoPrecio));
+
+        EntityManager em2 = Mockito.spy(EntityManager.class);
+        Mockito.when(em2.find(Orden.class,idOrden)).thenReturn(new Orden(idOrden));
+        Mockito.when(em2.find(ProductoPrecio.class,idProductoPrecio)).thenReturn(new ProductoPrecio(idProductoPrecio));
+
+        doThrow(PersistenceException.class).when(em2).merge(registro);
+        ordenDetalleBean.em = em2;
+        assertThrows(PersistenceException.class, () -> ordenDetalleBean.update(registro,idOrden, idProductoPrecio));
+
+
+    }
 }

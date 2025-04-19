@@ -31,6 +31,7 @@ import jakarta.persistence.Table;
     @NamedQuery(name = &quot;OrdenDetalle.findByIdProductoPrecio&quot;, query = &quot;SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio&quot;),
     @NamedQuery(name = &quot;OrdenDetalle.findByCantidad&quot;, query = &quot;SELECT o FROM OrdenDetalle o WHERE o.cantidad = :cantidad&quot;),
     @NamedQuery(name = &quot;OrdenDetalle.findByPrecio&quot;, query = &quot;SELECT o FROM OrdenDetalle o WHERE o.precio = :precio&quot;),
+    @NamedQuery(name = &quot;OrdenDetalle.deleteOrdenDetalleByIdOrdenAndProductoPrecio&quot;,query = &quot;DELETE FROM OrdenDetalle od WHERE od.orden.idOrden=:idOrden AND od.productoPrecio.idProductoPrecio=:idProductoPrecio&quot;),
     @NamedQuery(name = &quot;OrdenDetalle.findByPrecioProductoAndIdOrden&quot;,
             query = &quot;SELECT o FROM OrdenDetalle o WHERE o.ordenDetallePK.idProductoPrecio = :idProductoPrecio and o.ordenDetallePK.idOrden=:idOrden&quot;),
     @NamedQuery(name = &quot;OrdenDetalle.findByObservaciones&quot;, query = &quot;SELECT o FROM OrdenDetalle o WHERE o.observaciones = :observaciones&quot;)})
@@ -56,93 +57,93 @@ public class OrdenDetalle implements Serializable {
     @ManyToOne(optional = false)
     private ProductoPrecio productoPrecio;
 
-<span class="fc" id="L59">    public OrdenDetalle() {</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L60">    public OrdenDetalle() {</span>
+<span class="fc" id="L61">    }</span>
 
-<span class="nc" id="L62">    public OrdenDetalle(OrdenDetallePK ordenDetallePK) {</span>
-<span class="nc" id="L63">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="nc" id="L64">    }</span>
+<span class="nc" id="L63">    public OrdenDetalle(OrdenDetallePK ordenDetallePK) {</span>
+<span class="nc" id="L64">        this.ordenDetallePK = ordenDetallePK;</span>
+<span class="nc" id="L65">    }</span>
 
-<span class="nc" id="L66">    public OrdenDetalle(OrdenDetallePK ordenDetallePK, int cantidad) {</span>
-<span class="nc" id="L67">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="nc" id="L68">        this.cantidad = cantidad;</span>
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L67">    public OrdenDetalle(OrdenDetallePK ordenDetallePK, int cantidad) {</span>
+<span class="nc" id="L68">        this.ordenDetallePK = ordenDetallePK;</span>
+<span class="nc" id="L69">        this.cantidad = cantidad;</span>
+<span class="nc" id="L70">    }</span>
 
-<span class="fc" id="L71">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
-<span class="fc" id="L72">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L72">    public OrdenDetalle(long idOrden, long idProductoPrecio) {</span>
+<span class="fc" id="L73">        this.ordenDetallePK = new OrdenDetallePK(idOrden, idProductoPrecio);</span>
+<span class="fc" id="L74">    }</span>
 
     public OrdenDetallePK getOrdenDetallePK() {
-<span class="nc" id="L76">        return ordenDetallePK;</span>
+<span class="fc" id="L77">        return ordenDetallePK;</span>
     }
 
     public void setOrdenDetallePK(OrdenDetallePK ordenDetallePK) {
-<span class="fc" id="L80">        this.ordenDetallePK = ordenDetallePK;</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L81">        this.ordenDetallePK = ordenDetallePK;</span>
+<span class="fc" id="L82">    }</span>
 
     public int getCantidad() {
-<span class="fc" id="L84">        return cantidad;</span>
+<span class="fc" id="L85">        return cantidad;</span>
     }
 
     public void setCantidad(int cantidad) {
-<span class="fc" id="L88">        this.cantidad = cantidad;</span>
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L89">        this.cantidad = cantidad;</span>
+<span class="fc" id="L90">    }</span>
 
     public BigDecimal getPrecio() {
-<span class="fc" id="L92">        return precio;</span>
+<span class="fc" id="L93">        return precio;</span>
     }
 
     public void setPrecio(BigDecimal precio) {
-<span class="fc" id="L96">        this.precio = precio;</span>
-<span class="fc" id="L97">    }</span>
+<span class="fc" id="L97">        this.precio = precio;</span>
+<span class="fc" id="L98">    }</span>
 
     public String getObservaciones() {
-<span class="nc" id="L100">        return observaciones;</span>
+<span class="fc" id="L101">        return observaciones;</span>
     }
 
     public void setObservaciones(String observaciones) {
-<span class="nc" id="L104">        this.observaciones = observaciones;</span>
-<span class="nc" id="L105">    }</span>
+<span class="nc" id="L105">        this.observaciones = observaciones;</span>
+<span class="nc" id="L106">    }</span>
 
     public Orden getOrden() {
-<span class="nc" id="L108">        return orden;</span>
+<span class="nc" id="L109">        return orden;</span>
     }
 
     public void setOrden(Orden orden) {
-<span class="fc" id="L112">        this.orden = orden;</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L113">        this.orden = orden;</span>
+<span class="fc" id="L114">    }</span>
 
     public ProductoPrecio getProductoPrecio() {
-<span class="nc" id="L116">        return productoPrecio;</span>
+<span class="nc" id="L117">        return productoPrecio;</span>
     }
 
     public void setProductoPrecio(ProductoPrecio productoPrecio) {
-<span class="nc" id="L120">        this.productoPrecio = productoPrecio;</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L121">        this.productoPrecio = productoPrecio;</span>
+<span class="fc" id="L122">    }</span>
 
     @Override
     public int hashCode() {
-<span class="nc" id="L125">        int hash = 0;</span>
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        hash += (ordenDetallePK != null ? ordenDetallePK.hashCode() : 0);</span>
-<span class="nc" id="L127">        return hash;</span>
+<span class="fc" id="L126">        int hash = 0;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        hash += (ordenDetallePK != null ? ordenDetallePK.hashCode() : 0);</span>
+<span class="fc" id="L128">        return hash;</span>
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
-<span class="nc" id="L134">            return false;</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (!(object instanceof OrdenDetalle)) {</span>
+<span class="nc" id="L135">            return false;</span>
         }
-<span class="fc" id="L136">        OrdenDetalle other = (OrdenDetalle) object;</span>
-<span class="pc bpc" id="L137" title="2 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
-<span class="nc" id="L138">            return false;</span>
+<span class="fc" id="L137">        OrdenDetalle other = (OrdenDetalle) object;</span>
+<span class="pc bpc" id="L138" title="1 of 8 branches missed.">        if ((this.ordenDetallePK == null &amp;&amp; other.ordenDetallePK != null) || (this.ordenDetallePK != null &amp;&amp; !this.ordenDetallePK.equals(other.ordenDetallePK))) {</span>
+<span class="fc" id="L139">            return false;</span>
         }
-<span class="fc" id="L140">        return true;</span>
+<span class="fc" id="L141">        return true;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L145">        return &quot;com.mycompany.extreciondeentities.entities.OrdenDetalle[ ordenDetallePK=&quot; + ordenDetallePK + &quot; ]&quot;;</span>
+<span class="nc" id="L146">        return &quot;com.mycompany.extreciondeentities.entities.OrdenDetalle[ ordenDetallePK=&quot; + ordenDetallePK + &quot; ]&quot;;</span>
     }
     
 }

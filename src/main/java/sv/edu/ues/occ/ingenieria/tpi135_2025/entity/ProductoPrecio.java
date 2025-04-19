@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.json.bind.annotation.JsonbDateFormat;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -64,7 +65,9 @@ public class ProductoPrecio implements Serializable {
     @Column(name = "precio_sugerido")
     private BigDecimal precioSugerido;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productoPrecio")
+    @JsonbTransient
     private List<OrdenDetalle> ordenDetalleList;
+    @JsonbTransient
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
     @ManyToOne
     private Producto idProducto;

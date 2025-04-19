@@ -35,6 +35,7 @@ public class OrdenDetalleBeanIT extends AbstractContainerTest {
 
     Long idOrdenParPruebas = 12348L;
     Long idComboParPruebas = 1001L;
+    Long idProductoPrecioPAraPruebas = 1001L;
     Long idProductoParaPruebas = 1003L;
 
     @BeforeEach
@@ -105,13 +106,65 @@ public class OrdenDetalleBeanIT extends AbstractContainerTest {
         // Lista de combos (IDs existentes en la base de datos)
 
         em.getTransaction().begin();
-        assertDoesNotThrow(()-> cut.generarOrdenDetalleMixto(idOrdenParPruebas, productosList, comboList));
+        assertDoesNotThrow(() -> cut.generarOrdenDetalleMixto(idOrdenParPruebas, productosList, comboList));
         em.getTransaction().commit();
 
         // Mostrar resultados
 
         em.close();
     }
+
+    @Order(5)
+    @Test
+    public void update() {
+        System.out.println("OrdenDetalle testIt update");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+        OrdenDetalle registro = new OrdenDetalle();
+        Integer cantidadModificada = 99;
+        BigDecimal precioModificado = BigDecimal.valueOf(99.00);
+        registro.setCantidad(cantidadModificada);
+        registro.setPrecio(precioModificado);
+
+
+        // Lista de combos (IDs existentes en la base de datos)
+        Assertions.assertDoesNotThrow(() -> {
+            em.getTransaction().begin();
+            OrdenDetalle resultado = cut.update(registro, idOrdenParPruebas, idProductoPrecioPAraPruebas);
+            em.getTransaction().commit();
+            assertNotNull(resultado);
+            assertEquals(registro.getCantidad(), resultado.getCantidad());
+            assertEquals(registro.getPrecio(), resultado.getPrecio());
+        });
+
+        em.close();
+    }
+
+    @Order(6)
+    @Test
+    public void delete() {
+        System.out.println("OrdenDetalle testIt delete");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        // Lista de combos (IDs existentes en la base de datos)
+        Assertions.assertDoesNotThrow(() -> {
+            em.getTransaction().begin();
+            cut.delete( idOrdenParPruebas, idProductoPrecioPAraPruebas);
+            em.getTransaction().commit();
+        });
+
+        Assertions.assertThrows(NoResultException.class,()->{
+            em.getTransaction().begin();
+            cut.findByIdOrdenAndIdPrecioProducto(idOrdenParPruebas, idProductoPrecioPAraPruebas);
+            em.getTransaction().commit();
+        });
+
+        em.close();
+    }
+
 
 }
 

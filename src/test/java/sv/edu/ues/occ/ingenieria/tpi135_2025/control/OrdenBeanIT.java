@@ -28,7 +28,7 @@ public class OrdenBeanIT extends AbstractContainerTest {
     EntityManager mockEm;
     OrdenBean cut2;
 
-    Long totalEnScript = 4l;//cantidad en el script
+    Long totalEnScript = 6L;//cantidad en el script
     Long idDePrueba = 12345L;//ya se encuentra en el script
     Long idCreadoEnPrueba=0L;//se cambiara luego
 

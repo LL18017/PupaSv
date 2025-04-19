@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.core.StreamingOutput;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 /**
@@ -46,6 +47,12 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
 
 
     public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden, Long idProductoPrecio) {
+        if (idOrden == null || idOrden <= 0) {
+            throw new IllegalArgumentException("idOrden no puede ser negativo o nulo");
+        }
+        if (idProductoPrecio == null || idProductoPrecio <= 0) {
+            throw new IllegalArgumentException("idProductoPrecio no puede ser negativo o nulo");
+        }
         try {
             return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)
                     .setParameter("idOrden", idOrden)
@@ -72,7 +79,16 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * @param max     La cantidad máxima de resultados a devolver.
      * @return Una lista de objetos `OrdenDetalle` dentro del rango especificado.
      */
-    public List<OrdenDetalle> findRangeByIdOrden(Long idOrden, int first, int max) {
+    public List<OrdenDetalle> findRangeByIdOrden(Long idOrden, Integer first, Integer max) {
+        if (idOrden == null) {
+            throw new IllegalArgumentException("idOrden no puede ser nulo");
+        }
+        if (first < 0 || first == null) {
+            throw new IllegalArgumentException("first no puede ser negativo o nulo");
+        }
+        if (max <= 0 || max == null) {
+            throw new IllegalArgumentException("first no puede ser negativo o nulo");
+        }
         try {
             return em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)
                     .setParameter("idOrden", idOrden)
@@ -110,11 +126,11 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * @return Objeto OrdenDetalle generado o lanza excepción si los datos son inválidos.
      */
     public void generarOrdenDetalleProducto(Long idOrden, Long idProducto, Integer cantidadProducto) {
-        if (idOrden == null) {
+        if (idOrden == null || idOrden <= 0) {
             throw new IllegalArgumentException("La orden es invalida o no tiene ID");
         }
 
-        if (idProducto == null) {
+        if (idProducto == null || idProducto <= 0) {
             throw new IllegalArgumentException("La producto es invalida o no tiene ID");
         }
         if (cantidadProducto == null || cantidadProducto < 1) {
@@ -127,12 +143,11 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             if (detalle == null) {
                 throw new NoResultException("No se ha encontrado detalle para este producto : " + idProducto);
             }
-
             ProductoPrecio precio = (ProductoPrecio) detalle[0];
             OrdenDetalle ordenDetalle = new OrdenDetalle();
             ordenDetalle.setPrecio(precio.getPrecioSugerido());
             ordenDetalle.setCantidad(cantidadProducto);
-            ordenDetalle.setOrden(new Orden(idOrden));
+            ordenDetalle.setOrdenDetallePK(new OrdenDetallePK(idOrden, precio.getIdProductoPrecio()));
             em.persist(ordenDetalle);
 
         } catch (EntityNotFoundException e) {
@@ -168,7 +183,12 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             cantidadCombo = 1;
         }
 
+
         try {
+            Orden orden =  em.find(Orden.class,idOrden);
+            if (orden == null) {
+                throw new EntityNotFoundException("no se ha encontrado la orden :"+idOrden);
+            }
             List<Object[]> detalle = em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)
                     .setParameter("idCombo", idCombo)
                     .getResultList();
@@ -180,19 +200,20 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
 
                 ProductoPrecio precio = (ProductoPrecio) d[0];
                 Integer cantidad = (Integer) d[1] * cantidadCombo; // o Long según tu modelo
+                OrdenDetallePK pk = new OrdenDetallePK();
+                pk.setIdOrden(idOrden);
+                pk.setIdProductoPrecio(precio.getIdProductoPrecio());
                 OrdenDetalle ordenDetalle = new OrdenDetalle();
+                ordenDetalle.setOrdenDetallePK(pk);
                 ordenDetalle.setPrecio(precio.getPrecioSugerido());
                 ordenDetalle.setCantidad(cantidad);
-                ordenDetalle.setOrden(new Orden(idOrden));
                 ordenDetalles.add(ordenDetalle);
             }
 
             for (OrdenDetalle ordenDetalle : ordenDetalles) {
                 em.persist(ordenDetalle);
             }
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("no se ha encontrado un detalle con este combo : " + idCombo);
-        } catch (NoResultException e) {
+        } catch (EntityNotFoundException | NoResultException e) {
             throw e;
         } catch (PersistenceException e) {
             throw new PersistenceException("Error en la base de datos", e);
@@ -208,13 +229,13 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Si se proporcionan ambos tipos de entrada, se generan OrdenDetalle para ambos.
      * No calcula subtotal, solo genera los detalles de la orden.
      *
-     * @param idOrden           Objeto Orden asociado.
-     * @param productosList     Lista de productos individuales a agregar a la orden.
-     * @param comboList        Lista de combos a agregar a la orden.
+     * @param idOrden       Objeto Orden asociado.
+     * @param productosList Lista de productos individuales a agregar a la orden.
+     * @param comboList     Lista de combos a agregar a la orden.
      * @return Lista de objetos OrdenDetalle generados combinando productos individuales y productos de los combos.
      */
-    public void generarOrdenDetalleMixto(Long idOrden, List<Object[]> productosList,List<Object[]> comboList) {
-        if (idOrden == null) {
+    public void generarOrdenDetalleMixto(Long idOrden, List<Object[]> productosList, List<Object[]> comboList) {
+        if (idOrden == null || idOrden <= 0) {
             throw new IllegalArgumentException("La orden es inválida o no tiene ID.");
         }
 
@@ -230,7 +251,7 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
                 for (Object[] producto : productosList) {
                     Long idProducto = (Long) producto[0];
                     Integer cantidad = (Integer) producto[1];
-                    if (cantidad<1 || cantidad==null) {
+                    if (cantidad < 1 || cantidad == null) {
                         cantidad = 1;
                     }
                     Object[] resultado = em.createNamedQuery("ProductoPrecio.findProductoProductoProductoByIdProducto", Object[].class)
@@ -305,5 +326,54 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         }
     }
 
+    public void delete(Long idOrden, Long idProductoPrecio) {
+        try {
+            Orden orden = em.find(Orden.class, idOrden);
+            if (orden == null) {
+                throw new EntityNotFoundException("El orden no existe");
+            }
+            ProductoPrecio precio = em.find(ProductoPrecio.class, idProductoPrecio);
+            if (precio == null) {
+                throw new EntityNotFoundException("El producto precio no existe");
+            }
+            OrdenDetallePK pk = new OrdenDetallePK(idOrden, idProductoPrecio);
+            em.createNamedQuery("OrdenDetalle.deleteOrdenDetalleByIdOrdenAndProductoPrecio")
+                    .setParameter("idOrden", idOrden)
+                    .setParameter("idProductoPrecio", idProductoPrecio)
+                    .executeUpdate();
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("error con la base de datos: " + e.getMessage());
+        }
+    }
 
+    public OrdenDetalle update(OrdenDetalle registro, Long idOrden, Long idProductoPrecio) throws IllegalStateException, IllegalArgumentException {
+        if (registro == null) {
+            throw new IllegalArgumentException("El registro no puede ser nulo");
+        }
+        if (idOrden == null || idOrden <= 0) {
+            throw new IllegalArgumentException("El idOrden no puede ser nulo o menor a cero");
+        }
+        if (idProductoPrecio == null || idProductoPrecio <= 0) {
+            throw new IllegalArgumentException("idProductoPrecio no puede ser nulo o menor a cero");
+        }
+        try {
+            Orden orden = em.find(Orden.class, idOrden);
+            if (orden == null) {
+                throw new EntityNotFoundException("El orden no existe");
+            }
+            ProductoPrecio precio = em.find(ProductoPrecio.class, idProductoPrecio);
+            if (precio == null) {
+                throw new EntityNotFoundException("El producto precio no existe");
+            }
+            OrdenDetallePK pk = new OrdenDetallePK(idOrden, idProductoPrecio);
+            registro.setOrdenDetallePK(pk);
+            return em.merge(registro);
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("error con la base de datos", e);
+        }
+    }
 }

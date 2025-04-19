@@ -32,7 +32,7 @@ public class OrdenResourceSI extends AbstractContainerTest {
 
     Integer first = 0;
     Integer max = 10;
-    Long cantidadEnScript = 3L;
+    Long cantidadEnScript = 6L;
     Long idBase = 12345L;
 
     @Order(1)
