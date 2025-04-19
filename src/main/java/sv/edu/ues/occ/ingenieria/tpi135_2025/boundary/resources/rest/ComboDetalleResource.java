@@ -226,7 +226,7 @@
 //        if (registro != null && registro.getComboDetallePK().getIdCombo()!= 0 && registro.getComboDetallePK().getIdProducto()!= 0) {
 //
 //            try {
-//                cdBean.update(registro);
+////                cdBean.update(registro);
 //                if (registro.getComboDetallePK().getIdCombo() != 0 && registro.getComboDetallePK().getIdProducto() != 0) {
 //                    return Response.status(200).build();
 //                }
