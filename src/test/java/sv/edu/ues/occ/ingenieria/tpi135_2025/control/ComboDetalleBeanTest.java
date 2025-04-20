@@ -58,7 +58,7 @@ public class ComboDetalleBeanTest {
 
     @Test
     void testOrderParameterQuery() {
-        String esperado = "idComboDetalle";
+        String esperado = "cantidad";
         assertEquals(esperado, cut.orderParameterQuery());
     }
 
@@ -194,18 +194,20 @@ public class ComboDetalleBeanTest {
     void testDeleteByComboDetallePK_variosCasos() {
         Long idCombo = 1L, idProducto = 2L;
         Query mockQuery = Mockito.mock(Query.class);
-
-        // Simular éxito
-        Mockito.when(mockEm.createNamedQuery("ComboDetalle.deleteByComboDetallePK"))
-                .thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter("idCombo", idCombo)).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter("idProducto", idProducto)).thenReturn(mockQuery);
+        Combo mockCombo = Mockito.mock(Combo.class);
+        Producto mockProducto = Mockito.mock(Producto.class);
 
         // Caso 1: éxito
+        Mockito.when(mockEm.find(Combo.class, idCombo)).thenReturn(mockCombo);
+        Mockito.when(mockEm.find(Producto.class, idProducto)).thenReturn(mockProducto);
+        // Simular que la query se ejecuta sin problemas
+        Mockito.when(mockEm.createNamedQuery("ComboDetalle.deleteByComboDetallePK")).thenReturn(mockQuery);
+        Mockito.when(mockQuery.setParameter("idCombo", idCombo)).thenReturn(mockQuery);
+        Mockito.when(mockQuery.setParameter("idProducto", idProducto)).thenReturn(mockQuery);
+        Mockito.when(mockQuery.executeUpdate()).thenReturn(1); // Simular éxito
         assertDoesNotThrow(() -> cut.deleteByComboDetallePK(idCombo, idProducto));
-
         // Caso 2: falla por PersistenceException
-        Mockito.doThrow(new PersistenceException("Fallo de BD")).when(mockQuery).executeUpdate();
+        Mockito.when(mockQuery.executeUpdate()).thenThrow(new PersistenceException("Fallo de BD"));
         PersistenceException ex = assertThrows(PersistenceException.class, () -> {
             cut.deleteByComboDetallePK(idCombo, idProducto);
         });
@@ -228,6 +230,38 @@ public class ComboDetalleBeanTest {
                 -> cut.deleteByComboDetallePK(idCombo, 0L)
         );
         assertEquals("idProducto no puede ser nulo, cero o negativo", ex4.getMessage());
+
+        // Caso 7: Combo no encontrado
+        Mockito.when(mockEm.find(Combo.class, idCombo)).thenReturn(null);
+        EntityNotFoundException ex5 = assertThrows(EntityNotFoundException.class, ()
+                -> cut.deleteByComboDetallePK(idCombo, idProducto)
+        );
+        assertEquals("No existe el Combo con id=" + idCombo, ex5.getMessage());
+
+        // Caso 8: Producto no encontrado
+        Mockito.when(mockEm.find(Combo.class, idCombo)).thenReturn(mockCombo); // ahora sí existe el combo
+        Mockito.when(mockEm.find(Producto.class, idProducto)).thenReturn(null);
+        EntityNotFoundException ex6 = assertThrows(EntityNotFoundException.class, ()
+                -> cut.deleteByComboDetallePK(idCombo, idProducto)
+        );
+        assertEquals("No existe el Producto con id=" + idProducto, ex6.getMessage());
+
+        // Caso 9: IllegalStateException
+        Query mockQuery2 = Mockito.mock(Query.class);
+        Mockito.when(mockEm.find(Combo.class, idCombo)).thenReturn(mockCombo);
+        Mockito.when(mockEm.find(Producto.class, idProducto)).thenReturn(mockProducto);
+        // Reconfigurar para usar mockQuery2
+        Mockito.when(mockEm.createNamedQuery("ComboDetalle.deleteByComboDetallePK")).thenReturn(mockQuery2);
+        Mockito.when(mockQuery2.setParameter("idCombo", idCombo)).thenReturn(mockQuery2);
+        Mockito.when(mockQuery2.setParameter("idProducto", idProducto)).thenReturn(mockQuery2);
+        Mockito.when(mockQuery2.executeUpdate()).thenThrow(new IllegalStateException("Illegal state"));
+
+        IllegalStateException ex7 = assertThrows(IllegalStateException.class, ()
+                -> cut.deleteByComboDetallePK(idCombo, idProducto)
+        );
+        assertEquals("Error al persistir ComboDetalle", ex7.getMessage());
+        assertTrue(ex7.getCause() instanceof IllegalStateException);
+
     }
 
     @Test

@@ -11,6 +11,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,7 +26,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetallePK;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 /**
- * 
+ *
  * @author hdz bean para control de entidad ComboDetalle
  */
 @LocalBean
@@ -43,22 +47,46 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
 
     @Override
     public String orderParameterQuery() {
-        return "idComboDetalle";
+        return "cantidad";
     }
 
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
-/**
- * 
- * @param idCombo
- * @param idProducto
- * @return 
- * @throws 
- * @throws 
- * @throws 
- * 
- */
+    
+    public void create(ComboDetalle detalle, Long idCombo, Long idProducto) throws IllegalStateException, IllegalArgumentException {
+        try {
+            if (detalle == null) {
+                throw new IllegalArgumentException("El detalle no puede ser nulo.");
+            }
+            if (idCombo == null || idCombo <= 0) {
+                throw new IllegalArgumentException("idCombo no puede ser nulo, menor o igual a cero.");
+            }
+            if (idProducto == null || idProducto <= 0) {
+                throw new IllegalArgumentException("idProducto no puede ser nulo, menor o igual a cero.");
+            }
+            // Validar existencia de Combo y Producto
+            Combo combo = em.find(Combo.class, idCombo);
+            if (combo == null) {
+                throw new EntityNotFoundException("No se encontró Combo con id " + idCombo);
+            }
+            Producto producto = em.find(Producto.class, idProducto);
+            if (producto == null) {
+                throw new EntityNotFoundException("No se encontró Producto con id " + idProducto);
+            }
+            // Asignar la clave primaria embebida
+            ComboDetallePK pk = new ComboDetallePK(idCombo, idProducto);
+            detalle.setComboDetallePK(pk);
+            // Persistir usando el método del padre
+            super.create(detalle);
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error con la base de datos", e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("Error al persistir el registro");
+        }
+    }
     public ComboDetalle findByIdComboAndIdProducto(Long idCombo, Long idProducto) {
         if (idCombo == null || idCombo <= 0) {
             throw new IllegalArgumentException("idCombo no puede ser nulo, cero o negativo");
@@ -84,12 +112,26 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             throw new IllegalArgumentException("idProducto no puede ser nulo, cero o negativo");
         }
         try {
+            // Validación previa manual como en ProductoDetalleBean
+            Combo combo = em.find(Combo.class, idCombo);
+            if (combo == null) {
+                throw new EntityNotFoundException("No existe el Combo con id=" + idCombo);
+            }
+
+            Producto producto = em.find(Producto.class, idProducto);
+            if (producto == null) {
+                throw new EntityNotFoundException("No existe el Producto con id=" + idProducto);
+            }
             em.createNamedQuery("ComboDetalle.deleteByComboDetallePK")
                     .setParameter("idCombo", idCombo)
                     .setParameter("idProducto", idProducto)
                     .executeUpdate();
+        } catch (EntityNotFoundException e) {
+            throw e;
         } catch (PersistenceException e) {
             throw new PersistenceException("Error al eliminar ComboDetalle con idCombo " + idCombo + " e idProducto " + idProducto, e);
+        } catch (IllegalStateException ex) {
+            throw new IllegalStateException("Error al persistir ComboDetalle", ex);
         }
     }
 
@@ -99,7 +141,7 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             throw new IllegalArgumentException("El objeto ComboDetalle no puede ser nulo");
         }
         ComboDetalle existente = findByIdComboAndIdProducto(idCombo, idProducto);
-        
+
         try {
             // Reemplaza solo los campos que deseas actualizar
             existente.setCantidad(detalleActualizado.getCantidad());
@@ -122,42 +164,6 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
                     .getResultList();
         } catch (PersistenceException e) {
             throw new PersistenceException("Error al obtener el rango de ComboDetalle", e);
-        }
-    }
-
-    public void create(ComboDetalle detalle, Long idCombo, Long idProducto) throws IllegalStateException, IllegalArgumentException {
-        try {
-            if (detalle == null) {
-                throw new IllegalArgumentException("El detalle no puede ser nulo.");
-            }
-            if (idCombo == null || idCombo <= 0) {
-                throw new IllegalArgumentException("idCombo no puede ser nulo, menor o igual a cero.");
-            }
-            if (idProducto == null || idProducto <= 0) {
-                throw new IllegalArgumentException("idProducto no puede ser nulo, menor o igual a cero.");
-            }
-            // Validar existencia de Combo y Producto
-            Combo combo = em.find(Combo.class, idCombo);
-            if (combo == null) {
-                throw new EntityNotFoundException("No se encontró Combo con id " + idCombo);
-            }
-            Producto producto = em.find(Producto.class, idProducto);
-            if (producto == null) {
-                throw new EntityNotFoundException("No se encontró Producto con id " + idProducto);
-            }
-            // Asignar la clave primaria embebida
-            ComboDetallePK pk = new ComboDetallePK();
-            pk.setIdCombo(idCombo);
-            pk.setIdProducto(idProducto);
-            detalle.setComboDetallePK(pk);
-            // Persistir usando el método del padre
-            super.create(detalle);
-        } catch (EntityNotFoundException e) {
-            throw e;
-        } catch (PersistenceException e) {
-            throw new PersistenceException("Error con la base de datos", e);
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException("Error al persistir el registro");
         }
     }
 }
