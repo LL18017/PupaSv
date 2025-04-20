@@ -70,7 +70,7 @@ public class OrdenDetalleResourceSI extends AbstractContainerTest {
                 .request()
                 .get();
         assertEquals(404, response.getStatus(), "El código de estado debería ser 404");
-        //fail("Esta prueba no pasa quemado ");
+        //fail("Esta prueba no pasa quemado");
     }
 
 
@@ -106,6 +106,7 @@ public class OrdenDetalleResourceSI extends AbstractContainerTest {
         assertEquals(5, ordenDetalleVerificado.getCantidad());
         assertEquals(new BigDecimal("12.00"), ordenDetalleVerificado.getPrecio());
         getResponse.close();
+        //fail("Esta prueba no pasa quemado");
     }
 
 
@@ -125,7 +126,7 @@ public class OrdenDetalleResourceSI extends AbstractContainerTest {
                 .request()
                 .get();
         assertEquals(404, checkResponse.getStatus(), "Después de eliminar, debería ser 404 Not Found");
-//         fail("Esta prueba no pasa quemado"); // Removed the forced failure to allow the test to pass if the logic is correct
+        //fail("Esta prueba no pasa quemado"); // Removed the forced failure to allow the test to pass if the logic is correct
     }
 
     @Test

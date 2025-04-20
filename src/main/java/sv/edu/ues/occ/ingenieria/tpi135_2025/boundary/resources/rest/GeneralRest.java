@@ -10,9 +10,6 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.control.AbstractDataAccess;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoPrecioBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.TipoProductoBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
