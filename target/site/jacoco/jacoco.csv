@@ -10,7 +10,7 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoDetall
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoDetalleBean,0,394,4,34,0,98,4,26,0,11
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,TipoProductoBean,0,9,0,0,0,4,0,3,0,3
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ProductoPrecioBean,48,77,6,6,15,21,4,9,1,6
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoBean,59,0,0,0,14,0,5,0,5,0
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,PagoBean,11,115,5,13,3,26,7,7,2,3
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboBean,0,91,0,12,0,25,0,11,0,5
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,DatosMixtosDTO,19,27,0,0,10,10,5,5,5,5
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.control,ComboDetalleBean,172,7,0,0,42,3,8,2,8,2
@@ -27,11 +27,12 @@ PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.res
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,ProductoDetalleResource,128,0,0,0,27,0,6,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,TipicosApp,3,0,0,0,1,0,1,0,1,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,GeneralRest,154,0,14,0,25,0,9,0,2,0
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,PagoResouce,173,0,10,0,43,0,12,0,7,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,CORSFilter,43,0,2,0,13,0,3,0,2,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest,AbstracDataResource,261,0,24,0,50,0,18,0,6,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.rest,JakartaRestConfiguration,3,0,0,0,1,0,1,0,1,0
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,ProductoDetallePK,25,47,2,4,7,18,4,8,2,7
-PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Pago,60,37,8,4,20,13,18,5,12,5
+PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Pago,50,47,8,4,16,17,15,8,9,8
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Orden,25,72,6,6,9,24,10,13,5,12
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,OrdenDetallePK,10,64,2,4,3,22,3,9,1,8
 PupaSv-1.0-SNAPSHOT,sv.edu.ues.occ.ingenieria.tpi135_2025.entity,Combo,15,75,6,6,5,25,7,14,2,13

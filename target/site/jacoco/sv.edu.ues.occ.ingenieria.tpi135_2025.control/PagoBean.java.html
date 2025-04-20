@@ -4,10 +4,11 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
+import com.fasterxml.jackson.databind.ser.std.NonTypedScalarSerializerBase;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,7 +17,6 @@ import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 
 /**
- *
  * @author mjlopez bean para control de la entidad Pago
  */
 @LocalBean
@@ -27,8 +27,8 @@ public class PagoBean extends AbstractDataAccess&lt;Pago&gt; implements Serializ
     EntityManager em;
 
     public PagoBean() {
-<span class="nc" id="L30">        super(Pago.class);</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L30">        super(Pago.class);</span>
+<span class="fc" id="L31">    }</span>
 
     @Override
     public EntityManager getEntityManager() {
@@ -40,27 +40,47 @@ public class PagoBean extends AbstractDataAccess&lt;Pago&gt; implements Serializ
 <span class="nc" id="L40">        return &quot;idPago&quot;;</span>
     }
 
-    public List&lt;Pago&gt; findByIdOrden(Long idPago,int first, int max) {
-
+    public List&lt;Pago&gt; findByIdOrden(Long idOrden, Integer first, Integer max) {
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">        if (idOrden == null || idOrden &lt;= 0) {</span>
+<span class="fc" id="L45">            throw new IllegalArgumentException(&quot;idPago no puede ser negativo o nulo&quot;);</span>
+        }
+<span class="pc bpc" id="L47" title="1 of 4 branches missed.">        if (first == null || first &lt; 0) {</span>
+<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;first no puede ser negativo o nulo&quot;);</span>
+        }
+<span class="pc bpc" id="L50" title="1 of 4 branches missed.">        if (max == null || max &lt;= 0) {</span>
+<span class="fc" id="L51">            throw new IllegalArgumentException(&quot;first no puede ser negativo o nulo&quot;);</span>
+        }
         try {
-<span class="nc" id="L46">            return em.createNamedQuery(&quot;Pago.findByIdOrden&quot;, Pago.class).</span>
-<span class="nc" id="L47">                    setParameter(&quot;idOrden&quot;, idPago).setFirstResult(first).setMaxResults(max).getResultList();</span>
-<span class="nc" id="L48">        }catch (Exception e) {</span>
-<span class="nc" id="L49">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="fc" id="L54">            List&lt;Pago&gt; resultados= em.createNamedQuery(&quot;Pago.findByIdOrden&quot;, Pago.class).</span>
+<span class="fc" id="L55">                    setParameter(&quot;idOrden&quot;, idOrden).setFirstResult(first).setMaxResults(max).getResultList();</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (resultados.isEmpty()){</span>
+<span class="nc" id="L57">                throw new NoResultException(&quot;No se encontro el resultado con el id &quot; + idOrden);</span>
+            }
+<span class="fc" id="L59">            return resultados;</span>
+<span class="fc" id="L60">        } catch (NoResultException e) {</span>
+<span class="fc" id="L61">            throw e;</span>
+<span class="fc" id="L62">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L63">            throw new PersistenceException(&quot;error con la base de datos&quot; + e.getMessage());</span>
         }
 
-<span class="nc" id="L52">        return List.of();</span>
     }
-    public Long countByIdOrden(Long idOrden) {
 
+    public Long countByIdOrden(Long idOrden) {
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">        if (idOrden == null || idOrden &lt;= 0) {</span>
+<span class="fc" id="L70">            throw new IllegalArgumentException(&quot;idPago no puede ser negativo o nulo&quot;);</span>
+        }
         try {
-<span class="nc" id="L57">            return em.createNamedQuery(&quot;Pago.countByIdOrden&quot;, Long.class).</span>
-<span class="nc" id="L58">                    setParameter(&quot;idOrden&quot;, idOrden).getSingleResult();</span>
-<span class="nc" id="L59">        }catch (Exception e) {</span>
-<span class="nc" id="L60">            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);</span>
+<span class="fc" id="L73">            return em.createNamedQuery(&quot;Pago.countByIdOrden&quot;, Long.class).</span>
+<span class="fc" id="L74">                    setParameter(&quot;idOrden&quot;, idOrden).getSingleResult();</span>
+<span class="fc" id="L75">        } catch (NoResultException e) {</span>
+<span class="fc" id="L76">            throw new NoResultException(&quot;No se pudo encontrar pagos relacionados a esta orden&quot; + e.getMessage());</span>
+<span class="fc" id="L77">        } catch (NonUniqueResultException e) {</span>
+<span class="fc" id="L78">            throw new NonUniqueResultException(&quot;el dato devuelto no es unico&quot; + e.getMessage());</span>
+<span class="fc" id="L79">        } catch (PersistenceException e) {</span>
+<span class="fc" id="L80">            throw new PersistenceException(&quot;error con la base de datos&quot; + e.getMessage());</span>
         }
 
-<span class="nc" id="L63">        return 0L;</span>
+
     }
 
 }

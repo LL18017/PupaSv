@@ -11,6 +11,7 @@ sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/OrdenDetalleResour
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoDetalleBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/control/PagoBean.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ComboDetallePK.class
+sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/PagoResouce.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/plantillas/ProductoCantidadPLantilla.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/entity/ProductoPrecio.class
 sv/edu/ues/occ/ingenieria/tpi135_2025/boundary/resources/rest/AbstracDataResource.class

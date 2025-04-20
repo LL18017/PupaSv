@@ -508,6 +508,7 @@ INSERT INTO public.orden_detalle VALUES (12347,1001,8,null,null);
 INSERT INTO public.pago VALUES (1001,12345,'2025-03-03','contado',null);
 INSERT INTO public.pago VALUES (1002,12346,'2025-03-03','contado',null);
 INSERT INTO public.pago VALUES (1003,12347,'2025-03-03','contado',null);
+INSERT INTO public.pago VALUES (1004,12347,'2025-03-03','contado',null);
 
 -- generar un pago detalle dado un idPago del cual se obtendra el idOrden relacionado , delIdOrden se obtendra la lista OrdenDetalle relacionado y de este el precio y la cantidad para el monto
 INSERT INTO public.pago_detalle VALUES (1001,1001,8.20,null);

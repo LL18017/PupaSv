@@ -4,10 +4,11 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
+import com.fasterxml.jackson.databind.ser.std.NonTypedScalarSerializerBase;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,7 +17,6 @@ import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 
 /**
- *
  * @author mjlopez bean para control de la entidad Pago
  */
 @LocalBean
@@ -40,27 +40,47 @@ public class PagoBean extends AbstractDataAccess<Pago> implements Serializable {
         return "idPago";
     }
 
-    public List<Pago> findByIdOrden(Long idPago,int first, int max) {
-
+    public List<Pago> findByIdOrden(Long idOrden, Integer first, Integer max) {
+        if (idOrden == null || idOrden <= 0) {
+            throw new IllegalArgumentException("idPago no puede ser negativo o nulo");
+        }
+        if (first == null || first < 0) {
+            throw new IllegalArgumentException("first no puede ser negativo o nulo");
+        }
+        if (max == null || max <= 0) {
+            throw new IllegalArgumentException("first no puede ser negativo o nulo");
+        }
         try {
-            return em.createNamedQuery("Pago.findByIdOrden", Pago.class).
-                    setParameter("idOrden", idPago).setFirstResult(first).setMaxResults(max).getResultList();
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            List<Pago> resultados= em.createNamedQuery("Pago.findByIdOrden", Pago.class).
+                    setParameter("idOrden", idOrden).setFirstResult(first).setMaxResults(max).getResultList();
+            if (resultados.isEmpty()){
+                throw new NoResultException("No se encontro el resultado con el id " + idOrden);
+            }
+            return resultados;
+        } catch (NoResultException e) {
+            throw e;
+        } catch (PersistenceException e) {
+            throw new PersistenceException("error con la base de datos" + e.getMessage());
         }
 
-        return List.of();
     }
-    public Long countByIdOrden(Long idOrden) {
 
+    public Long countByIdOrden(Long idOrden) {
+        if (idOrden == null || idOrden <= 0) {
+            throw new IllegalArgumentException("idPago no puede ser negativo o nulo");
+        }
         try {
             return em.createNamedQuery("Pago.countByIdOrden", Long.class).
                     setParameter("idOrden", idOrden).getSingleResult();
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        } catch (NoResultException e) {
+            throw new NoResultException("No se pudo encontrar pagos relacionados a esta orden" + e.getMessage());
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("el dato devuelto no es unico" + e.getMessage());
+        } catch (PersistenceException e) {
+            throw new PersistenceException("error con la base de datos" + e.getMessage());
         }
 
-        return 0L;
+
     }
 
 }
