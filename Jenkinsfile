@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'prueba lunes'
+            echo 'forzando push'
         }
     }
 }
