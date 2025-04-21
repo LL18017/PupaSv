@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'forzando push'
+            echo 'forzando push 2'
         }
     }
 }
