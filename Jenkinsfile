@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'prueba desde dia lunes'
+            echo 'prueba lunes'
         }
     }
 }
