@@ -102,7 +102,6 @@ public class PagoResourceSI extends AbstractContainerTest {
         Response respuesta = target.path(path).request(MediaType.APPLICATION_JSON).put(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Response respuestaPeticion = target.path(path).request(MediaType.APPLICATION_JSON).get();
 
-        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(200, respuesta.getStatus());
         Pago rpp = respuestaPeticion.readEntity(Pago.class);
         Assertions.assertNotNull(rpp);
