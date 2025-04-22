@@ -36,24 +36,56 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
     @PersistenceContext(unitName = "PupaSV-PU")
     EntityManager em;
 
+    /**
+     * Constructor que inicializa la clase padre con la entidad
+     */
     public ComboDetalleBean() {
         super(ComboDetalle.class);
     }
 
+    /**
+     * Devuelve el EntityManager asociado a este bean.
+     *
+     * @return instancia de EntityManager
+     */
     @Override
     public EntityManager getEntityManager() {
         return em;
     }
 
+    /**
+     * Define el parámetro por el cual se ordenarán los resultados en las
+     * consultas.
+     *
+     * @return el nombre del campo utilizado para ordenamiento
+     */
     @Override
     public String orderParameterQuery() {
         return "cantidad";
     }
 
+    /**
+     * Permite establecer manualmente el EntityManager (útil para pruebas
+     * unitarias o configuración manual).
+     *
+     * @param em instancia de {@link EntityManager}
+     */
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
-    
+
+    /**
+     * Crea un nuevo registro de {@code ComboDetalle} relacionando un Combo y un
+     * Producto.
+     *
+     * @param detalle objeto {@link ComboDetalle} a persistir
+     * @param idCombo identificador del combo
+     * @param idProducto identificador del producto
+     * @throws IllegalArgumentException si los parámetros son nulos o inválidos
+     * @throws EntityNotFoundException si el combo o el producto no existen
+     * @throws PersistenceException en caso de error de base de datos
+     * @throws IllegalStateException si ocurre un error inesperado al persistir
+     */
     public void create(ComboDetalle detalle, Long idCombo, Long idProducto) throws IllegalStateException, IllegalArgumentException {
         try {
             if (detalle == null) {
@@ -87,6 +119,17 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             throw new IllegalStateException("Error al persistir el registro");
         }
     }
+
+    /**
+     * Obtiene un objeto {@link ComboDetalle} por su clave compuesta.
+     *
+     * @param idCombo identificador del combo
+     * @param idProducto identificador del producto
+     * @return objeto {@link ComboDetalle} encontrado
+     * @throws EntityNotFoundException si no se encuentra el detalle
+     * @throws IllegalArgumentException si los parámetros son nulos, cero o
+     * negativos
+     */
     public ComboDetalle findByIdComboAndIdProducto(Long idCombo, Long idProducto) {
         if (idCombo == null || idCombo <= 0) {
             throw new IllegalArgumentException("idCombo no puede ser nulo, cero o negativo");
@@ -104,6 +147,18 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
         }
     }
 
+    /**
+     * Elimina un {@link ComboDetalle} mediante su clave compuesta.
+     *
+     * @param idCombo identificador del combo
+     * @param idProducto identificador del producto
+     * @throws IllegalArgumentException si los parámetros son nulos, cero o
+     * negativos
+     * @throws EntityNotFoundException si el combo o producto no existen
+     * @throws PersistenceException si ocurre un error al eliminar el registro
+     * en la base de datos
+     * @throws IllegalStateException si ocurre un error inesperado al persistir
+     */
     public void deleteByComboDetallePK(Long idCombo, Long idProducto) {
         if (idCombo == null || idCombo <= 0) {
             throw new IllegalArgumentException("idCombo no puede ser nulo, cero o negativo");
@@ -135,6 +190,18 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
         }
     }
 
+    /**
+     * Actualiza los campos del objeto {@code ComboDetalle} correspondiente a la
+     * clave compuesta.
+     *
+     * @param detalleActualizado objeto {@link ComboDetalle} con los nuevos
+     * valores
+     * @param idCombo identificador del combo
+     * @param idProducto identificador del producto
+     * @return entidad actualizada
+     * @throws IllegalArgumentException si el objeto es nulo
+     * @throws PersistenceException si ocurre un error al actualizar
+     */
     public ComboDetalle updateByComboDetallePK(ComboDetalle detalleActualizado, Long idCombo, Long idProducto) {
         // Validamos que el detalle actualizado no sea null
         if (detalleActualizado == null) {
@@ -152,6 +219,17 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
         }
     }
 
+    /**
+     * Devuelve una lista paginada de {@code ComboDetalle} para un combo
+     * específico.
+     *
+     * @param idCombo identificador del combo
+     * @param first índice inicial para paginación
+     * @param max cantidad máxima de resultados
+     * @return lista de objetos {@link ComboDetalle}
+     * @throws IllegalArgumentException si los parámetros son inválidos
+     * @throws PersistenceException si ocurre un error en la consulta
+     */
     public List<ComboDetalle> findRangeByCombo(Long idCombo, int first, int max) {
         if (idCombo == null || first < 0 || max <= 0) {
             throw new IllegalArgumentException("Parámetros no válidos para paginación.");

@@ -24,12 +24,23 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author hdz Recurso REST para entidad Combo
+ */
 @Path("combo")
 public class ComboResource extends GeneralRest implements Serializable {
 
     @Inject
     ComboBean comboBean;
 
+    /**
+     * Método que devuelve un rango de registros de la entidad Combo.
+     *
+     * @param first posición del primer registro a devolver (por defecto 0).
+     * @param max cantidad máxima de registros a devolver (por defecto 20).
+     * @return status 200 con una lista de combos y encabezado con total de
+     * registros.
+     */
     @GET
     @Path("")
     @Produces({MediaType.APPLICATION_JSON})
@@ -49,6 +60,14 @@ public class ComboResource extends GeneralRest implements Serializable {
 
     }
 
+    /**
+     * Método para buscar un Combo por su ID.
+     *
+     * @param id identificador del combo a buscar.
+     * @return status 200 con el combo encontrado. status 404 si no se encuentra
+     * el combo. status 400 si el ID es inválido. status 500 si ocurre un error
+     * en el servidor.
+     */
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -61,6 +80,14 @@ public class ComboResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Método para registrar un nuevo Combo en la base de datos.
+     *
+     * @param registro objeto Combo que se desea crear.
+     * @param uriInfo información sobre la URI donde se realiza la petición.
+     * @return status 201 si el combo fue creado exitosamente, con la URI del
+     * nuevo recurso.
+     */
     @Path("")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -76,6 +103,14 @@ public class ComboResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Método para actualizar un Combo existente.
+     *
+     * @param registro objeto Combo actualizado
+     * @param idCombo ID del combo a actualizar
+     * @param uriInfo contexto URI
+     * @return respuesta HTTP 200 si fue exitoso
+     */
     @PUT
     @Path("{idCombo}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -91,6 +126,13 @@ public class ComboResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Método para eliminar un Combo por su ID.
+     *
+     * @param id identificador del combo a eliminar.
+     * @param uriInfo información sobre la URI donde se realiza la petición.
+     * @return status 200 si se eliminó correctamente.
+     */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})

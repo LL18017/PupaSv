@@ -17,7 +17,7 @@ import jakarta.validation.ConstraintViolationException;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 /**
- * @author mjlopez bean para control de entidad Orden
+ * @author hdz bean para control de entidad Combo
  */
 @LocalBean
 @Stateless
@@ -26,14 +26,31 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
     @PersistenceContext(unitName = "PupaSV-PU")
     EntityManager em;
 
+    /**
+     * Constructor por defecto. Establece la clase de la entidad administrada a
+     * Combo
+     */
     public ComboBean() {
         super(Combo.class);
     }
 
+    /**
+     * Establece el EntityManager manualmente. Útil para pruebas o entornos
+     * donde no se inyecta automáticamente.
+     *
+     * @param em EntityManager a utilizar.
+     */
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
 
+    /**
+     * Obtiene el {EntityManager} actual.
+     *
+     * @return el EntityManager inyectado.
+     * @throws IllegalStateException si el EntityManager no ha sido
+     * inicializado.
+     */
     @Override
     public EntityManager getEntityManager() {
         if (em == null) {
@@ -42,11 +59,34 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
         return em;
     }
 
+    /**
+     * Define el nombre del parámetro por el cual se ordenan las consultas por
+     * defecto.
+     *
+     * @return nombre del campo utilizado para ordenamiento (idCombo).
+     */
     @Override
     public String orderParameterQuery() {
         return "idCombo";
     }
 
+    /**
+     * Actualiza un registro existente de la entidad {Combo}.
+     *
+     * Verifica que el EntityManager esté disponible, que el objeto no sea nulo,
+     * y que el ID proporcionado sea válido. Si el registro existe, se actualiza
+     * su nombre.
+     *
+     * @param combo objeto con los nuevos datos a actualizar.
+     * @param id identificador del registro a modificar.
+     * @return la entidad {@link Combo} actualizada.
+     * @throws IllegalArgumentException si los parámetros son inválidos.
+     * @throws EntityNotFoundException si no se encuentra el registro con el ID
+     * especificado.
+     * @throws ConstraintViolationException si existen violaciones a
+     * restricciones de la entidad.
+     * @throws PersistenceException si ocurre un error con la base de datos.
+     */
     @Override
     public Combo update(Combo combo, Object id) {
         if (getEntityManager() == null) {

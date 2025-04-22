@@ -21,6 +21,9 @@ import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 
+/**
+ * @author hdz Recurso REST para gestionar entidades ComboDetalle.
+ */
 @Path("comboDetalle")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,6 +36,14 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     @Inject
     private ProductoBean productoBean;
 
+    /**
+     * Obtiene una lista paginada de registros ComboDetalle.
+     *
+     * @param first la posición del primer registro (por defecto 0).
+     * @param max la cantidad máxima de registros a obtener (por defecto 20).
+     * @return 200 con una lista de ComboDetalle y cabecera con el total de
+     * registros. 500 si ocurre un error en la lógica o en la base de datos.
+     */
     @GET
     public Response find(@QueryParam("first") @DefaultValue("0") Integer first,
             @QueryParam("max") @DefaultValue("20") Integer max) {
@@ -48,6 +59,13 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Obtiene un detalle específico de combo-producto usando ambos IDs.
+     *
+     * @param idCombo ID del combo
+     * @param idProducto ID del producto
+     * @return detalle ComboDetalle correspondiente
+     */
     @GET
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response findByIDs(@PathParam("idCombo") Long idCombo,
@@ -59,6 +77,19 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
             return responseExcepcions(e, null);
         }
     }
+
+    /**
+     * Crea un nuevo detalle para un combo y producto especificado.
+     *
+     * @param detalle entidad ComboDetalle a crear
+     * @param idCombo ID del combo asociado
+     * @param idProducto ID del producto asociado
+     * @param uriInfo contexto de la solicitud para construir URI del recurso
+     * creado
+     * @return 201 si se crea correctamente, junto con la ubicación del recurso
+     * creado, 400 si hay errores de argumentos, 422 si ya existe, 500 si hay
+     * error de servidor.
+     */
     @POST
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response create(ComboDetalle detalle,
@@ -74,6 +105,15 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
         }
     }
 
+    /**
+     * Actualiza un detalle existente de combo-producto.
+     *
+     * @param detalle objeto con los nuevos datos a actualizar.
+     * @param idCombo ID del combo relacionado
+     * @param idProducto ID del producto relacionado
+     * @param uriInfo información de la URI de la solicitud.
+     * @return respuesta con estado 200 si fue exitoso
+     */
     @PUT
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response update(ComboDetalle detalle,
@@ -89,7 +129,14 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
         }
     }
 
-    
+    /**
+     * Elimina un registro de ComboDetalle identificado por combo y producto.
+     *
+     * @param idCombo ID del combo
+     * @param idProducto ID del producto
+     * @param uriInfo información de la URI de la solicitud.
+     * @return respuesta con estado 200 si fue exitoso
+     */
     @DELETE
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response delete(@PathParam("idCombo") Long idCombo,
