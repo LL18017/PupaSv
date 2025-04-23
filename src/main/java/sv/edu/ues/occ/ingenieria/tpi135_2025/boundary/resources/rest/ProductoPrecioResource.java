@@ -42,6 +42,16 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     }
 
 
+    /**
+     * Busca un {ProductoPrecio} por su ID y lo retorna en la respuesta HTTP.
+     *
+     * Este método busca un ProductoPrecio utilizando el ID proporcionado en la URL. Si se encuentra el producto,
+     * se retorna con un estado HTTP {@code 200 OK}. Si no se encuentra, se retorna un estado HTTP {@code 404 Not Found}.</p>
+     *
+     * @param id el ID del {ProductoPrecio} que se desea buscar.
+     * @return una respuesta HTTP con el producto encontrado, o un error si el producto no existe.
+     * @throws Exception si ocurre un error durante el proceso de búsqueda.
+     */
     @GET
     @Path("{id}")
     public Response findById(@PathParam("id") Long id) {
@@ -87,6 +97,20 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
         }
     }
 
+    /**
+     * Actualiza un ProductoPrecio existente con los datos proporcionados en la solicitud.
+     *
+     * <Este método recibe una solicitud HTTP PUT con un objeto ProductoPrecio en el cuerpo de la solicitud,
+     * y actualiza el ProductoPrecio correspondiente en la base de datos. Si el ID proporcionado en la ruta no
+     * coincide con el ID del objeto en el cuerpo de la solicitud, se retorna un error
+     * Si el cuerpo de la solicitud está vacío, se retorna un error
+     *
+     * @param id el ID del ProductoPrecio que se desea actualizar (proporcionado en la ruta).
+     * @param precio el objeto ProductoPrecio que contiene los nuevos valores a actualizar.
+     * @return una respuesta HTTP con el objeto actualizado si la operación fue exitosa,
+     *         o un error {@code 400 Bad Request} si los IDs no coinciden o {@code 404 Not Found} si el cuerpo está vacío.
+     * @throws Exception si ocurre un error durante el proceso de actualización.
+     */
     @PUT
     @Path("{id}")
     public Response update(@PathParam("id") Long id, ProductoPrecio precio){
@@ -109,6 +133,17 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     }
 
 
+    /**
+     * Elimina un ProductoPrecio existente según el ID proporcionado en la ruta.
+     *
+     * Este método recibe una solicitud HTTP DELETE para eliminar el objeto correspondiente
+     * al ID proporcionado en la ruta. Si la eliminación es exitosa, se retorna una respuesta HTTP con el estado {@code 200 OK}.
+     * En caso de error, se maneja la excepción y se retorna una respuesta adecuada.</p>
+     *
+     * @param id el ID del ProductoPrecio que se desea eliminar (proporcionado en la ruta).
+     * @return una respuesta HTTP si la eliminación fue exitosa, o una respuesta de error si ocurre una excepción.
+     * @throws Exception si ocurre un error durante el proceso de eliminación.
+     */
     @DELETE
     @Path("{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -121,6 +156,19 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     }
 
 
+    /**
+     * Recupera un ProductoPrecio correspondiente al Producto especificado por su ID.
+     *
+     * Este método maneja las solicitudes HTTP GET para obtener los precios asociados a un producto dado el ID
+     * del producto. Los parámetros opcionales  first y max permiten paginar los resultados si es necesario.
+     *
+     * @param idProducto el ID del Producto cuyo precio se desea recuperar (proporcionado en la ruta).
+     * @param first el índice del primer elemento de la página de resultados (por defecto es 0).
+     * @param max el número máximo de elementos a devolver en la respuesta (por defecto es 20).
+     * @return una respuesta HTTP que contiene el objeto ProductoPrecio correspondiente al Producto solicitado,
+     *         o una respuesta de error si ocurre un problema durante la consulta.
+     * @throws Exception si ocurre un error durante la recuperación del producto o sus precios.
+     */
     @GET
     @Path("producto/{idProducto}")
     public Response findByIdProducto(@PathParam("idProducto") Long idProducto,
@@ -139,6 +187,16 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
         }
     }
 
+    /**
+     * Cuenta la cantidad de registros de ProductoPrecio asociados a un Producto especificado por su ID.
+     *
+     * Este método maneja las solicitudes HTTP GET para obtener el número total de precios asociados a un producto
+     * dado el ID del producto. La respuesta es el conteo de los registros relacionados con el producto solicitado.
+     *
+     * @param idProducto el ID del Producto cuyo número de precios se desea contar (proporcionado en la ruta).
+     * @return una respuesta HTTP que contiene el número total de precios asociados al Producto especificado.
+     * @throws Exception si ocurre un error durante el conteo de los registros.
+     */
     @GET
     @Path("producto/{idProducto}/count")
     public Response count(@PathParam("idProducto") Long idProducto){
