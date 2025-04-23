@@ -26,9 +26,8 @@ import java.util.logging.Logger;
 public class ProductoPrecioResource extends GeneralRest implements Serializable {
 
     @Inject
-    private ProductoPrecioBean productoPrecioBean;
-    @Context
-    private UriInfo uriInfo;
+    ProductoPrecioBean productoPrecioBean;
+
 
     @GET
     public Response findAll(@QueryParam("first") @DefaultValue("0") int firts,
@@ -37,6 +36,7 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
             List<ProductoPrecio> precios = productoPrecioBean.findRange(firts, max);
             return Response.ok(precios).build();
         }catch (Exception e) {
+            Logger.getLogger(ProductoPrecioResource.class.getName()).log(Level.SEVERE, null, e);
             return responseExcepcions(e,null);
         }
     }
@@ -79,7 +79,7 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
      **/
     @Path("{idProducto}")
     @POST
-    public Response create(@PathParam("idProducto") Long idProducto, ProductoPrecio precio) {
+    public Response create(@PathParam("idProducto") Long idProducto, ProductoPrecio precio, @Context UriInfo uriInfo) {
         try {
 
             String[] url=uriInfo.getAbsolutePath().toString().split("/");

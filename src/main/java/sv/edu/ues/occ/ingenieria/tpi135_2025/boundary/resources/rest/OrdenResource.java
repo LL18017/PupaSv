@@ -94,7 +94,6 @@ public class OrdenResource extends GeneralRest implements Serializable {
     /**
      * Borra un registro de tipo Orden Especifico
      * @param id      id del Orden a eliminar
-     * @param uriInfo info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad
      * 422 si hubo un problema con las reglas de integridad referencial
      * 500 si falla el servdor o la base d e datos
@@ -104,7 +103,7 @@ public class OrdenResource extends GeneralRest implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response delete(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("id") Long id) {
         try {
             oBean.delete(id);
             return Response.status(200).build();

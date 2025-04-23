@@ -1,193 +1,251 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
-import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenDetalleBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.PagoBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 public class OrdenDetalleResourceTest {
 
-    @InjectMocks
-    OrdenDetalleResource ordenDetalleResource;
-    @Mock
-    OrdenDetalleBean odBean;
-    @Mock
-    private UriInfo uriInfo;
+    List<OrdenDetalle> TEST_TP = Arrays.asList(
+            new OrdenDetalle(1L, 1L),
+            new OrdenDetalle(1L, 2L),
+            new OrdenDetalle(1L, 3L),
+            new OrdenDetalle(1L, 4L),
+            new OrdenDetalle(1L, 5L),
+            new OrdenDetalle(1L, 6L));
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    OrdenDetalleResource cut; // Clase bajo prueba
+    OrdenDetalleBean mockOd;
+    PersistenceException causaPe = new PersistenceException("eroor desde test");
+    PersistenceException persistenceExcepcion = new PersistenceException("Error al consultar", causaPe);
+
+    EntityNotFoundException causaEe = new EntityNotFoundException("eroor desde test");
+    EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Error al consultar", causaEe);
+
 
     @Test
     void testFindRangeByIdOrden() {
-        System.out.println("findRangeByIdOrden");
-        Long idOrden = 1L;
-        // Caso exitoso
-        when(odBean.findRangeByIdOrden(eq(idOrden), anyInt(), anyInt())).thenReturn(List.of(new OrdenDetalle()));
-        when(odBean.countByIdOrden(idOrden)).thenReturn(1L);
+        System.out.println("OrdenDetalle test findRange");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
 
-        Response response = ordenDetalleResource.findRangeByIdOrden(0, 20, idOrden);
-        assertEquals(200, response.getStatus());
-        // Caso con excepción
-        reset(odBean);
-        Throwable causa = new IllegalArgumentException("Causa simulada");
-        when(odBean.findRangeByIdOrden(eq(idOrden), anyInt(), anyInt())).thenThrow(new RuntimeException("Simulacion de error", causa));
+        cut.odBean = mockOd;
+        Integer first = 0;
+        Integer max = 10;
+        Long idOrden = 2L;
 
-        Response errorResponse = ordenDetalleResource.findRangeByIdOrden(0, 20, idOrden);
-        assertNotNull(errorResponse);
-        assertTrue(errorResponse.getStatus() >= 400);
-        if (errorResponse.getEntity() != null) {
-            assertTrue(errorResponse.getEntity().toString().contains("Simulacion de error"));
-        }
+        //id cero y activo null
+        Mockito.when(mockOd.findRangeByIdOrden(idOrden, first, max)).thenReturn(TEST_TP);
+        Mockito.when(mockOd.countByIdOrden(idOrden)).thenReturn((long) TEST_TP.size());
+        Response response = cut.findRangeByIdOrden(first, max, idOrden);
+        Assertions.assertEquals(200, response.getStatus());
+        Mockito.verify(mockOd).findRangeByIdOrden(idOrden, first, max);
+        Mockito.verify(mockOd).countByIdOrden(idOrden);
+
+        //excepciones
+
+        Mockito.reset(mockOd);
+        Mockito.when(mockOd.findRangeByIdOrden(idOrden, first, max)).thenThrow(persistenceExcepcion);
+        response = cut.findRangeByIdOrden(first, max, idOrden);
+        Assertions.assertEquals(500, response.getStatus());
+
+        //fail("Esta prueba no pasa quemado");
+
         //fail("Esta prueba no pasa quemado");
     }
 
     @Test
     void testFindByIdOrdenAndIdProductoPrecio() {
-        System.out.println("findByIdOrdenAndIdProductoPrecio");
+        System.out.println("OrdenDetalle test findByIdOrdenAndIdProductoPrecio");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+
+        cut.odBean = mockOd;
         Long idOrden = 1L;
-        Long idProducto = 2L;
-        when(odBean.findByIdOrdenAndIdPrecioProducto(idOrden, idProducto)).thenReturn(new OrdenDetalle());
-        Response response = ordenDetalleResource.findByIdOrdenAndIdProductoPrecio(idOrden, idProducto);
-        assertEquals(200, response.getStatus());
+        Long idProductoPrecio = 3L;
+
+        //flujo normal
+        Mockito.when(mockOd.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio)).thenReturn(TEST_TP.get(0));
+        Response response = cut.findByIdOrdenAndIdProductoPrecio(idOrden, idProductoPrecio);
+        Assertions.assertEquals(200, response.getStatus());
+        Mockito.verify(mockOd).findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio);
+
+        //excepciones
+        Mockito.reset(mockOd);
+        Mockito.when(mockOd.findByIdOrdenAndIdPrecioProducto(idOrden, idProductoPrecio)).thenThrow(persistenceExcepcion);
+        response = cut.findByIdOrdenAndIdProductoPrecio(idOrden, idProductoPrecio);
+        Assertions.assertEquals(500, response.getStatus());
         //fail("Esta prueba no pasa quemado");
+
+
     }
+
     @Test
-    void testDelete() throws  Exception {
-        System.out.println("testDelete");
-        doNothing().when(odBean).delete(1L, 2L);
-        Response response = ordenDetalleResource.delete(1L, 2L, null);
-        assertEquals(200, response.getStatus());
+    void testDelete() throws Exception {
+        System.out.println("OrdenDetalle test delete");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+
+        cut.odBean = mockOd;
+        Long idOrden = 1L;
+        Long idProductoPrecio = 3L;
+        //flujo normal
+        Mockito.doNothing().when(mockOd).delete(idOrden, idProductoPrecio);
+        Response response = cut.delete(idOrden, idProductoPrecio);
+        Assertions.assertEquals(200, response.getStatus());
+        Mockito.verify(mockOd).delete(idOrden, idProductoPrecio);
+        //excepciones
+        Mockito.reset(mockOd);
+
+        Mockito.doThrow(persistenceExcepcion)
+                .when(mockOd).delete(idOrden, idProductoPrecio);
+        response = cut.delete(idOrden, idProductoPrecio);
+        Assertions.assertEquals(500, response.getStatus());
         //fail("Esta prueba no pasa quemado");
     }
 
     @Test
     void testupdate() {
-        System.out.println("testupdate");
-        OrdenDetalle ordenDetalle = new OrdenDetalle();
-        when(odBean.update(any(OrdenDetalle.class), anyLong(), anyLong()))
-                .thenReturn(ordenDetalle);
-        Response response = ordenDetalleResource.update(ordenDetalle, null, 1L, 2L);
-        assertEquals(200, response.getStatus());
+        System.out.println("OrdenDetalle test update");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+        cut.odBean = mockOd;
+        Long idOrden = 1L;
+        Long idProductoPrecio = 2L;
+        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
+
+        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
+        OrdenDetalle tp = new OrdenDetalle(1L, 2L);
+        tp.setObservaciones("Test");
+        //flujo normal
+        URI uri = URI.create("http://localhost:8080/api/ordenDetalle");
+        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
+        Mockito.when(mockOd.update(tp, idOrden, idProductoPrecio)).thenReturn(tp);
+        Response response = cut.update(tp, mockUriInfo, idOrden, idProductoPrecio);
+        Assertions.assertEquals(200, response.getStatus());
+        //excepciones
+        Mockito.reset(mockOd);
+        Mockito.doThrow(persistenceExcepcion)
+                .when(mockOd).update(tp, idOrden, idProductoPrecio);
+        response = cut.update(tp, mockUriInfo, idOrden, idProductoPrecio);
+        Assertions.assertEquals(500, response.getStatus());
+
         //fail("Esta prueba no pasa quemado");
     }
 
     @Test
-    void testGenerarOrdenDetalleProducto(){
-        System.out.println("testGenerarOrdenDetalleProducto");
-        System.out.println("Valores correctos");
-        doNothing().when(odBean).generarOrdenDetalleProducto(1L, 2L, 3);
-        Response response = ordenDetalleResource.generarOrdenDetalleProducto(1L, 2L, 3);
-        assertEquals(200, response.getStatus());
+    void generarOrdenDetalleProducto() {
+        System.out.println("Pago test generarOrdenDetalleProducto");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+        cut.odBean = mockOd;
+        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
+        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
+        Long idOrden = 1L;
+        Long idProductoPrecio = 2L;
+        Integer cantidad = 1;
+        //flujo normal
+        URI uri = URI.create("http://localhost:8080/api/pago/1");
+        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
+        Mockito.doNothing().when(mockOd).generarOrdenDetalleProducto(idOrden, idProductoPrecio, cantidad);
+        Response response = cut.generarOrdenDetalleProducto(idOrden, idProductoPrecio, cantidad);
+        Assertions.assertEquals(200, response.getStatus());
+        //excepciones
+        Mockito.reset(mockOd);
+        Mockito.doThrow(persistenceExcepcion)
+                .when(mockOd).generarOrdenDetalleProducto(idOrden, idProductoPrecio, cantidad);
+        response = cut.generarOrdenDetalleProducto(idOrden, idProductoPrecio, cantidad);
+        Assertions.assertEquals(500, response.getStatus());
 
-        System.out.println("Cuando ocurra una excepcion");
-        RuntimeException exceptionConCausa = new RuntimeException("Error general", new Throwable("Causa de la excepción"));
-        doThrow(exceptionConCausa).when(odBean).generarOrdenDetalleProducto(1L, 2L, 3);
-
-        Response responseConExcepcion = ordenDetalleResource.generarOrdenDetalleProducto(1L, 2L, 3);
-        assertEquals(500, responseConExcepcion.getStatus());
-        assertNotNull(responseConExcepcion.getEntity());
         //fail("Esta prueba no pasa quemado");
     }
 
     @Test
-    void testGenerarOrdenDetalleDesdeCombo_ValoresInvalidos(){
-        System.out.println("testGenerarOrdenDetalleDesdeCombo_ValoresInvalidos");
-        Response response=ordenDetalleResource.generarOrdenDetalleDesdeCombo(0L,0L,3);
-        assertEquals(400, response.getStatus());
-        //fail("Esta prueba no pasa quemado");
+    void generarOrdenDetalleDesdeCombo() {
+        System.out.println("Pago test generarOrdenDetalleDesdeCombo");
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+        cut.odBean = mockOd;
+        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
+        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
+        Long idOrden = 1L;
+        Long idcombo = 2L;
+        Integer cantidad = 1;
+        //flujo normal
+        URI uri = URI.create("http://localhost:8080/api/pago/1");
+        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
+        Mockito.doNothing().when(mockOd).generarOrdenDetalleDesdeCombo(idOrden, idcombo, cantidad);
+        Response response = cut.generarOrdenDetalleDesdeCombo(idOrden, idcombo, cantidad);
+        Assertions.assertEquals(200, response.getStatus());
+        //argumnetos malos
+        Mockito.doNothing().when(mockOd).generarOrdenDetalleDesdeCombo(0L, idcombo, cantidad);
+        response = cut.generarOrdenDetalleDesdeCombo(0L, idcombo, cantidad);
+        Assertions.assertEquals(400, response.getStatus());
+        //excepciones
+        Mockito.reset(mockOd);
+        Mockito.doThrow(persistenceExcepcion)
+                .when(mockOd).generarOrdenDetalleDesdeCombo(idOrden, idcombo, cantidad);
+        response = cut.generarOrdenDetalleDesdeCombo(idOrden, idcombo, cantidad);
+        Assertions.assertEquals(500, response.getStatus());
     }
 
-    @Test
-    void testGenerarOrdenDetalleDesdeCombo(){
-        System.out.println("testGenerarOrdenDetalleDesdeCombo");
-        doNothing().when(odBean).generarOrdenDetalleProducto(1L, 2L, 3);
-        Response response = ordenDetalleResource.generarOrdenDetalleDesdeCombo(1L,2L,3);
-        assertEquals(200, response.getStatus());
-        //fail("Esta prueba no pasa quemado");
-    }
-
-    @Test
-    void testGenerarOrdenDetalleDesdeCombo_conExcepcion(){
-        System.out.println("testGenerarOrdenDetalleDesdeCombo_conExcepcion");
-
-        RuntimeException exceptionConCausa = new RuntimeException("Error general", new Throwable("Causa de la excepción"));
-        doThrow(exceptionConCausa).when(odBean).generarOrdenDetalleDesdeCombo(1L, 2L, 3);
-
-        Response responseConExcepcion = ordenDetalleResource.generarOrdenDetalleDesdeCombo(1L, 2L, 3);
-
-        assertEquals(500, responseConExcepcion.getStatus());
-        assertNotNull(responseConExcepcion.getEntity());
-        //fail("Esta prueba no pasa quemado");
-    }
 
     @Test
     void testGenerarOrdenDetalleMixto(){
         System.out.println("testGenerarOrdenDetalleMixto");
-        DatosMixtosDTO dto = new DatosMixtosDTO();
-        dto.setIdProductos(1L);
-        dto.setCantidadProductos(2);
-        dto.setIdCombos(3L);
-        dto.setCantidadCombo(1);
+        cut = new OrdenDetalleResource();
+        mockOd = Mockito.mock(OrdenDetalleBean.class);
+        cut.odBean = mockOd;
+        Long idOrden = 1L;
+        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
+        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
+        List<DatosMixtosDTO> listDatos = new ArrayList<>();
+        listDatos.add(new DatosMixtosDTO(1L,5,2L,3));
+        listDatos.add(new DatosMixtosDTO(2L,5,9L,1));
 
-        doNothing().when(odBean).generarOrdenDetalleMixto(anyLong(), anyList(), anyList());
-
-        Response response = ordenDetalleResource.generarOrdenDetalleMixto(List.of(dto), 1L);
-        assertEquals(200, response.getStatus());
+        //flujo normal
+        URI uri = URI.create("http://localhost:8080/api/pago/1");
+        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
+        Mockito.doNothing().when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
+        Response response = cut.generarOrdenDetalleMixto(listDatos,idOrden);
+        Assertions.assertEquals(200, response.getStatus());
+        //lista nula
+        response = cut.generarOrdenDetalleMixto(null,idOrden);
+        Assertions.assertEquals(400, response.getStatus());
+        //id Orden invalido
+        response = cut.generarOrdenDetalleMixto(listDatos,0L);
+        Assertions.assertEquals(400, response.getStatus());
+        //excepciones
+        Mockito.reset(mockOd);
+        Mockito.doThrow(persistenceExcepcion)
+                .when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
+        response = cut.generarOrdenDetalleMixto(listDatos, idOrden);
+        Assertions.assertEquals(500, response.getStatus());
         //fail("Esta prueba no pasa quemado");
-    }
 
-    @Test
-    void testGenerarOrdenDetalleMixto_valoresInvalidos(){
-        System.out.println("testGenerarOrdenDetalleMixto_valoresInvalidos");
-        Response response=ordenDetalleResource.generarOrdenDetalleMixto(null,1L);
-        assertEquals(400, response.getStatus());
-        //fail("Esta prueba no pasa quemado ");
-    }
 
-    @Test
-    void testGenerarOrdenDetalleMixto_SinIdOrden(){
-        System.out.println("testGenerarOrdenDetalleMixto_SinIdOrden");
-        DatosMixtosDTO dto = new DatosMixtosDTO();
-        dto.setIdProductos(1L);
-        dto.setCantidadProductos(2);
-        dto.setIdCombos(3L);
-        dto.setCantidadCombo(1);
-
-        Response response=ordenDetalleResource.generarOrdenDetalleMixto(List.of(dto),1L);
-        assertEquals(200, response.getStatus());
-        //fail("Esta prueba no pasa quemado");
-    }
-
-    @Test
-    void testGenerarOrdenDetalleMixto_conExcepcion() {
-        System.out.println("testGenerarOrdenDetalleMixto_conExcepcion");
-
-        DatosMixtosDTO dto = new DatosMixtosDTO();
-        dto.setIdProductos(1L);
-        dto.setCantidadProductos(1);
-        dto.setIdCombos(2L);
-        dto.setCantidadCombo(1);
-
-        // Simular una excepción
-        doThrow(new RuntimeException("Error simulado", new Throwable("Causa de error"))).when(odBean).generarOrdenDetalleMixto(anyLong(), anyList(), anyList());
-        Response response = ordenDetalleResource.generarOrdenDetalleMixto(List.of(dto), 1L);
-        assertEquals(500, response.getStatus());
-        //fail("Esta prueba no pasa quemado");
     }
 
 

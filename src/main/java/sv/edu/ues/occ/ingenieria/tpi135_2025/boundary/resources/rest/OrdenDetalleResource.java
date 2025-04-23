@@ -89,7 +89,6 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
      *
      * @param idOrden          id del Combo relacionado con ComboDetalle
      * @param idProductoPrecio id del Combo relacionado con ComboDetalle
-     * @param uriInfo          info de url de donde se ha realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
      */
@@ -98,8 +97,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
     @Path("orden/{idOrden}/productoPrecio/{idProductoPrecio}/")
-        public Response delete(@PathParam("idOrden") Long idOrden, @PathParam("idProductoPrecio") Long idProductoPrecio, @Context UriInfo uriInfo) {
-
+        public Response delete(@PathParam("idOrden") Long idOrden, @PathParam("idProductoPrecio") Long idProductoPrecio) {
             try {
                 odBean.delete(idOrden, idProductoPrecio);
                 return Response.status(200).build();
@@ -143,9 +141,6 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
             @QueryParam("idProducto") @DefaultValue("0") Long idProducto,
             @QueryParam("cantidad") @DefaultValue("0") Integer cantidad) {
         try {
-            System.out.println("idOrden = " + idOrden);
-            System.out.println("idProducto = " + idProducto);
-            System.out.println("cantidad = " + cantidad);
             odBean.generarOrdenDetalleProducto(idOrden, idProducto, cantidad);
             return Response.ok().build();
 

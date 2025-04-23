@@ -8,25 +8,25 @@ import jakarta.ws.rs.core.UriInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 class OrdenResourceTest {
-    List<Combo> TEST_C = Arrays.asList(
-            new Combo(1L),
-            new Combo(2L),
-            new Combo(3L),
-            new Combo(4L),
-            new Combo(5L),
-            new Combo(6L));
+    List<Orden> TEST_C = Arrays.asList(
+            new Orden(1L),
+            new Orden(2L),
+            new Orden(3L),
+            new Orden(4L),
+            new Orden(5L),
+            new Orden(6L));
 
-    ComboResource cut; // Clase bajo prueba
-    ComboBean mockC;
+    OrdenResource cut; // Clase bajo prueba
+    OrdenBean mockC;
     PersistenceException causaPe = new PersistenceException("eroor desde test");
     PersistenceException persistenceExcepcion = new PersistenceException("Error al consultar", causaPe);
 
@@ -36,11 +36,11 @@ class OrdenResourceTest {
 
     @Test
     void findRange() {
-        System.out.println("Combo test findRange");
-        cut = new ComboResource();
-        mockC = Mockito.mock(ComboBean.class);
+        System.out.println("Orden test findRange");
+        cut = new OrdenResource();
+        mockC = Mockito.mock(OrdenBean.class);
 
-        cut.comboBean= mockC;
+        cut.oBean= mockC;
         Integer first=0;
         Integer max=10;
 
@@ -65,15 +65,15 @@ class OrdenResourceTest {
 
     @Test
     void findById() {
-        System.out.println("Combo test findById");
-        cut = new ComboResource();
-        mockC = Mockito.mock(ComboBean.class);
+        System.out.println("Orden test findById");
+        cut = new OrdenResource();
+        mockC = Mockito.mock(OrdenBean.class);
         Long id = 1L;
-        cut.comboBean= mockC;
+        cut.oBean= mockC;
         Integer first=0;
         Integer max=10;
         //flujo normal
-        Mockito.when(mockC.findById(id)).thenReturn(TEST_C.stream().filter(p->p.getIdCombo().equals(id)).findFirst().get());
+        Mockito.when(mockC.findById(id)).thenReturn(TEST_C.stream().filter(p->p.getIdOrden().equals(id)).findFirst().get());
         Response response = cut.findById(id);
         Assertions.assertEquals(200, response.getStatus());
         //excepciones
@@ -87,19 +87,19 @@ class OrdenResourceTest {
 
     @Test
     void create() {
-        System.out.println("Combo test create");
-        cut = new ComboResource();
-        mockC = Mockito.mock(ComboBean.class);
-        cut.comboBean= mockC;
+        System.out.println("Orden test create");
+        cut = new OrdenResource();
+        mockC = Mockito.mock(OrdenBean.class);
+        cut.oBean= mockC;
         UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
         UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
-        Combo tp = new Combo();
-        tp.setIdCombo(1L);
-        tp.setNombre("Test");
+        Orden tp = new Orden();
+        tp.setIdOrden(1L);
+        tp.setSucursal("Test");
         //flujo normal
-        URI uri = URI.create("http://localhost:8080/api/Combo/1");
+        URI uri = URI.create("http://localhost:8080/api/Orden/1");
         Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
-        Mockito.when(mockUriBuilder.path(String.valueOf(tp.getIdCombo()))).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.path(String.valueOf(tp.getIdOrden()))).thenReturn(mockUriBuilder);
         Mockito.when(mockUriBuilder.build()).thenReturn(uri);
         Mockito.doNothing().when(mockC).create(tp);
         Response response = cut.create(tp, mockUriInfo);
@@ -118,10 +118,10 @@ class OrdenResourceTest {
 
     @Test
     void delete() {
-        System.out.println("Combo test delete");
-        cut = new ComboResource();
-        mockC = Mockito.mock(ComboBean.class);
-        cut.comboBean= mockC;
+        System.out.println("Orden test delete");
+        cut = new OrdenResource();
+        mockC = Mockito.mock(OrdenBean.class);
+        cut.oBean= mockC;
         Long id=1L;
         //flujo normal
         Mockito.doNothing().when(mockC).delete(id);
@@ -140,21 +140,21 @@ class OrdenResourceTest {
 
     @Test
     void update() {
-        System.out.println("Combo test update");
-        cut = new ComboResource();
-        mockC = Mockito.mock(ComboBean.class);
-        cut.comboBean= mockC;
+        System.out.println("Orden test update");
+        cut = new OrdenResource();
+        mockC = Mockito.mock(OrdenBean.class);
+        cut.oBean= mockC;
         Long id=1L;
         UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
 
         UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
-        Combo tp = new Combo();
-        tp.setIdCombo(1L);
-        tp.setNombre("Test");
+        Orden tp = new Orden();
+        tp.setIdOrden(1L);
+        tp.setSucursal("Test");
         //flujo normal
-        URI uri = URI.create("http://localhost:8080/api/Combo/1");
+        URI uri = URI.create("http://localhost:8080/api/Orden/1");
         Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
-        Mockito.when(mockUriBuilder.path(String.valueOf(tp.getIdCombo()))).thenReturn(mockUriBuilder);
+        Mockito.when(mockUriBuilder.path(String.valueOf(tp.getIdOrden()))).thenReturn(mockUriBuilder);
         Mockito.when(mockUriBuilder.build()).thenReturn(uri);
         Mockito.when(mockC.update(tp,id)).thenReturn(tp);
         Response response = cut.update(tp,id, mockUriInfo);
