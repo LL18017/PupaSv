@@ -130,14 +130,13 @@ public class ComboResource extends GeneralRest implements Serializable {
      * Método para eliminar un Combo por su ID.
      *
      * @param id identificador del combo a eliminar.
-     * @param uriInfo información sobre la URI donde se realiza la petición.
      * @return status 200 si se eliminó correctamente.
      */
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response delete(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("id") Long id) {
         try {
             comboBean.delete(id);
             return Response.ok().build();

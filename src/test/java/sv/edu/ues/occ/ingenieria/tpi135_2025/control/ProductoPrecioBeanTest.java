@@ -78,7 +78,7 @@ class ProductoPrecioBeanTest {
 
     @Test
     void findByIdProducto() {
-        System.out.println("test findByIdProducto");
+        System.out.println("ProductoPrecio test findByIdProducto");
         Long idProducto = 1001L;//ya establecido en DB
         int first = 0;
         int max = 10;
@@ -104,7 +104,7 @@ class ProductoPrecioBeanTest {
 
     @Test
     void countByIdProducto() {
-        System.out.println("test countByIdProducto");
+        System.out.println("ProductoPrecio test countByIdProducto");
         Long idProducto = 1001L;
         Long esperado=2L;
 

@@ -51,25 +51,25 @@ public class GeneralRest {
     public Response responseExcepcions(Exception e, Long id) {
         Throwable causa = e.getCause();
         if (causa instanceof IllegalArgumentException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
         } else if (causa instanceof EntityNotFoundException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
         } else if (causa instanceof NoResultException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getCause()).build();
         } else if (causa instanceof ConstraintViolationException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al aceder a la base de datos").build();
         } else if (causa instanceof IllegalStateException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en el repositorio").build();
         } else if (causa instanceof PersistenceException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en la base  de datos").build();
         } else if (causa instanceof JsonbException) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al serializar").entity(e).build();
         }
         return Response.status(500).header(Headers.PROCESS_ERROR, causa.toString()).entity(e).build();

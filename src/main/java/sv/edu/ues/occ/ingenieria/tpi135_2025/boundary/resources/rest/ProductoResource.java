@@ -143,7 +143,6 @@ public class ProductoResource extends GeneralRest implements Serializable {
      * Borra un registro de tipo Producto Especifico
      *
      * @param idProducto a identificador de la entidda a borar
-     * @param uriInfo    info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad ,
      * un 422 si hubo un problema
      * y 500 si falla el seridor o la base
@@ -153,7 +152,7 @@ public class ProductoResource extends GeneralRest implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/{idProducto}")
-    public Response delete(@PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo
+    public Response delete(@PathParam("idProducto") Long idProducto
             , @QueryParam("idTipoProducto") @DefaultValue("0") Integer idTipoProducto) {
         try {
             if (idTipoProducto == 0) {
@@ -163,7 +162,6 @@ public class ProductoResource extends GeneralRest implements Serializable {
             pBean.deleteProductoAndDetail(idProducto, idTipoProducto);
             return Response.status(200).build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
         }
     }
@@ -205,17 +203,17 @@ public class ProductoResource extends GeneralRest implements Serializable {
      * problema y 500 si falla el servidor
      */
 
-    public Response buscarPorTipoProductosAndActivo(Integer idTipoProducto, boolean activo, int first, int max) {
-        try {
-            List<Producto> encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);
-            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);
-            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();
-
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
-        }
-    }
+//    public Response buscarPorTipoProductosAndActivo(Integer idTipoProducto, boolean activo, int first, int max) {
+//        try {
+//            List<Producto> encontrados = pBean.findRangeByIdTipoProductosAndActivo(idTipoProducto, activo, first, max);
+//            long total = pBean.countByIdTipoProductosAndActivo(idTipoProducto, activo);
+//            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();
+//
+//        } catch (Exception e) {
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+//            return Response.status(500).header(Headers.PROCESS_ERROR, e.getMessage()).build();
+//        }
+//    }
 
 
 }

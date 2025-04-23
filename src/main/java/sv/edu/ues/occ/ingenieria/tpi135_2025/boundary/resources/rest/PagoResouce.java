@@ -27,7 +27,7 @@ public class PagoResouce extends GeneralRest implements Serializable {
     @GET
     @Path("")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(@QueryParam("first") @DefaultValue("0") int first,@QueryParam("max") @DefaultValue("20") int max) {
+    public Response findRange(@QueryParam("first") @DefaultValue("0") int first, @QueryParam("max") @DefaultValue("20") int max) {
         try {
             List<Pago> encontrados = pBean.findRange(first, max);
             long total = pBean.count();
@@ -87,11 +87,8 @@ public class PagoResouce extends GeneralRest implements Serializable {
     public Response findById(@PathParam("id") Long id) {
         try {
             Pago encontrado = pBean.findById(id);
-            if (encontrado != null) {
-                Response.ResponseBuilder builder = Response.ok(encontrado);
-                return builder.build();
-            }
-            return Response.status(404).header(Headers.NOT_FOUND_ID, id).build();
+            Response.ResponseBuilder builder = Response.ok(encontrado);
+            return builder.build();
         } catch (Exception e) {
             return responseExcepcions(e, id);
         }
@@ -112,7 +109,7 @@ public class PagoResouce extends GeneralRest implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Pago registro,
                            @Context UriInfo uriInfo) {
-        if (registro != null && registro.getIdPago() == null && registro.getIdOrden() != null) {
+        if (registro != null && registro.getIdPago() != null && registro.getIdOrden() != null) {
             try {
                 pBean.create(registro);
                 if (registro.getIdPago() != null) {
@@ -130,8 +127,7 @@ public class PagoResouce extends GeneralRest implements Serializable {
     /**
      * Borra un registro de tipo PAgo Especifico
      *
-     * @param id      id del TipoProducto a eliminar
-     * @param uriInfo info de url de donde se esta realizado la peticion
+     * @param id id del TipoProducto a eliminar
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
      */
@@ -139,7 +135,7 @@ public class PagoResouce extends GeneralRest implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response delete(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("id") Long id) {
         try {
             pBean.delete(id);
             return Response.status(200).build();

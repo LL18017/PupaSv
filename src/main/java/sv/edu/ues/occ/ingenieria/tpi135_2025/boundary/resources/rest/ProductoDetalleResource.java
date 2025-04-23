@@ -105,7 +105,6 @@ public class ProductoDetalleResource extends GeneralRest implements Serializable
      *
      * @param idTipoProducto id de TipoProducto relacionado con el detalle
      * @param idProducto     id de Producto relacionado con el detalle
-     * @param uriInfo        info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad ,
      * un 422 si hubo un problema
      * y 500 si falla el servdor
@@ -115,7 +114,7 @@ public class ProductoDetalleResource extends GeneralRest implements Serializable
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("tipoProducto/{idTipoProducto}/producto/{idProducto}")
-    public Response delete(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("idTipoProducto") Integer idTipoProducto, @PathParam("idProducto") Long idProducto) {
         try {
             pdBean.deleteByIdTipoProductoAndIdProducto(idTipoProducto, idProducto);
             return Response.status(200).build();
@@ -147,7 +146,6 @@ public class ProductoDetalleResource extends GeneralRest implements Serializable
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             return Response.ok(uriBuilder.build()).build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return responseExcepcions(e, null);
         }
     }
