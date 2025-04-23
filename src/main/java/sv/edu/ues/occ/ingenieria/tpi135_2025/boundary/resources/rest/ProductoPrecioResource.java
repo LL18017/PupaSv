@@ -44,15 +44,15 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
 
     @GET
     @Path("{id}")
-    public Response findById(@PathParam("id") Long id){
+    public Response findById(@PathParam("id") Long id) {
         try {
             ProductoPrecio precio = productoPrecioBean.findById(id);
             if (precio == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
             return Response.ok(precio).build();
-        }catch (Exception e) {
-            return responseExcepcions(e,null);
+        } catch (Exception e) {
+            return responseExcepcions(e, null);
         }
     }
     /**

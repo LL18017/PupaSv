@@ -98,15 +98,15 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     //URL:http://localhost:9080/PupaSv-1.0-SNAPSHOT/v1/ordenDetalle/orden/{idOrden}/productoPrecio/{idProductoPrecio}
     @Path("orden/{idOrden}/productoPrecio/{idProductoPrecio}/")
-    public Response delete(@PathParam("idOrden") Long idOrden, @PathParam("idProductoPrecio") Long idProductoPrecio, @Context UriInfo uriInfo) {
+        public Response delete(@PathParam("idOrden") Long idOrden, @PathParam("idProductoPrecio") Long idProductoPrecio, @Context UriInfo uriInfo) {
 
-        try {
-            odBean.delete(idOrden, idProductoPrecio);
-            return Response.status(200).build();
-        } catch (Exception e) {
-            return responseExcepcions(e, idOrden);
+            try {
+                odBean.delete(idOrden, idProductoPrecio);
+                return Response.status(200).build();
+            } catch (Exception e) {
+                return responseExcepcions(e, idOrden);
+            }
         }
-    }
 
 
     /**

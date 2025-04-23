@@ -136,7 +136,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
         assertEquals(formatoFechaActualizada,resultado.getFechaDesde());
         assertEquals(precioActualizadoValor,resultado.getPrecioSugerido());
         assertEquals(createdId,resultado.getIdProductoPrecio());
-        // Puedes agregar más aserciones para verificar que los datos se actualizaron correctamente
+        //fail("Esta prueba no pasa quemado");
     }
 
     @Test
@@ -152,7 +152,8 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
         Response getResponse = target.path(createdId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-        assertEquals(404, getResponse.getStatus()); // Cambiado a 500
+        assertEquals(404, getResponse.getStatus());
+        //fail("Esta prueba no pasa quemado");
     }
 
 }

@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +15,7 @@ import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class ProductoPrecioBeanTest {
     List<ProductoPrecio> LIST_Producto_TEST = Arrays.asList(new ProductoPrecio[]{
@@ -126,4 +126,39 @@ class ProductoPrecioBeanTest {
         Assertions.assertThrows(IllegalStateException.class, () -> cut2.countByIdProducto(idProducto));
 ////        fail("fallo exitosamenet");
     }
+
+    @Test
+    void tetsCreate(){
+        System.out.println("test create");
+        // Caso 1: El idProducto es null
+        ProductoPrecio registro = new ProductoPrecio();
+        assertThrows(IllegalArgumentException.class, () -> cut.create(registro, null));
+
+        // Caso 2: El idProducto es menor que 0
+        assertThrows(IllegalArgumentException.class, () -> cut.create(registro, -1L));
+
+        // Caso 3: El producto no existe (em.find devuelve null)
+        Long idProductoInexistente = 999L;
+        when(mockEm.find(Producto.class, idProductoInexistente)).thenReturn(null);
+        assertThrows(EntityNotFoundException.class, () -> cut.create(registro, idProductoInexistente));
+
+        // Caso 4: El producto existe y la creación se realiza correctamente
+        Long idProductoValido = 1L;
+        ProductoPrecio registroValido = new ProductoPrecio();
+        Producto productoExistente = new Producto(idProductoValido);
+        when(mockEm.find(Producto.class, idProductoValido)).thenReturn(productoExistente);
+
+        ProductoPrecioBean spyCut = spy(cut);
+        doNothing().when(spyCut).create(registroValido);  // Especificamos que no haga nada cuando se invoque create.
+
+        spyCut.create(registroValido, idProductoValido);
+        verify(spyCut, times(1)).create(registroValido);
+
+        // Caso 5: Se lanza una excepción inesperada (cualquier otra excepción en el bloque try)
+        when(mockEm.find(Producto.class, idProductoValido)).thenThrow(new RuntimeException("Error inesperado"));
+        assertThrows(RuntimeException.class, () -> cut.create(registroValido, idProductoValido));
+        //fail("Esta prueba no pasa quemado");
+    }
+
+
 }
