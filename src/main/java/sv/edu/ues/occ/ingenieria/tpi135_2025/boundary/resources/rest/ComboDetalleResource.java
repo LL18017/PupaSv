@@ -54,8 +54,7 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
                     .header(Headers.TOTAL_RECORD, total)
                     .build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return responseExcepcions(e, null);
+            return responseExcepcions(e, (Long) null);
         }
     }
 
@@ -72,9 +71,14 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
             @PathParam("idProducto") Long idProducto) {
         try {
             ComboDetalle detalle = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
+            if (detalle == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("ComboDetalle no encontrado para los IDs proporcionados.")
+                        .build();
+            }
             return Response.ok(detalle).build();
         } catch (Exception e) {
-            return responseExcepcions(e, null);
+            return responseExcepcions(e, (Long) null);
         }
     }
 
@@ -97,11 +101,22 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
             @PathParam("idProducto") Long idProducto,
             @Context UriInfo uriInfo) {
         try {
+            // Validar si el Combo y Producto existen
+            if (comboBean.findById(idCombo) == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Combo no encontrado para el ID proporcionado.")
+                        .build();
+            }
+            if (productoBean.findById(idProducto) == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Producto no encontrado para el ID proporcionado.")
+                        .build();
+            }
             comboDetalleBean.create(detalle, idCombo, idProducto);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             return Response.created(uriBuilder.build()).build();
         } catch (Exception e) {
-            return responseExcepcions(e, null);
+            return responseExcepcions(e, (Long) null);
         }
     }
 
@@ -121,11 +136,18 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
             @PathParam("idProducto") Long idProducto,
             @Context UriInfo uriInfo) {
         try {
+            // Validar si el ComboDetalle existe
+            ComboDetalle existe = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
+            if (existe == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                               .entity("ComboDetalle no encontrado para los IDs proporcionados.")
+                               .build();
+            }
             comboDetalleBean.updateByComboDetallePK(detalle, idCombo, idProducto);
             URI uri = uriInfo.getAbsolutePathBuilder().build();
             return Response.ok(uri).build();
         } catch (Exception e) {
-            return responseExcepcions(e, null);
+            return responseExcepcions(e, (Long) null);
         }
     }
 
@@ -143,11 +165,31 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
             @PathParam("idProducto") Long idProducto,
             @Context UriInfo uriInfo) {
         try {
+            // Validar si el ComboDetalle existe
+            ComboDetalle existe = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
+            if (existe == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                               .entity("ComboDetalle no encontrado para los IDs proporcionados.")
+                               .build();
+            }
+
             comboDetalleBean.deleteByComboDetallePK(idCombo, idProducto);
             return Response.ok().build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return responseExcepcions(e, null);
+            return responseExcepcions(e, (Long) null);
         }
     }
+
+    public void setComboDetalleBean(ComboDetalleBean comboDetalleBean) {
+        this.comboDetalleBean = comboDetalleBean;
+    }
+
+    public void setComboBean(ComboBean comboBean) {
+        this.comboBean = comboBean;
+    }
+
+    public void setProductoBean(ProductoBean productoBean) {
+        this.productoBean = productoBean;
+    }
+
 }

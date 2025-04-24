@@ -55,7 +55,15 @@ public class ComboResource extends GeneralRest implements Serializable {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
-            return responseExcepcions(e, null);
+            // Verifica si la causa es nula, y maneja la excepción
+            if (e.getCause() != null) {
+                return responseExcepcions(e, null);
+            }
+            // Si la causa es null, pasa la excepción
+            return Response.status(500)
+                    .header(Headers.PROCESS_ERROR, "Error desconocido")
+                    .entity(e.getMessage())
+                    .build();
         }
 
     }
@@ -74,9 +82,20 @@ public class ComboResource extends GeneralRest implements Serializable {
     public Response findById(@PathParam("id") Long id) {
         try {
             Combo combo = comboBean.findById(id);
+            if (combo == null) {
+                return Response.status(Response.Status.NOT_FOUND).build(); // <-- esto es lo que falta
+            }
             return Response.ok(combo).build();
         } catch (Exception e) {
-            return responseExcepcions(e, id);
+            // Verifica si la causa es nula, y maneja la excepción
+            if (e.getCause() != null) {
+                return responseExcepcions(e, null);
+            }
+            // Si la causa es null, pasa la excepción
+            return Response.status(500)
+                    .header(Headers.PROCESS_ERROR, "Error desconocido")
+                    .entity(e.getMessage())
+                    .build();
         }
     }
 
@@ -93,13 +112,21 @@ public class ComboResource extends GeneralRest implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Combo registro, @Context UriInfo uriInfo) {
+        if (registro == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .header(Headers.WRONG_PARAMETER, "Combo no puede ser null")
+                    .build();
+        }
         try {
             comboBean.create(registro);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(String.valueOf(registro.getIdCombo()));
             return Response.created(builder.build()).build();
         } catch (Exception e) {
-            return responseExcepcions(e, registro.getIdCombo());
+            if (e.getCause() == null) {
+                e = new RuntimeException("Error desconocido al crear el combo", e);
+            }
+            return responseExcepcions(e, registro != null ? registro.getIdCombo() : null);
         }
     }
 
@@ -122,7 +149,9 @@ public class ComboResource extends GeneralRest implements Serializable {
             comboBean.update(registro, idCombo);
             return Response.ok().build();
         } catch (Exception e) {
-            return responseExcepcions(e, idCombo);
+            // Evitar pasar excepción sin causa
+            Exception wrapped = (e.getCause() == null) ? new Exception("Excepción sin causa", e) : e;
+            return responseExcepcions(wrapped, idCombo);
         }
     }
 
@@ -141,7 +170,13 @@ public class ComboResource extends GeneralRest implements Serializable {
             comboBean.delete(id);
             return Response.ok().build();
         } catch (Exception e) {
-            return responseExcepcions(e, id);
+            // Evitar pasar excepción sin causa
+            Exception wrapped = (e.getCause() == null) ? new Exception("Excepción sin causa", e) : e;
+            return responseExcepcions(wrapped, id);
         }
+    }
+
+    public void setComboBean(ComboBean comboBean) {
+        this.comboBean = comboBean;
     }
 }
