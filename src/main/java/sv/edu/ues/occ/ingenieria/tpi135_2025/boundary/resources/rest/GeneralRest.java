@@ -52,9 +52,7 @@ public class GeneralRest {
             return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
         } else if (e.getCause() instanceof EntityNotFoundException) {
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
-        } else if (e.getCause() instanceof EntityNotFoundException) {
-            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
-        } else if (e instanceof NoResultException) {
+        }else if (e instanceof NoResultException) {
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
         } else if (e instanceof ConstraintViolationException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al acceder a la base de datos").build();
@@ -68,7 +66,6 @@ public class GeneralRest {
         } else if (e instanceof JsonbException || e.getCause() instanceof JsonbException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al serializar").entity(e).build();
         }
-        System.out.println(e.getMessage());
         if (e.getMessage().contains("No se encontro resultado")){
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
         }

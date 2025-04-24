@@ -23,6 +23,7 @@ class GeneralRestTest {
         Long idError = 10L;
         PersistenceException causaPe = new PersistenceException("eroor desde test");
         PersistenceException persistenceExcepcion = new PersistenceException("Error al consultar", causaPe);
+        PersistenceException persistenceExcepcion2 = new PersistenceException("No se encontro resultado para esto", causaPe);
 
         EntityNotFoundException causaEe = new EntityNotFoundException("eroor desde test");
         EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Error al consultar", causaEe);
@@ -44,10 +45,11 @@ class GeneralRestTest {
         Exception causa = new Exception("eroor desde test");
         Exception exception = new Exception("Error al consultar", causa);
 
-        Response response = cut.responseExcepcions(persistenceExcepcion, idError);
-        assertEquals(500, response.getStatus());
+        Exception exception2 = new Exception("No se encontro resultado", causa);
 
-        response = cut.responseExcepcions(illegalArgumentException, idError);
+
+
+       Response response = cut.responseExcepcions(illegalArgumentException, idError);
         assertEquals(400, response.getStatus());
 
         response = cut.responseExcepcions(noResultException, idError);
@@ -69,6 +71,14 @@ class GeneralRestTest {
         response = cut.responseExcepcions(exception, idError);
         assertEquals(500, response.getStatus());
 
+        response = cut.responseExcepcions(exception2, idError);
+        assertEquals(404, response.getStatus());
+
+        response = cut.responseExcepcions(persistenceExcepcion, idError);
+        assertEquals(500, response.getStatus());
+
+        response = cut.responseExcepcions(persistenceExcepcion2, idError);
+        assertEquals(404, response.getStatus());
 
 //        fail("fallo existosamente");
     }
