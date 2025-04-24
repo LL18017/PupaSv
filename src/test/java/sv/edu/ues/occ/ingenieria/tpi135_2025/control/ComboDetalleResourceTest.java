@@ -100,16 +100,16 @@ public class ComboDetalleResourceTest {
 
         reset(mockComboDetalleBean);
 
-        // ❌ Caso no encontrado (404)
+        //Caso no encontrado
         when(mockComboDetalleBean.findByIdComboAndIdProducto(1L, 2L)).thenReturn(null);
         Response notFoundResponse = resource.findByIDs(1L, 2L);
         assertEquals(404, notFoundResponse.getStatus());
         assertTrue(notFoundResponse.getEntity().toString().contains("ComboDetalle no encontrado"));
 
-        // 🔄 Reset para el siguiente caso
+        //Reset para el siguiente caso
         reset(mockComboDetalleBean);
 
-        // ⚠️ Caso con excepción (500)
+        // Caso con excepción
         RuntimeException error = new RuntimeException("Error findByIDs", new Throwable("Causa dummy"));
         when(mockComboDetalleBean.findByIdComboAndIdProducto(1L, 2L)).thenThrow(error);
         Response errorResponse = resource.findByIDs(1L, 2L);
@@ -130,14 +130,14 @@ public class ComboDetalleResourceTest {
         assertEquals(201, response.getStatus());
         assertEquals(URI.create("http://localhost/test"), response.getLocation());
 
-        // ❌ Combo no existe
+        //Combo no existe
         reset(mockComboBean, mockProductoBean, mockComboDetalleBean);
         when(mockComboBean.findById(1L)).thenReturn(null);
         Response noComboResponse = resource.create(detalle, 1L, 2L, mockUriInfo);
         assertEquals(400, noComboResponse.getStatus());
         assertEquals("Combo no encontrado para el ID proporcionado.", noComboResponse.getEntity());
 
-        // ❌ Producto no existe
+        //Producto no existe
         reset(mockComboBean, mockProductoBean, mockComboDetalleBean);
         when(mockComboBean.findById(1L)).thenReturn(new Combo());
         when(mockProductoBean.findById(2L)).thenReturn(null);
@@ -145,7 +145,7 @@ public class ComboDetalleResourceTest {
         assertEquals(400, noProductoResponse.getStatus());
         assertEquals("Producto no encontrado para el ID proporcionado.", noProductoResponse.getEntity());
 
-        // ❌ Error inesperado
+        //Error inesperado
         reset(mockComboBean, mockProductoBean, mockComboDetalleBean);
         when(mockComboBean.findById(1L)).thenReturn(new Combo());
         when(mockProductoBean.findById(2L)).thenReturn(new Producto());

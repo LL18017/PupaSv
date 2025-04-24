@@ -160,13 +160,21 @@ public class ComboResourceTest {
         System.out.println("ComboResource test Delete");
         UriInfo uriInfo = mock(UriInfo.class);
         // Caso exitoso
-        Response response = comboResource.delete(1L, uriInfo);
+        Response response = comboResource.delete(1L);
         verify(mockComboBean).delete(1L);
         assertEquals(200, response.getStatus());
-        // Caso con ID inexistente
+
+        // Caso con excepción simulada
         doThrow(new EntityNotFoundException("No se encontró combo con ID 999"))
                 .when(mockComboBean).delete(999L);
-        Response responseError = comboResource.delete(999L, uriInfo);
+        Response responseError = comboResource.delete(999L);
         assertEquals(404, responseError.getStatus());
+        assertTrue(responseError.getEntity().toString().contains("No se encontró combo"));
+        // Caso con una excepción genérica: Simula una excepción inesperada
+        RuntimeException runtimeException = new RuntimeException("Error inesperado");
+        doThrow(runtimeException).when(mockComboBean).delete(1L);  // Simula error al eliminar
+        Response responseGenericError = comboResource.delete(1L);
+        assertEquals(500, responseGenericError.getStatus()); // Se espera un 500
+        assertTrue(responseGenericError.getEntity().toString().contains("Excepción sin causa"));
     }
 }

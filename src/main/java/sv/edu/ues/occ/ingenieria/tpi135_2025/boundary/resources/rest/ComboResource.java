@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -169,6 +170,11 @@ public class ComboResource extends GeneralRest implements Serializable {
         try {
             comboBean.delete(id);
             return Response.ok().build();
+        } catch (EntityNotFoundException e) {
+            // Si la entidad no se encuentra, devolvemos un 404 con el mensaje de error
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("No se encontró combo con ID " + id)
+                    .build();
         } catch (Exception e) {
             // Evitar pasar excepción sin causa
             Exception wrapped = (e.getCause() == null) ? new Exception("Excepción sin causa", e) : e;
