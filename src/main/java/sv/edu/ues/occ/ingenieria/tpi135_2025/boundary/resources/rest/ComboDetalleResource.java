@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 
@@ -30,23 +31,23 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 public class ComboDetalleResource extends GeneralRest implements Serializable {
 
     @Inject
-    private ComboDetalleBean comboDetalleBean;
+    ComboDetalleBean comboDetalleBean;
     @Inject
-    private ComboBean comboBean;
+    ComboBean comboBean;
     @Inject
-    private ProductoBean productoBean;
+    ProductoBean productoBean;
 
     /**
      * Obtiene una lista paginada de registros ComboDetalle.
      *
      * @param first la posición del primer registro (por defecto 0).
-     * @param max la cantidad máxima de registros a obtener (por defecto 20).
+     * @param max   la cantidad máxima de registros a obtener (por defecto 20).
      * @return 200 con una lista de ComboDetalle y cabecera con el total de
      * registros. 500 si ocurre un error en la lógica o en la base de datos.
      */
     @GET
     public Response find(@QueryParam("first") @DefaultValue("0") Integer first,
-            @QueryParam("max") @DefaultValue("20") Integer max) {
+                         @QueryParam("max") @DefaultValue("20") Integer max) {
         try {
             List<ComboDetalle> lista = comboDetalleBean.findRange(first, max);
             Long total = comboDetalleBean.count();
@@ -61,21 +62,16 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     /**
      * Obtiene un detalle específico de combo-producto usando ambos IDs.
      *
-     * @param idCombo ID del combo
+     * @param idCombo    ID del combo
      * @param idProducto ID del producto
      * @return detalle ComboDetalle correspondiente
      */
     @GET
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response findByIDs(@PathParam("idCombo") Long idCombo,
-            @PathParam("idProducto") Long idProducto) {
+                              @PathParam("idProducto") Long idProducto) {
         try {
             ComboDetalle detalle = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
-            if (detalle == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("ComboDetalle no encontrado para los IDs proporcionados.")
-                        .build();
-            }
             return Response.ok(detalle).build();
         } catch (Exception e) {
             return responseExcepcions(e, (Long) null);
@@ -85,11 +81,11 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     /**
      * Crea un nuevo detalle para un combo y producto especificado.
      *
-     * @param detalle entidad ComboDetalle a crear
-     * @param idCombo ID del combo asociado
+     * @param detalle    entidad ComboDetalle a crear
+     * @param idCombo    ID del combo asociado
      * @param idProducto ID del producto asociado
-     * @param uriInfo contexto de la solicitud para construir URI del recurso
-     * creado
+     * @param uriInfo    contexto de la solicitud para construir URI del recurso
+     *                   creado
      * @return 201 si se crea correctamente, junto con la ubicación del recurso
      * creado, 400 si hay errores de argumentos, 422 si ya existe, 500 si hay
      * error de servidor.
@@ -97,21 +93,10 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     @POST
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response create(ComboDetalle detalle,
-            @PathParam("idCombo") Long idCombo,
-            @PathParam("idProducto") Long idProducto,
-            @Context UriInfo uriInfo) {
+                           @PathParam("idCombo") Long idCombo,
+                           @PathParam("idProducto") Long idProducto,
+                           @Context UriInfo uriInfo) {
         try {
-            // Validar si el Combo y Producto existen
-            if (comboBean.findById(idCombo) == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Combo no encontrado para el ID proporcionado.")
-                        .build();
-            }
-            if (productoBean.findById(idProducto) == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Producto no encontrado para el ID proporcionado.")
-                        .build();
-            }
             comboDetalleBean.create(detalle, idCombo, idProducto);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             return Response.created(uriBuilder.build()).build();
@@ -123,25 +108,25 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     /**
      * Actualiza un detalle existente de combo-producto.
      *
-     * @param detalle objeto con los nuevos datos a actualizar.
-     * @param idCombo ID del combo relacionado
+     * @param detalle    objeto con los nuevos datos a actualizar.
+     * @param idCombo    ID del combo relacionado
      * @param idProducto ID del producto relacionado
-     * @param uriInfo información de la URI de la solicitud.
+     * @param uriInfo    información de la URI de la solicitud.
      * @return respuesta con estado 200 si fue exitoso
      */
     @PUT
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response update(ComboDetalle detalle,
-            @PathParam("idCombo") Long idCombo,
-            @PathParam("idProducto") Long idProducto,
-            @Context UriInfo uriInfo) {
+                           @PathParam("idCombo") Long idCombo,
+                           @PathParam("idProducto") Long idProducto,
+                           @Context UriInfo uriInfo) {
         try {
             // Validar si el ComboDetalle existe
             ComboDetalle existe = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
             if (existe == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                               .entity("ComboDetalle no encontrado para los IDs proporcionados.")
-                               .build();
+                        .entity("ComboDetalle no encontrado para los IDs proporcionados.")
+                        .build();
             }
             comboDetalleBean.updateByComboDetallePK(detalle, idCombo, idProducto);
             URI uri = uriInfo.getAbsolutePathBuilder().build();
@@ -154,23 +139,21 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
     /**
      * Elimina un registro de ComboDetalle identificado por combo y producto.
      *
-     * @param idCombo ID del combo
+     * @param idCombo    ID del combo
      * @param idProducto ID del producto
-     * @param uriInfo información de la URI de la solicitud.
      * @return respuesta con estado 200 si fue exitoso
      */
     @DELETE
     @Path("combo/{idCombo}/producto/{idProducto}")
     public Response delete(@PathParam("idCombo") Long idCombo,
-            @PathParam("idProducto") Long idProducto,
-            @Context UriInfo uriInfo) {
+                           @PathParam("idProducto") Long idProducto) {
         try {
             // Validar si el ComboDetalle existe
             ComboDetalle existe = comboDetalleBean.findByIdComboAndIdProducto(idCombo, idProducto);
             if (existe == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                               .entity("ComboDetalle no encontrado para los IDs proporcionados.")
-                               .build();
+                        .entity("ComboDetalle no encontrado para los IDs proporcionados.")
+                        .build();
             }
 
             comboDetalleBean.deleteByComboDetallePK(idCombo, idProducto);
@@ -180,16 +163,5 @@ public class ComboDetalleResource extends GeneralRest implements Serializable {
         }
     }
 
-    public void setComboDetalleBean(ComboDetalleBean comboDetalleBean) {
-        this.comboDetalleBean = comboDetalleBean;
-    }
-
-    public void setComboBean(ComboBean comboBean) {
-        this.comboBean = comboBean;
-    }
-
-    public void setProductoBean(ProductoBean productoBean) {
-        this.productoBean = productoBean;
-    }
 
 }

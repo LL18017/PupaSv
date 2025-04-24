@@ -69,7 +69,6 @@ public class OrdenDetalleResourceSI extends AbstractContainerTest {
         response = target.path(pathFormath)
                 .request()
                 .get();
-        System.out.println(servidorDeAplicaion.getLogs());
         assertEquals(404, response.getStatus(), "El código de estado debería ser 404");
         //fail("Esta prueba no pasa quemado");
     }

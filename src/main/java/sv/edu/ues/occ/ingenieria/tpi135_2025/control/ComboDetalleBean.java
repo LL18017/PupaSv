@@ -144,6 +144,8 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
                     .getSingleResult();
         } catch (NoResultException e) {
             throw new EntityNotFoundException("No se encontro resultado para ComboDetalle con idCombo=" + idCombo + " e idProducto=" + idProducto);
+        }catch (PersistenceException e) {
+            throw new PersistenceException("Error con la base de datos", e);
         }
     }
 

@@ -48,9 +48,11 @@ public class GeneralRest {
      * serialización JSON (JsonbException)
      */
     public Response responseExcepcions(Exception e, Long id) {
-        if (e instanceof IllegalArgumentException) {
+        if (e.getCause() instanceof IllegalArgumentException) {
             return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
-        } else if (e instanceof EntityNotFoundException) {
+        } else if (e.getCause() instanceof EntityNotFoundException) {
+            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
+        } else if (e.getCause() instanceof EntityNotFoundException) {
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
         } else if (e instanceof NoResultException) {
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
@@ -59,10 +61,6 @@ public class GeneralRest {
         } else if (e.getCause() instanceof IllegalStateException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en el repositorio").build();
         } else if (e instanceof PersistenceException ) {
-            System.out.println("pasa aqui");
-            if (e.getCause() instanceof EntityNotFoundException) {
-                return Response.status(404).header(Headers.NOT_FOUND_ID, e.getCause().getMessage()).build();
-            }
             if (e.getMessage().contains("No se encontro resultado")){
                 return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
             }
@@ -70,7 +68,10 @@ public class GeneralRest {
         } else if (e instanceof JsonbException || e.getCause() instanceof JsonbException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al serializar").entity(e).build();
         }
-
+        System.out.println(e.getMessage());
+        if (e.getMessage().contains("No se encontro resultado")){
+            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
+        }
         return Response.status(500).header(Headers.PROCESS_ERROR, e.toString()).entity(e).build();
     }
 

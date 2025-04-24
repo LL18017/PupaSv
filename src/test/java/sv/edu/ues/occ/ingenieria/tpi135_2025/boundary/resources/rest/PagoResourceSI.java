@@ -206,8 +206,6 @@ public class PagoResourceSI extends AbstractContainerTest {
         //id Inexistente
         path = String.format("pago/orden/%d", 112233);
         respuesta = target.path(path).queryParam("first", first).queryParam("max", max).request(MediaType.APPLICATION_JSON).get();
-        registros = respuesta.readEntity(new GenericType<List<Pago>>() {
-        });
         Assertions.assertEquals(404, respuesta.getStatus());
 //
 

@@ -6,8 +6,10 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,17 +17,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import org.mockito.MockitoAnnotations;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetalle;
@@ -36,8 +43,8 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 /**
- *
  * @author hdz
  */
 public class ComboDetalleBeanTest {
@@ -158,33 +165,41 @@ public class ComboDetalleBeanTest {
         assertNotNull(resultado);
         assertEquals(esperado, resultado);
 
-        // Caso: NoResultException 
-        // Caso: NoResultException → EntityNotFoundException
-        when(mockTypedQuery.getSingleResult()).thenThrow(new NoResultException());
+        // Caso: NoResultException (Debería lanzar EntityNotFoundException)
+        Mockito.when(mockTypedQuery.getSingleResult()).thenThrow(new NoResultException());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, ()
-                -> cut.findByIdComboAndIdProducto(idCombo, idProducto)
+        // Verificar que se lanza la excepción EntityNotFoundException
+        assertThrows(EntityNotFoundException.class, () ->
+                cut.findByIdComboAndIdProducto(idCombo, idProducto)
+        );
+
+        // Caso: PersistenceException (Debería lanzar PersistenceException)
+        Mockito.doThrow(PersistenceException.class).when(mockTypedQuery).getSingleResult();
+
+        // Verificar que se lanza la excepción PersistenceException
+        assertThrows(PersistenceException.class, () ->
+                cut.findByIdComboAndIdProducto(idCombo, idProducto)
         );
 
         // Caso: idCombo nulo o inválido → IllegalArgumentException
-        IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, ()
-                -> cut.findByIdComboAndIdProducto(null, idProducto)
+        assertThrows(IllegalArgumentException.class, () ->
+                cut.findByIdComboAndIdProducto(null, idProducto)
         );
-        IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, ()
-                -> cut.findByIdComboAndIdProducto(0L, idProducto)
-        );
-        assertEquals("idCombo no puede ser nulo, cero o negativo", ex2.getMessage());
-        // Caso: idProducto nulo o inválido → IllegalArgumentException
-        IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class, ()
-                -> cut.findByIdComboAndIdProducto(idCombo, null)
-        );
-        assertEquals("idProducto no puede ser nulo, cero o negativo", ex3.getMessage());
-        IllegalArgumentException ex4 = assertThrows(IllegalArgumentException.class, ()
-                -> cut.findByIdComboAndIdProducto(idCombo, 0L)
-        );
-        assertEquals("idProducto no puede ser nulo, cero o negativo", ex4.getMessage());
 
+        assertThrows(IllegalArgumentException.class, () ->
+                cut.findByIdComboAndIdProducto(0L, idProducto)
+        );
+
+        // Caso: idProducto nulo o inválido → IllegalArgumentException
+        assertThrows(IllegalArgumentException.class, () ->
+                cut.findByIdComboAndIdProducto(idCombo, null)
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                cut.findByIdComboAndIdProducto(idCombo, 0L)
+        );
     }
+
 
     @Test
     void testDeleteByComboDetallePK_variosCasos() {

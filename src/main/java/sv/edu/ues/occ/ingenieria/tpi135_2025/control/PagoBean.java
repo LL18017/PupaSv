@@ -54,7 +54,7 @@ public class PagoBean extends AbstractDataAccess<Pago> implements Serializable {
             List<Pago> resultados= em.createNamedQuery("Pago.findByIdOrden", Pago.class).
                     setParameter("idOrden", idOrden).setFirstResult(first).setMaxResults(max).getResultList();
             if (resultados.isEmpty()){
-                throw new NoResultException("No se encontro el resultado con el id " + idOrden);
+                throw new NoResultException("No se encontro resultado con el id " + idOrden);
             }
             return resultados;
         } catch (NoResultException e) {

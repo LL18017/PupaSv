@@ -106,7 +106,7 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
                     .getResultList();
 
             if (resultados.isEmpty()) {
-                throw new EntityNotFoundException("No se encontraron resultados para la orden con id: " + idOrden);
+                throw new NoResultException("No se encontraron resultados para la orden con id: " + idOrden);
             }
             return resultados;
         } catch (NoResultException e){
