@@ -109,7 +109,7 @@ public class PagoResouce extends GeneralRest implements Serializable {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Pago registro,
                            @Context UriInfo uriInfo) {
-        if (registro != null && registro.getIdPago() != null && registro.getIdOrden() != null) {
+        if (registro != null && registro.getIdOrden() != null) {
             try {
                 pBean.create(registro);
                 if (registro.getIdPago() != null) {

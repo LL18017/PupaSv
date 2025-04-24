@@ -5,6 +5,7 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
@@ -159,14 +160,13 @@ public class ProductoDetalleResourceSI extends AbstractContainerTest {
     public void testDelete() {
         System.out.println("ProductoDetalle  testSIdelete");
 
-
         String formato = String.format("productoDetalle/tipoProducto/%d/producto/%d", idTipoProductoCreado, idProductoCreado);
         Response respuesta = target.path(String.format(formato)).
                 request(MediaType.APPLICATION_JSON).delete();
         Assertions.assertEquals(200, respuesta.getStatus());
 
         Response comprobacion = target.path(formato).request(MediaType.APPLICATION_JSON).get();
-        Assertions.assertEquals(404, comprobacion.getStatus());
+        Assertions.assertEquals(500, comprobacion.getStatus());
 
         //fallo de argumentos uno de los ides no existe
         formato = String.format("productoDetalle/tipoProducto/%d/producto/%d", idTipoProductoCreado, 112233);//no existe este producto

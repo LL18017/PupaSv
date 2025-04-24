@@ -49,12 +49,12 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     /**
      * Busca un objeto {Ordendetalle} según su id de una orden y id de un productoprecio
      *
-     * @param idOrden el ID de la orden. No pueder ser Null ni menor o igual a cero
+     * @param idOrden          el ID de la orden. No pueder ser Null ni menor o igual a cero
      * @param idProductoPrecio el ID del ProductoPrecio. No puede ser Null ni menor o igual a cero
-     * @return  el objeto {OrdenDetalle} que coincida con los parámetros especificados.
+     * @return el objeto {OrdenDetalle} que coincida con los parámetros especificados.
      * @throws IllegalArgumentException si {idOrden} o {idProductoPrecio} son nulos o menores o iguales a cero.
-     * @throws NoResultException si no se encuentra ninguna coincidencia en la base de datos.
-     * @throws PersistenceException si ocurre un error en la consulta a la base de datos.
+     * @throws NoResultException        si no se encuentra ninguna coincidencia en la base de datos.
+     * @throws PersistenceException     si ocurre un error en la consulta a la base de datos.
      */
     public OrdenDetalle findByIdOrdenAndIdPrecioProducto(Long idOrden, Long idProductoPrecio) {
         if (idOrden == null || idOrden <= 0) {
@@ -64,10 +64,11 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             throw new IllegalArgumentException("idProductoPrecio no puede ser negativo o nulo");
         }
         try {
-            return em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)
+           OrdenDetalle resultado= em.createNamedQuery("OrdenDetalle.findByPrecioProductoAndIdOrden", OrdenDetalle.class)
                     .setParameter("idOrden", idOrden)
                     .setParameter("idProductoPrecio", idProductoPrecio)
                     .getSingleResult();
+           return resultado;
         } catch (NoResultException e) {
             throw new NoResultException("No se encontro resultado con el id " + idOrden);
         } catch (PersistenceException e) {
@@ -79,13 +80,13 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Recupera una lista de ordenDetalle asociados a una orden específica
      *
      * @param idOrden el ID de la orden para la cual se desean obtener los detalles. No puede ser Null
-     * @param first se asigna el valor inicial de los resultados a recuperar. Debe ser cero o mayor
-     * @param max se asigna el valor maximo de resultados a retornar. Debe ser mayor para cero
+     * @param first   se asigna el valor inicial de los resultados a recuperar. Debe ser cero o mayor
+     * @param max     se asigna el valor maximo de resultados a retornar. Debe ser mayor para cero
      * @return una lista de objetos que pertenecen a la orden específicada
      * @throws IllegalArgumentException si {idOrden} es {null}, o si {first} es {null} o negativo,
-     *                                   o si {max} es {null} o menor o igual a cero.
-     * @throws NoResultException si no se encuentran resultados para la orden indicada.
-     * @throws PersistenceException si ocurre un error en la ejecución de la consulta.
+     *                                  o si {max} es {null} o menor o igual a cero.
+     * @throws NoResultException        si no se encuentran resultados para la orden indicada.
+     * @throws PersistenceException     si ocurre un error en la ejecución de la consulta.
      */
     public List<OrdenDetalle> findRangeByIdOrden(Long idOrden, Integer first, Integer max) {
         if (idOrden == null) {
@@ -98,13 +99,19 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             throw new IllegalArgumentException("first no puede ser negativo o nulo");
         }
         try {
-            return em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)
+            List<OrdenDetalle> resultados = em.createNamedQuery("Orden.findByIdOrden", OrdenDetalle.class)
                     .setParameter("idOrden", idOrden)
-                    .setFirstResult(first).setMaxResults(max).
-                    getResultList();
-        } catch (NoResultException e) {
-            throw new NoResultException("No se encontro resultado con el id " + idOrden);
-        } catch (PersistenceException e) {
+                    .setFirstResult(first)
+                    .setMaxResults(max)
+                    .getResultList();
+
+            if (resultados.isEmpty()) {
+                throw new EntityNotFoundException("No se encontraron resultados para la orden con id: " + idOrden);
+            }
+            return resultados;
+        } catch (NoResultException e){
+            throw new NoResultException();
+        }catch (PersistenceException e) {
             throw new PersistenceException("Error en la base de datos", e);
         }
     }
@@ -115,8 +122,8 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * @param idOrden el ID de la orden por la cual se desea contar los detalles.
      * @return el número total de registros asociados al ID de la orden
      * @throws NonUniqueResultException si la consulta devuelve más de un resultado (lo cual no debería suceder en una consulta de conteo).
-     * @throws NoResultException si no se encuentra ningún resultado para el ID de orden proporcionado.
-     * @throws PersistenceException si ocurre un error en la ejecución de la consulta o al acceder a la base de datos.
+     * @throws NoResultException        si no se encuentra ningún resultado para el ID de orden proporcionado.
+     * @throws PersistenceException     si ocurre un error en la ejecución de la consulta o al acceder a la base de datos.
      */
     public Long countByIdOrden(Long idOrden) {
         try {
@@ -136,14 +143,14 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Genera un nuevo registro de {OrdenDetalle} para una orden y producto específicos utilizando la información de
      * precio obtenida desde la entidad{ComboDetalle}.
      *
-     * @param idOrden el ID de la orden a la cual se asociará el detalle. No debe de ser null ni menor o0 igual a cero
-     * @param idProducto EL ID del producto que se desea agregara la orden. No debe ser Null ni menor o igual a cero
+     * @param idOrden          el ID de la orden a la cual se asociará el detalle. No debe de ser null ni menor o0 igual a cero
+     * @param idProducto       EL ID del producto que se desea agregara la orden. No debe ser Null ni menor o igual a cero
      * @param cantidadProducto la cantidad del producto a agregar. Si es NUll o menor a 1, se asigna 1 por defecto.
      * @throws IllegalArgumentException si {idOrden} o {idProducto} son nulos o menores o iguales a cero.
-     * @throws NoResultException si no se encuentra el precio correspondiente para el producto especificado.
-     * @throws EntityNotFoundException si el producto no tiene un precio asociado válido.
-     * @throws PersistenceException si ocurre un error durante la persistencia del {OrdenDetalle}.
-     * @throws NullPointerException si alguno de los datos obtenidos de la base de datos es inválido.
+     * @throws NoResultException        si no se encuentra el precio correspondiente para el producto especificado.
+     * @throws EntityNotFoundException  si el producto no tiene un precio asociado válido.
+     * @throws PersistenceException     si ocurre un error durante la persistencia del {OrdenDetalle}.
+     * @throws NullPointerException     si alguno de los datos obtenidos de la base de datos es inválido.
      */
     public void generarOrdenDetalleProducto(Long idOrden, Long idProducto, Integer cantidadProducto) {
         if (idOrden == null || idOrden <= 0) {
@@ -186,14 +193,15 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     /**
      * Genera y preserban  múltiples registros de {OrdenDetalle} en base a un combo seleccionado.
      * Cada combo puede contener múltiples productos con cantidades y precios definidos.
-     * @param idOrden el ID de la orden a la que se asociarán los detalles del combo
-     * @param idCombo el ID del combo selecccionado que contiene los productos a agregar
+     *
+     * @param idOrden       el ID de la orden a la que se asociarán los detalles del combo
+     * @param idCombo       el ID del combo selecccionado que contiene los productos a agregar
      * @param cantidadCombo cantidad que desea agregar del combo a la orden. Si es null o menor a 1, se asignára 1 por defecto.
      * @throws IllegalArgumentException si {idOrden} o {idCombo} es nulo o menor o igual a cero.
-     * @throws EntityNotFoundException si no se encuentra la orden con el ID proporcionado.
-     * @throws NoResultException si no se encuentran productos asociados al combo especificado.
-     * @throws PersistenceException si ocurre un error al persistir los datos en la base de datos.
-     * @throws NullPointerException si ocurre un error inesperado con valores nulos al acceder a los resultados de la base de datos.
+     * @throws EntityNotFoundException  si no se encuentra la orden con el ID proporcionado.
+     * @throws NoResultException        si no se encuentran productos asociados al combo especificado.
+     * @throws PersistenceException     si ocurre un error al persistir los datos en la base de datos.
+     * @throws NullPointerException     si ocurre un error inesperado con valores nulos al acceder a los resultados de la base de datos.
      */
     public void generarOrdenDetalleDesdeCombo(Long idOrden, Long idCombo, Integer cantidadCombo) {
         if (idOrden == null || idOrden <= 0) {
@@ -206,15 +214,15 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             cantidadCombo = 1;
         }
         try {
-            Orden orden =  em.find(Orden.class,idOrden);
+            Orden orden = em.find(Orden.class, idOrden);
             if (orden == null) {
-                throw new EntityNotFoundException("no se ha encontrado la orden :"+idOrden);
+                throw new EntityNotFoundException("No se encontro resultado para la orden :" + idOrden);
             }
             List<Object[]> detalle = em.createNamedQuery("ComboDetalle.findProductoPrecioAndCantidadByIdCombo", Object[].class)
                     .setParameter("idCombo", idCombo)
                     .getResultList();
             if (detalle == null || detalle.isEmpty()) {
-                throw new NoResultException("No se ha encontrado detalle para este combo : " + idCombo);
+                throw new NoResultException("No se encontro resultado de detalle para este combo : " + idCombo);
             }
             List<OrdenDetalle> ordenDetalles = new ArrayList<>();
             for (Object[] d : detalle) {
@@ -247,12 +255,12 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * Genera y conserva los detalles de una orden a partir de una mezcla de Productos individuales y Combos seleccionados
      * Evita duplicados acumilando las catidades de los prodcutos repetidos.
      *
-     * @param idOrden el ID de la orden la que se asociaran los detalles
+     * @param idOrden       el ID de la orden la que se asociaran los detalles
      * @param productosList Lista de prodcutos individuales
-     * @param comboList Lista de combos.
+     * @param comboList     Lista de combos.
      * @throws IllegalArgumentException si {idOrden} es nulo o menor o igual a cero, o si ambas listas están vacías o nulas.
-     * @throws NoResultException si no se encuentra información necesaria para productos o combos en la base de datos.
-     * @throws PersistenceException si ocurre un error al persistir los datos en la base de datos.
+     * @throws NoResultException        si no se encuentra información necesaria para productos o combos en la base de datos.
+     * @throws PersistenceException     si ocurre un error al persistir los datos en la base de datos.
      */
     public void generarOrdenDetalleMixto(Long idOrden, List<Object[]> productosList, List<Object[]> comboList) {
         if (idOrden == null || idOrden <= 0) {
@@ -341,13 +349,14 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
     }
 
     /**
-     *  Elimina un registro específico en función del ID de la orden
-     *  el ID de producto-precio asociado. Verifica previamente que tanto la orden como
-     *  el producto-precio existan en la base de datos.
-     * @param idOrden el ID de la orden a la que pertenece el detalle a eliminar
+     * Elimina un registro específico en función del ID de la orden
+     * el ID de producto-precio asociado. Verifica previamente que tanto la orden como
+     * el producto-precio existan en la base de datos.
+     *
+     * @param idOrden          el ID de la orden a la que pertenece el detalle a eliminar
      * @param idProductoPrecio el ID del prodcuto-precio asociado al detalle a eliminar
      * @throws EntityNotFoundException si la orden o el producto-precio no existen en la base de datos.
-     * @throws PersistenceException si ocurre un error al ejecutar la eliminación en la base de datos.
+     * @throws PersistenceException    si ocurre un error al ejecutar la eliminación en la base de datos.
      */
     public void delete(Long idOrden, Long idProductoPrecio) {
         try {
@@ -373,13 +382,14 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
 
     /**
      * Actualizacion de un registro existente se utiliza el ID de la orden y el ID de producto-precio como clave compuesta
-     * @param registro  el objeto con los nuevos datos que se desean actualizar.
-     * @param idOrden el ID d ela orden a la que pertemece el detalle
+     *
+     * @param registro         el objeto con los nuevos datos que se desean actualizar.
+     * @param idOrden          el ID d ela orden a la que pertemece el detalle
      * @param idProductoPrecio el ID del producto-precio asociado al detalle
      * @return el objeto actualizado
      * @throws IllegalArgumentException si alguno de los parámetros es nulo o inválido.
-     * @throws EntityNotFoundException si no se encuentra la orden o el producto-precio especificado.
-     * @throws PersistenceException si ocurre un error al intentar actualizar el registro en la base de datos.
+     * @throws EntityNotFoundException  si no se encuentra la orden o el producto-precio especificado.
+     * @throws PersistenceException     si ocurre un error al intentar actualizar el registro en la base de datos.
      */
     public OrdenDetalle update(OrdenDetalle registro, Long idOrden, Long idProductoPrecio) throws IllegalStateException, IllegalArgumentException {
         if (registro == null) {

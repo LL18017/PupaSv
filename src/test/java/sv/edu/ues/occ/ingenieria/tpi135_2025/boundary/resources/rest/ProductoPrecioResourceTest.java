@@ -165,6 +165,12 @@ public class ProductoPrecioResourceTest {
         Mockito.when(mockPp.update(tp,id)).thenReturn(tp);
         Response response = cut.update(id,tp);
         Assertions.assertEquals(200, response.getStatus());
+        //precio nulo
+        response =cut.update(id,null);
+        Assertions.assertEquals(404, response.getStatus());
+        //precio nulo
+        response =cut.update(200L,tp);
+        Assertions.assertEquals(400, response.getStatus());
         //excepciones
         Mockito.reset(mockPp);
         Mockito.doThrow(persistenceExcepcion)
@@ -174,4 +180,51 @@ public class ProductoPrecioResourceTest {
 
         //fail("Esta prueba no pasa quemado");
     }
+
+
+    @Test
+    void findByIdProducto() {
+        System.out.println("ProductoPrecio test findByIdProducto");
+        cut = new ProductoPrecioResource();
+        mockPp = Mockito.mock(ProductoPrecioBean.class);
+        Long id = 1L;
+        cut.productoPrecioBean= mockPp;
+        //flujo normal
+        Mockito.when(mockPp.findByIdProducto(id)).thenReturn(TEST_TP.stream().filter(p->p.getIdProductoPrecio().equals(id)).findFirst().get());
+        Response response = cut.findByIdProducto(id);
+        Assertions.assertEquals(200, response.getStatus());
+        //error de id
+        response=cut.findByIdProducto(null);
+        Assertions.assertEquals(400, response.getStatus());
+        //excepciones
+        Mockito.reset(mockPp);
+        Mockito.when(mockPp.findByIdProducto(2L)).thenThrow(entityNotFoundException);
+        response = cut.findByIdProducto(2L);
+        Assertions.assertEquals(404, response.getStatus());
+
+        //fail("Esta prueba no pasa quemado");
+    }
+
+    @Test
+    void findCount() {
+        System.out.println("ProductoPrecio test count");
+        cut = new ProductoPrecioResource();
+        mockPp = Mockito.mock(ProductoPrecioBean.class);
+        Long id = 1L;
+        cut.productoPrecioBean= mockPp;
+        //flujo normal con id
+        Mockito.when(mockPp.countByIdProducto(id)).thenReturn((long) TEST_TP.subList(0,3).size());
+         Response response = cut.count(id);
+        Assertions.assertEquals(200, response.getStatus());
+        response = cut.count(null);
+        Assertions.assertEquals(400, response.getStatus());
+        //excepciones
+        Mockito.reset(mockPp);
+        Mockito.when(mockPp.countByIdProducto(id)).thenThrow(persistenceExcepcion);
+        response = cut.count(id);
+        Assertions.assertEquals(500, response.getStatus());
+
+        //fail("Esta prueba no pasa quemado");
+    }
+
 }

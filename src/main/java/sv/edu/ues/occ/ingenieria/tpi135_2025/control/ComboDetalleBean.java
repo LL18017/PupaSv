@@ -100,11 +100,11 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             // Validar existencia de Combo y Producto
             Combo combo = em.find(Combo.class, idCombo);
             if (combo == null) {
-                throw new EntityNotFoundException("No se encontró Combo con id " + idCombo);
+                throw new EntityNotFoundException("No se encontro resultado para  Combo con id " + idCombo);
             }
             Producto producto = em.find(Producto.class, idProducto);
             if (producto == null) {
-                throw new EntityNotFoundException("No se encontró Producto con id " + idProducto);
+                throw new EntityNotFoundException("No se encontro resultado para producto con id " + idProducto);
             }
             // Asignar la clave primaria embebida
             ComboDetallePK pk = new ComboDetallePK(idCombo, idProducto);
@@ -143,7 +143,7 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
                     .setParameter("idProducto", idProducto)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new EntityNotFoundException("No se encontró ComboDetalle con idCombo=" + idCombo + " e idProducto=" + idProducto);
+            throw new EntityNotFoundException("No se encontro resultado para ComboDetalle con idCombo=" + idCombo + " e idProducto=" + idProducto);
         }
     }
 
@@ -170,12 +170,12 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             // Validación previa manual como en ProductoDetalleBean
             Combo combo = em.find(Combo.class, idCombo);
             if (combo == null) {
-                throw new EntityNotFoundException("No existe el Combo con id=" + idCombo);
+                throw new EntityNotFoundException("No se encontro resultado para el Combo con id=" + idCombo);
             }
 
             Producto producto = em.find(Producto.class, idProducto);
             if (producto == null) {
-                throw new EntityNotFoundException("No existe el Producto con id=" + idProducto);
+                throw new EntityNotFoundException("No se encontro resultado  para el Producto con id=" + idProducto);
             }
             em.createNamedQuery("ComboDetalle.deleteByComboDetallePK")
                     .setParameter("idCombo", idCombo)

@@ -70,7 +70,6 @@ public class ProductoDetalleResource extends GeneralRest implements Serializable
         try {
             ProductoDetalle registro = pdBean.findById(idTipoProducto, idProducto);
             return Response.ok((registro)).build();
-
         } catch (Exception e) {
             return responseExcepcions(e, null);
         }
@@ -119,7 +118,6 @@ public class ProductoDetalleResource extends GeneralRest implements Serializable
             pdBean.deleteByIdTipoProductoAndIdProducto(idTipoProducto, idProducto);
             return Response.status(200).build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return responseExcepcions(e, null);
         }
     }

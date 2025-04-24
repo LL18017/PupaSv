@@ -36,7 +36,6 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
             List<ProductoPrecio> precios = productoPrecioBean.findRange(firts, max);
             return Response.ok(precios).build();
         }catch (Exception e) {
-            Logger.getLogger(ProductoPrecioResource.class.getName()).log(Level.SEVERE, null, e);
             return responseExcepcions(e,null);
         }
     }
@@ -57,9 +56,6 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     public Response findById(@PathParam("id") Long id) {
         try {
             ProductoPrecio precio = productoPrecioBean.findById(id);
-            if (precio == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
             return Response.ok(precio).build();
         } catch (Exception e) {
             return responseExcepcions(e, null);
@@ -163,17 +159,13 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
      * del producto. Los parámetros opcionales  first y max permiten paginar los resultados si es necesario.
      *
      * @param idProducto el ID del Producto cuyo precio se desea recuperar (proporcionado en la ruta).
-     * @param first el índice del primer elemento de la página de resultados (por defecto es 0).
-     * @param max el número máximo de elementos a devolver en la respuesta (por defecto es 20).
      * @return una respuesta HTTP que contiene el objeto ProductoPrecio correspondiente al Producto solicitado,
      *         o una respuesta de error si ocurre un problema durante la consulta.
      * @throws Exception si ocurre un error durante la recuperación del producto o sus precios.
      */
     @GET
     @Path("producto/{idProducto}")
-    public Response findByIdProducto(@PathParam("idProducto") Long idProducto,
-                                     @QueryParam("first")@DefaultValue("0") int first,
-                                     @QueryParam("max")@DefaultValue("20") int max){
+    public Response findByIdProducto(@PathParam("idProducto") Long idProducto){
         if (idProducto == null || idProducto < 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("El ID del producto no puede ser nulo o menor que 0.")
@@ -200,7 +192,7 @@ public class ProductoPrecioResource extends GeneralRest implements Serializable 
     @GET
     @Path("producto/{idProducto}/count")
     public Response count(@PathParam("idProducto") Long idProducto){
-        if (idProducto == null || idProducto < 0) {
+        if (idProducto == null || idProducto <= 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("El ID del producto no puede ser nulo o menor que 0.")
                     .build();

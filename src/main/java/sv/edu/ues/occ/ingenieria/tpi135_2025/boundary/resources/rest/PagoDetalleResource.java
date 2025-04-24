@@ -34,7 +34,7 @@ public class PagoDetalleResource extends GeneralRest implements Serializable {
     public Response findRange(@QueryParam("fist") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max, @QueryParam("idPago") @DefaultValue("0") Long idPago) {
         try {
             //flujo normal
-            if (idPago != null && idPago == 0) {
+            if (idPago == null || idPago == 0) {
                 List<PagoDetalle> encontrados = pdBean.findRange(first, max);
                 long total = pdBean.count();
                 Response.ResponseBuilder builder = Response.ok(encontrados).
@@ -108,9 +108,7 @@ public class PagoDetalleResource extends GeneralRest implements Serializable {
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.path(String.valueOf(registro.getIdPagoDetalle()));
             return Response.created(uriBuilder.build()).build();
-        } catch (NullPointerException e) {
-            return Response.status(400).header(Headers.WRONG_PARAMETER, e.getMessage()).build();
-        } catch (Exception e) {
+        }catch (Exception e) {
             return responseExcepcions(e, null);
         }
     }
@@ -119,7 +117,6 @@ public class PagoDetalleResource extends GeneralRest implements Serializable {
      * Borra un registro de tipo PAgo Especifico
      *
      * @param id      id del TipoProducto a eliminar
-     * @param uriInfo info de url de donde se esta realizado la peticion
      * @return un status 200 si se borro la entidad , un 422 si hubo un problema
      * y 500 si falla el servdor
      */
@@ -127,7 +124,7 @@ public class PagoDetalleResource extends GeneralRest implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("{id}")
-    public Response delete(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("id") Long id) {
         try {
             pdBean.delete(id);
             return Response.status(200).build();

@@ -67,6 +67,7 @@ public class ComboDetalleResourceSI extends AbstractContainerTest {
         path = String.format("comboDetalle/combo/%d/producto/%d", idComboCreado, 999999);
         respuesta = target.path(path).request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(detalle, MediaType.APPLICATION_JSON));
+        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(404, respuesta.getStatus());
 
         // idCombo inexistente
@@ -121,6 +122,7 @@ public class ComboDetalleResourceSI extends AbstractContainerTest {
         resp = target.path(path)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
+        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(400, resp.getStatus());
     }
 

@@ -25,7 +25,6 @@ public class GeneralRest {
     public GeneralRest() {
     }
 
-    //    abstract AbstractDataAccess<T> getBean();
 
     @Inject
     ProductoBean pBean;
@@ -38,7 +37,7 @@ public class GeneralRest {
      * Método que transforma excepciones lanzadas durante la ejecución de
      * métodos de negocio en respuestas HTTP adecuadas.
      *
-     * @param e excepción capturada.
+     * @param e  excepción capturada.
      * @param id identificador del recurso relacionado (puede ser nulo).
      * @return respuesta HTTP con el código y encabezado correspondiente según
      * el tipo de excepción: - 400: Parámetros inválidos
@@ -49,31 +48,31 @@ public class GeneralRest {
      * serialización JSON (JsonbException)
      */
     public Response responseExcepcions(Exception e, Long id) {
-        Throwable causa = e.getCause();
-        if (causa instanceof IllegalArgumentException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        if (e instanceof IllegalArgumentException) {
             return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
-        } else if (causa instanceof EntityNotFoundException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        } else if (e instanceof EntityNotFoundException) {
             return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
-        } else if (causa instanceof NoResultException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getCause()).build();
-        } else if (causa instanceof ConstraintViolationException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return Response.status(500).header(Headers.PROCESS_ERROR, "error al aceder a la base de datos").build();
-        } else if (causa instanceof IllegalStateException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        } else if (e instanceof NoResultException) {
+            return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
+        } else if (e instanceof ConstraintViolationException) {
+            return Response.status(500).header(Headers.PROCESS_ERROR, "error al acceder a la base de datos").build();
+        } else if (e.getCause() instanceof IllegalStateException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error en el repositorio").build();
-        } else if (causa instanceof PersistenceException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            return Response.status(500).header(Headers.PROCESS_ERROR, "error en la base  de datos").build();
-        } else if (causa instanceof JsonbException) {
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        } else if (e instanceof PersistenceException ) {
+            System.out.println("pasa aqui");
+            if (e.getCause() instanceof EntityNotFoundException) {
+                return Response.status(404).header(Headers.NOT_FOUND_ID, e.getCause().getMessage()).build();
+            }
+            if (e.getMessage().contains("No se encontro resultado")){
+                return Response.status(404).header(Headers.NOT_FOUND_ID, e.getMessage()).build();
+            }
+            return Response.status(500).header(Headers.PROCESS_ERROR, "error en la base de datos").build();
+        } else if (e instanceof JsonbException || e.getCause() instanceof JsonbException) {
             return Response.status(500).header(Headers.PROCESS_ERROR, "error al serializar").entity(e).build();
         }
-        return Response.status(500).header(Headers.PROCESS_ERROR, causa.toString()).entity(e).build();
 
+        return Response.status(500).header(Headers.PROCESS_ERROR, e.toString()).entity(e).build();
     }
+
 
 }
