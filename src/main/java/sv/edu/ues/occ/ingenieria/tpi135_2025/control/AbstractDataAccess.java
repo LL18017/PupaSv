@@ -26,7 +26,7 @@ public abstract class AbstractDataAccess<T> {
     final Class tipoDato;
 
     /**
-     * Constructor que recibe el tipo de dato manejado.
+     * Constructor que recibe el tipo de dato manejado cambiado.
      *
      * @param t Clase del tipo de entidad que se maneja.
      */
