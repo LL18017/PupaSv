@@ -31,7 +31,7 @@ public class PagoDetalleResourceSI extends AbstractContainerTest{
 
     @Order(1)
    @Test
-
+//ljnaejbaéjbcáe
     public void testCreate() throws InterruptedException {
         System.out.println("PagoDetalle testSI create");
         PagoDetalle registro = new PagoDetalle();

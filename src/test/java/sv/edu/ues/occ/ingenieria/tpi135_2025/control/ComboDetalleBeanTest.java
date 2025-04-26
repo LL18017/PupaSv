@@ -76,6 +76,7 @@ public class ComboDetalleBeanTest {
 
     @Test
     void testCreateComboDetalle_variosCasos() {
+        System.out.println("comboDetalle test create");
         ComboDetalle detalleValido = new ComboDetalle();
         detalleValido.setCantidad(5);
         detalleValido.setActivo(true);
@@ -149,6 +150,7 @@ public class ComboDetalleBeanTest {
 
     @Test
     void testFindByIdComboAndIdProducto_variosCasos() {
+        System.out.println("comboDetalle test finbyidcomboand");
         Long idCombo = 1L, idProducto = 2L;
         ComboDetalle esperado = new ComboDetalle();
 
