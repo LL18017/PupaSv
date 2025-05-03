@@ -29,7 +29,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ComboDetalle;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ComboDetalleResourceSI extends AbstractContainerTest {
 
-    Long totalEnScript = 6L;
+    Long totalEnScript = 25L;
 
     Long idComboPrueba = 1001L;
     Long idProductoPrueba = 1003L;
@@ -97,7 +97,7 @@ public class ComboDetalleResourceSI extends AbstractContainerTest {
         Assertions.assertEquals(200, resp.getStatus()); // aqui esta mandando el error 
         List<ComboDetalle> lista = resp.readEntity(new GenericType<List<ComboDetalle>>() {
         });
-        Assertions.assertEquals(totalEnScript, lista.size());
+        Assertions.assertEquals(totalEnScript>20?20:totalEnScript, lista.size());
 
         // Obtener uno válido
         String path = String.format("comboDetalle/combo/%d/producto/%d", idComboPrueba, idProductoPrueba);

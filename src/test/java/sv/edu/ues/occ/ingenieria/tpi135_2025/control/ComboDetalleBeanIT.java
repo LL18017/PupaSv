@@ -34,11 +34,11 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
 
     ComboDetalleBean cut;
 
-    Long totalEnScript = 6l;//cantidad en el script
+    Long totalEnScript = 25l;//cantidad en el script
     Long idComboPrueba = 1001L;
     Long idProductoPrueba = 1001L;
 
-    Long idComboCreado = 1003L;
+    Long idComboCreado = 1011L;
     Long idProductoCreado = 1003L;
 
     ComboDetallePK idCreadoEnPrueba = null;

@@ -40,8 +40,8 @@ public class ComboResourceSI extends AbstractContainerTest {
     }
 
     Integer first = 0;
-    Integer max = 10;
-    Long cantidadEnScript = 3L;
+    Integer max = 30;
+    Long cantidadEnScript = 11L;
     Long idBase = 1001L; // ID de referencia de Combo
     Long idCreado=1L;
 

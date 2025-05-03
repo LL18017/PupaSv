@@ -20,7 +20,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     private static final Logger log = LoggerFactory.getLogger(ProductoBeanIT.class);
     ProductoBean cut;
 
-    Long totalEnScript = 4l;//cantidad en el script
+    Long totalEnScript = 20l;//cantidad en el script
     Long idDePrueba = 1001L;//ya se encuentra en el script
     Long idCreadoEnPrueba = 1001L;//se cambiara luego
     Integer idTipoProdcutoCreado = 1002;
@@ -249,7 +249,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
     void findRangeProductoActivos() {
         System.out.println("Producto testIT findRangeProductoActivos");
         EntityManager em = emf.createEntityManager();
-        Long cantidadEsperada = 2L;//
+        Long cantidadEsperada = 18L;//
         boolean activo = true;
         cut.em = em;
         List<Producto> respuesta = cut.findRangeProductoActivos(first, max, activo);
@@ -269,7 +269,7 @@ public class ProductoBeanIT extends AbstractContainerTest {
         System.out.println("Producto testIT countProductoActivos");
         EntityManager em = emf.createEntityManager();
         boolean activo = true;
-        Long cantiddaEsperada = 2L;//segun script db
+        Long cantiddaEsperada = 18L;//segun script db
         cut.em = em;
         em.getTransaction().begin();
         Long respuesta = cut.countProductoActivos(activo);

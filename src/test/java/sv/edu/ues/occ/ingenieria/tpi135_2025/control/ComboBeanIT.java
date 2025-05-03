@@ -33,7 +33,7 @@ public class ComboBeanIT extends AbstractContainerTest {
     EntityManager mockEm;
     ComboDetalleBean cut2;
 
-    Long totalEnScript = 3l;//cantidad en el script
+    Long totalEnScript = 11l;//cantidad en el script
     Long idDePrueba = 1001L;//ya se encuentra en el script
     static Long idCreadoEnPrueba = 0L;//se cambiara luego
 
@@ -51,7 +51,7 @@ public class ComboBeanIT extends AbstractContainerTest {
         EntityManager em = emf.createEntityManager();
         cut.em = em;
         Combo creado = new Combo();
-        creado.setIdCombo(1004L); // Asignar manualmente un ID único
+        creado.setIdCombo(1010L); // Asignar manualmente un ID único
         creado.setNombre("Tipo test");
         try {
             // Flujo normal: Persistimos el objeto

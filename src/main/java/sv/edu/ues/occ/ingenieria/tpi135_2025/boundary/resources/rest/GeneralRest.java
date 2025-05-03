@@ -48,6 +48,7 @@ public class GeneralRest {
      * serialización JSON (JsonbException)
      */
     public Response responseExcepcions(Exception e, Long id) {
+        System.out.println(e.getMessage());
         if (e.getCause() instanceof IllegalArgumentException) {
             return Response.status(400).header(Headers.WRONG_PARAMETER, "id: " + id).build();
         } else if (e.getCause() instanceof EntityNotFoundException) {

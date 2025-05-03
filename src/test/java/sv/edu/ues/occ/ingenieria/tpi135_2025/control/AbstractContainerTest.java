@@ -33,7 +33,7 @@ public abstract class AbstractContainerTest {
     static int DB_PORT = 5432;
 
     Integer first = 0;
-    Integer max = 10;
+    Integer max = 30;
 
     @Container
     static GenericContainer postgres = new PostgreSQLContainer("postgres:16-alpine")

@@ -33,7 +33,7 @@ public abstract class AbstractContainerTest {
     Client cliente;
     WebTarget target;
     Integer first=0;
-    Integer max=10;
+    Integer max=30;
 
     static String ruta = "/home/mjlopez/Escritorio/PupaSv/target/PupaSv-1.0-SNAPSHOT.war";
     static String dbName = "Tipicos";

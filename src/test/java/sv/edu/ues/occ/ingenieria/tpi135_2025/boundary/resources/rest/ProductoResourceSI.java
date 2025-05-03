@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductoResourceSI extends AbstractContainerTest {
 
-    Long totalEnScript = 4L;
+    Long totalEnScript = 20L;
     Long idParaTest = 1001L;
     Integer idTipoProductoCreado = 1003;
     Long idCreadoConRelacion = 0L;
@@ -47,6 +47,7 @@ public class ProductoResourceSI extends AbstractContainerTest {
                 .request(MediaType.APPLICATION_JSON).
                 post(Entity.entity(registro, MediaType.APPLICATION_JSON));
         Assertions.assertNotNull(respuesta);
+        System.out.println(servidorDeAplicaion.getLogs());
         Assertions.assertEquals(201, respuesta.getStatus());
 
         String[] id = respuesta.getLocation().toString().split("/");
@@ -87,7 +88,7 @@ public class ProductoResourceSI extends AbstractContainerTest {
         System.out.println("Producto  testSI getRange");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
         Integer idTipoProducto = 1001;//dos registros en db
-        Long cantidadTotalActivos = 3L;//3 en db + 1  the create()
+        Long cantidadTotalActivos = 19L;//3 en db + 1  the create()
         Integer cantidadEsperadasActicos = 1;
 
         String path = "producto";
@@ -99,7 +100,7 @@ public class ProductoResourceSI extends AbstractContainerTest {
         List<Producto> registros = respuesta.readEntity(new GenericType<List<Producto>>() {
         });
 
-        Assertions.assertEquals(totalEnScript, registros.size());
+        Assertions.assertEquals(totalEnScript>20?20:totalEnScript, registros.size());
 
         //todos los activos
         respuesta = target.path(path).queryParam("activo", true).request(MediaType.APPLICATION_JSON).get();

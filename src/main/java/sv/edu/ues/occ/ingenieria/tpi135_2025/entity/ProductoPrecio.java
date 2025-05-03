@@ -61,6 +61,7 @@ public class ProductoPrecio implements Serializable {
     @Column(name = "fecha_hasta")
     @Temporal(TemporalType.DATE)
     private Date fechaHasta;
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio_sugerido")
     private BigDecimal precioSugerido;
@@ -127,6 +128,7 @@ public class ProductoPrecio implements Serializable {
     public void setIdProducto(Producto idProducto) {
         this.idProducto = idProducto;
     }
+
 
     @Override
     public int hashCode() {

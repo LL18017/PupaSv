@@ -38,7 +38,7 @@ class ProductoPrecioBeanIT extends AbstractContainerTest {
         System.out.println("findByIdProducto");
         ProductoPrecio precio = productoPrecioBean.findByIdProducto(idProductoParaPruebas);
         assertNotNull(precio);
-        assertEquals(new BigDecimal("1.00"), precio.getPrecioSugerido());
+        assertEquals(new BigDecimal("1.50"), precio.getPrecioSugerido());
         //Assertions.fail("Esta prueba no pasa quemado");
 
     }

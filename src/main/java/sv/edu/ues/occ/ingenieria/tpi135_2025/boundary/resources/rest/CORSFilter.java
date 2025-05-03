@@ -19,6 +19,7 @@ public class CORSFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Cambia a la URL de tu frontend
+        res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500"); // Cambia a la URL de tu frontend
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         res.setHeader("Access-Control-Allow-Headers", "Origin, Accept, Content-Type, Access-Control-Request-Method, " +
                 "Access-Control-Request-Headers, Authorization,not-found-id-sala");

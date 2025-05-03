@@ -47,6 +47,8 @@ public class Producto implements Serializable {
     private Boolean activo;
     @Column(name = "observaciones")
     private String observaciones;
+    @Column(name = "url")
+    private String url;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto", fetch = FetchType.EAGER)
     @JsonbTransient
     private List<ComboDetalle> comboDetalleList;
@@ -56,7 +58,7 @@ public class Producto implements Serializable {
     private List<ProductoDetalle> productoDetalleList;
 
 
-    @JsonbTransient
+//    @JsonbTransient
     @OneToMany(mappedBy = "idProducto")
     private List<ProductoPrecio> productoPrecioList;
 
@@ -97,6 +99,14 @@ public class Producto implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<ComboDetalle> getComboDetalleList() {

@@ -34,7 +34,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
     private WebTarget target;
     private Long createdId=1001L;
     Long idProductoPrecioPrueba=1003L;
-    Long totalRegistros=3L;
+    Long totalRegistros=20L;
 
 
     @BeforeAll
@@ -111,7 +111,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
         List<ProductoPrecio> resultados = response.readEntity(new GenericType<List<ProductoPrecio>>() {});
 
 
-        Assertions.assertEquals(totalRegistros, resultados.size());
+        Assertions.assertEquals(totalRegistros>20?20:totalRegistros, resultados.size());
         //fail("Esta prueba no pasa quemado");
     }
 

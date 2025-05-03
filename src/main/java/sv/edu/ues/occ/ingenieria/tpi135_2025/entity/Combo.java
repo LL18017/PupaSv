@@ -44,6 +44,9 @@ public class Combo implements Serializable {
     private Boolean activo;
     @Column(name = "descripcion_publica")
     private String descripcionPublica;
+    @Column(name = "url")
+    private String url;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "combo")
     private List<ComboDetalle> comboDetalleList;
 
@@ -92,6 +95,14 @@ public class Combo implements Serializable {
 
     public void setComboDetalleList(List<ComboDetalle> comboDetalleList) {
         this.comboDetalleList = comboDetalleList;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

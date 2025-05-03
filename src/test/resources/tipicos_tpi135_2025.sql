@@ -10,10 +10,11 @@ CREATE SEQUENCE public.combo_id_combo_seq
 ALTER SEQUENCE public.combo_id_combo_seq OWNER TO postgres;
 
 CREATE TABLE public.combo (
-    id_combo bigint NOT NULL  DEFAULT nextval('combo_id_combo_seq'),
-    nombre character varying(155),
-    activo boolean,
-    descripcion_publica text
+                              id_combo bigint NOT NULL  DEFAULT nextval('combo_id_combo_seq'),
+                              nombre character varying(155),
+                              activo boolean,
+                              descripcion_publica text,
+                              url text
 );
 
 
@@ -25,10 +26,10 @@ ALTER TABLE public.combo OWNER TO postgres;
 --
 
 CREATE TABLE public.combo_detalle (
-    id_combo bigint NOT NULL,
-    id_producto bigint NOT NULL,
-    cantidad integer DEFAULT 1,
-    activo boolean
+                                      id_combo bigint NOT NULL,
+                                      id_producto bigint NOT NULL,
+                                      cantidad integer DEFAULT 1,
+                                      activo boolean
 );
 
 
@@ -40,10 +41,10 @@ ALTER TABLE public.combo_detalle OWNER TO postgres;
 --
 
 CREATE TABLE public.orden (
-    id_orden bigint NOT NULL,
-    fecha date DEFAULT now(),
-    sucursal character varying(5),
-    anulada boolean DEFAULT false
+                              id_orden bigint NOT NULL,
+                              fecha date DEFAULT now(),
+                              sucursal character varying(5),
+                              anulada boolean DEFAULT false
 );
 
 
@@ -55,11 +56,11 @@ ALTER TABLE public.orden OWNER TO postgres;
 --
 
 CREATE TABLE public.orden_detalle (
-    id_orden bigint NOT NULL,
-    id_producto_precio bigint NOT NULL,
-    cantidad integer DEFAULT 1 NOT NULL,
-    precio numeric(6,2),
-    observaciones text
+                                      id_orden bigint NOT NULL,
+                                      id_producto_precio bigint NOT NULL,
+                                      cantidad integer DEFAULT 1 NOT NULL,
+                                      precio numeric(6,2),
+                                      observaciones text
 );
 
 
@@ -95,11 +96,11 @@ ALTER SEQUENCE public.orden_id_orden_seq OWNED BY public.orden.id_orden;
 --
 
 CREATE TABLE public.pago (
-    id_pago bigint NOT NULL,
-    id_orden bigint,
-    fecha date DEFAULT now(),
-    metodo_pago character varying(10) DEFAULT 'EFECTIVO'::character varying,
-    referencia text
+                             id_pago bigint NOT NULL,
+                             id_orden bigint,
+                             fecha date DEFAULT now(),
+                             metodo_pago character varying(10) DEFAULT 'EFECTIVO'::character varying,
+                             referencia text
 );
 
 
@@ -111,10 +112,10 @@ ALTER TABLE public.pago OWNER TO postgres;
 --
 
 CREATE TABLE public.pago_detalle (
-    id_pago_detalle bigint NOT NULL,
-    id_pago bigint,
-    monto numeric(6,2),
-    observaciones text
+                                     id_pago_detalle bigint NOT NULL,
+                                     id_pago bigint,
+                                     monto numeric(6,2),
+                                     observaciones text
 );
 
 
@@ -174,10 +175,11 @@ ALTER SEQUENCE public.pago_id_pago_seq OWNED BY public.pago.id_pago;
 --
 
 CREATE TABLE public.producto (
-    id_producto bigint NOT NULL,
-    nombre character varying(155),
-    activo boolean DEFAULT true,
-    observaciones text
+                                 id_producto bigint NOT NULL,
+                                 nombre character varying(155),
+                                 activo boolean DEFAULT true,
+                                 observaciones text,
+                                 url text
 );
 
 
@@ -198,10 +200,10 @@ COMMENT ON TABLE public.producto IS 'Productos disponibles para consumo';
 --
 
 CREATE TABLE public.producto_detalle (
-    id_tipo_producto integer NOT NULL,
-    id_producto bigint NOT NULL,
-    activo boolean DEFAULT true,
-    observaciones text
+                                         id_tipo_producto integer NOT NULL,
+                                         id_producto bigint NOT NULL,
+                                         activo boolean DEFAULT true,
+                                         observaciones text
 );
 
 
@@ -246,11 +248,11 @@ ALTER SEQUENCE public.producto_id_producto_seq OWNED BY public.producto.id_produ
 --
 
 CREATE TABLE public.producto_precio (
-    id_producto_precio bigint NOT NULL,
-    id_producto bigint,
-    fecha_desde date DEFAULT now(),
-    fecha_hasta date,
-    precio_sugerido numeric(8,2)
+                                        id_producto_precio bigint NOT NULL,
+                                        id_producto bigint,
+                                        fecha_desde date DEFAULT now(),
+                                        fecha_hasta date,
+                                        precio_sugerido numeric(8,2)
 );
 
 
@@ -286,10 +288,10 @@ ALTER SEQUENCE public.producto_precio_id_producto_precio_seq OWNED BY public.pro
 --
 
 CREATE TABLE public.tipo_producto (
-    id_tipo_producto integer NOT NULL,
-    nombre character varying(155) NOT NULL,
-    activo boolean DEFAULT true,
-    observaciones text
+                                      id_tipo_producto integer NOT NULL,
+                                      nombre character varying(155) NOT NULL,
+                                      activo boolean DEFAULT true,
+                                      observaciones text
 );
 
 
@@ -459,15 +461,48 @@ INSERT INTO public.tipo_producto VALUES (1001, 'bebida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1002, 'comida', true, NULL);
 INSERT INTO public.tipo_producto VALUES (1003, 'tipicos', true, NULL);
 
-INSERT INTO public.producto VALUES (1001, 'coca', true, NULL);
-INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL);
-INSERT INTO public.producto VALUES (1003, 'pupusas', true, NULL);
-INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL);
+INSERT INTO public.producto VALUES (1001, 'coca 1.25L', true, NULL,'https://cdn.pedix.app/lJ0himepqTJcT1Ynn5lP/products/1718493289062-24927.png?size=2000x2000');
+INSERT INTO public.producto VALUES (1002, 'pepsi', true, NULL,'https://farinapizzas.com.au/wp-content/uploads/2023/05/1.25L-Pepsi.jpg');
+INSERT INTO public.producto VALUES (1003, 'pupusas', true,null ,'https://imag.bonviveur.com/pupusas-salvadorenas.webp');
+INSERT INTO public.producto VALUES (1004, 'nuegados', false, NULL,'https://www.tipicosmargoth.com/wp-content/uploads/2020/05/NU%C3%89GADO-DE-YUCA-TIPICOS-MARGOTH.jpg');
+INSERT INTO public.producto VALUES (1005, 'yuca frita', true, NULL,'https://mojo.generalmills.com/api/public/content/dIC2MOZgzUy11gV3XUty4g_gmi_hi_res_jpeg.jpeg?v=1b8cbe0c&t=16e3ce250f244648bef28c5949fb99ff');
+INSERT INTO public.producto VALUES (1006, 'chilate', true, NULL,'https://scontent.fsal2-2.fna.fbcdn.net/v/t1.6435-9/126903013_1324003161281913_2395096843591853983_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=xMvTpJKNmBEQ7kNvwHNLIh3&_nc_oc=AdniETChzLvoW-st65gATZU2-Yyq-CchCP5mBOsOIUNjQBp4awcBpwZ1YCVUnSBpNa0WnwjhWaTRr8yU1ZetPJmf&_nc_zt=23&_nc_ht=scontent.fsal2-2.fna&_nc_gid=U6oH-84yWomciF_IiYbXpw&oh=00_AfGPNqJ5-I-11oAFO749eCb2DU6hLVxmibgyOBQpnWsz7g&oe=683C7064');
+INSERT INTO public.producto VALUES (1007, 'tamal de maiz', true, NULL,'https://www.correo.ca/wp-content/uploads/2023/06/Tamales-colombianosshutterstock_2045038238-696x464.jpeg');
+INSERT INTO public.producto VALUES (1008, 'tamal de elote', true, NULL,'https://editorialtelevisa.brightspotcdn.com/dims4/default/a8975df/2147483647/strip/true/crop/900x507+0+47/resize/1000x563!/format/webp/quality/90/?url=https%3A%2F%2Fk2-prod-editorial-televisa.s3.us-east-1.amazonaws.com%2Fbrightspot%2Fwp-content%2Fuploads%2F2021%2F07%2Ftamales.jpg');
+INSERT INTO public.producto VALUES (1009, 'empanadas de platano', true, NULL,'https://scontent.fsal2-1.fna.fbcdn.net/v/t1.6435-9/66315240_2055458884558069_7533554039422713856_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ZuqDvh5wpLYQ7kNvwFsjMPq&_nc_oc=AdnzTCmNG56ItSDyHZAQr0M5Y1_x4UkNVx5sRBnG1wt8SMdu1Ur4bFcgizC8ie_lSVbRI-Vg8QcNJjjzp2y468_5&_nc_zt=23&_nc_ht=scontent.fsal2-1.fna&_nc_gid=NNn6M4-lTMTwdRvjwfqdQQ&oh=00_AfFvdF4G0xVrQQWdEIhCe4kQgjiJKClxfih-yBkzG2bEYA&oe=683C6209');
+INSERT INTO public.producto VALUES (1010, 'riguas', true, NULL,'https://www.tipicosmargoth.com/wp-content/uploads/2020/05/RIGUAS-TIPICOS-MARGOTH.jpg');
+INSERT INTO public.producto VALUES (1011, 'casamiento', true, NULL,'https://www.recetassalvador.com/base/stock/Recipe/casamiento/casamiento_web.jpg.webp');
+INSERT INTO public.producto VALUES (1012, 'cafe', true, NULL,'https://static.elmundo.sv/wp-content/uploads/2020/08/Cafe1.jpg');
+INSERT INTO public.producto VALUES (1013, 'chocolate', true, NULL,'https://images.squarespace-cdn.com/content/v1/629687d754ac3a7c9d6de4f9/f3b4c260-44be-4a37-b604-3e200f309116/ya_DSC0583.jpg');
+INSERT INTO public.producto VALUES (1014, 'atol', true, NULL,'https://cdn-pro.elsalvador.com/wp-content/uploads/2019/01/Atol-de-maiz.jpg');
+INSERT INTO public.producto VALUES (1015, 'frijoles fritos', true, NULL,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMZpYhPkJ4xwoDi02T9_Ds3DkC3-_BWKr0LA&s');
+INSERT INTO public.producto VALUES (1016, 'queso fresco', true, NULL,'https://i.ytimg.com/vi/ElD931s_Vgs/sddefault.jpg');
+INSERT INTO public.producto VALUES (1017, 'crema', true, NULL,'https://walmartsv.vtexassets.com/arquivos/ids/274677/Crema-Salud-Bolsa-750Ml-1-14861.jpg?v=638025251119530000');
+INSERT INTO public.producto VALUES (1018, 'horchata', true, NULL,'https://i.pinimg.com/736x/84/5c/16/845c16967a40214e0d83fd25f9954fbc.jpg');
+INSERT INTO public.producto VALUES (1019, 'platanos fritos', true, NULL,'https://lh4.googleusercontent.com/proxy/tL2W2GwdL5zOstTl8ROvwZSgB4xf9Yi1vU8vpW_ZBeOa67JJIbWgenrLUqH3dwlL_Q_6ZoBjtsFHwb_q96TRUVCTASfIOjNf4_ck6q0x-h7V54hfl452iJDS0NG4PQ');
+INSERT INTO public.producto VALUES (1020, 'huevos revueltos', true, NULL,'https://www.divinacocina.es/wp-content/uploads/2016/01/huevos-revueltos-para-desayunos-sarten.jpg');
 
 
-INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.00);
-INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',0.80);
-INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31',1.50);
+INSERT INTO public.producto_precio VALUES (1001,1001 ,'2025-01-01',  '2030-12-31',1.50);
+INSERT INTO public.producto_precio VALUES (1002,1002 ,'2025-01-01',  '2030-12-31',1.50);
+INSERT INTO public.producto_precio VALUES (1003,1003 ,'2025-01-01',  '2030-12-31',0.80);
+INSERT INTO public.producto_precio VALUES (1004,1004 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1005,1005 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1006,1006 ,'2025-01-01',  '2030-12-31',0.75);
+INSERT INTO public.producto_precio VALUES (1007,1007 ,'2025-01-01',  '2030-12-31',0.75);
+INSERT INTO public.producto_precio VALUES (1008,1008 ,'2025-01-01',  '2030-12-31',1.50);
+INSERT INTO public.producto_precio VALUES (1009,1009 ,'2025-01-01',  '2030-12-31',0.50);
+INSERT INTO public.producto_precio VALUES (1010,1010 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1011,1011 ,'2025-01-01',  '2030-12-31',0.75);
+INSERT INTO public.producto_precio VALUES (1012,1012 ,'2025-01-01',  '2030-12-31',0.75);
+INSERT INTO public.producto_precio VALUES (1013,1013 ,'2025-01-01',  '2030-12-31',1.00);
+INSERT INTO public.producto_precio VALUES (1014,1014 ,'2025-01-01',  '2030-12-31',0.80);
+INSERT INTO public.producto_precio VALUES (1015,1015 ,'2025-01-01',  '2030-12-31',0.60);
+INSERT INTO public.producto_precio VALUES (1016,1016 ,'2025-01-01',  '2030-12-31',0.50);
+INSERT INTO public.producto_precio VALUES (1017,1017 ,'2025-01-01',  '2030-12-31',1.50);
+INSERT INTO public.producto_precio VALUES (1018,1018 ,'2025-01-01',  '2030-12-31',0.60);
+INSERT INTO public.producto_precio VALUES (1019,1019 ,'2025-01-01',  '2030-12-31',0.25);
+INSERT INTO public.producto_precio VALUES (1020,1020 ,'2025-01-01',  '2030-12-31',0.60);
 
 INSERT INTO public.orden VALUES (12345, '2025-03-03', 'Zarsa', true);
 INSERT INTO public.orden VALUES (12346, '2025-03-04', 'S-Ana', true);
@@ -482,16 +517,45 @@ INSERT INTO public.producto_detalle VALUES (1001,1002 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1003 ,true,  NULL);
 INSERT INTO public.producto_detalle VALUES (1002,1004 ,true,  NULL);
 
-INSERT INTO public.combo VALUES (1001, 'superCombo', true, NULL);
-INSERT INTO public.combo VALUES (1002, 'megaCombo', true, NULL);
-INSERT INTO public.combo VALUES (1003, 'ultraCombo', true, NULL);
+INSERT INTO public.combo VALUES (1001, 'superCombo', true, '10 pupusas de cualquier especialidad y 3 cocas ','https://pollosreal.com/wp-content/uploads/2023/08/Pupusas-1024x1024.webp');
+INSERT INTO public.combo VALUES (1002, 'megaCombo', true, '20 pupusas de cualquier especialidad y pepsis','https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Pupusas_El_Salvador_Centro_America.JPG/330px-Pupusas_El_Salvador_Centro_America.JPG');
+INSERT INTO public.combo VALUES (1003, 'ultraCombo', true, '40 pupusas de cualquier especialidda + 3 pepsis','https://recetassalvadorenas.com/wp-content/uploads/2014/03/rosalba-e1504404527338.jpg');
+INSERT INTO public.combo VALUES (1004, 'desayuno tradicional', true,'porcion huevos y casamiento junto platanos y un cafe','https://cdn.prod.website-files.com/65eaa6f14ade57080837bd43/65ebe5693083c7cc4feb71bb_Desayuno-Armenia.jpg');
+INSERT INTO public.combo VALUES (1005, 'Amanecer Criollo', true, 'porcion de casamiento, platanos y queso freso y un cafe','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrwHUqLTQ0_q0Mw_fdh4RBWKQqrrXehvt_hw&s');
+INSERT INTO public.combo VALUES (1006, 'amantes de la cafeina', true, '3 cafes','https://miro.medium.com/v2/resize:fit:540/1*bz6Gj2NAp3zfJoV6yBX5lw.jpeg');
+INSERT INTO public.combo VALUES (1007, 'tarde tradicional', true, 'porcion de nuegados y atol','https://i.pinimg.com/236x/52/64/03/5264036e73e50052290096016375dc68.jpg');
+INSERT INTO public.combo VALUES (1008, 'tarde de dulce', true, '5 empanadas de platano junto a un chocolate','https://www.tipicosmargoth.com/wp-content/uploads/2020/05/EMPANADA-DE-FRIJOL-TIPICOS-MARGOTH.jpg');
+
+INSERT INTO public.combo VALUES (1009, 'tradiCombo', true, '2 tamales de elote, crema junto con un chocolate','https://comedera.com/wp-content/uploads/sites/9/2024/06/Tamales-de-Elote.jpg');
+
+INSERT INTO public.combo VALUES (1010, 'sabor guanaco', true, '2 tamales de maiz  y un cafe','https://cocinaalchile.com/wp-content/uploads/2019/11/2.jpg');
+INSERT INTO public.combo VALUES (1011, 'sabor guanaco', true, '2 tamales de maiz  y un cafe','https://cocinaalchile.com/wp-content/uploads/2019/11/2.jpg');
 
 INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
 INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);
 INSERT INTO public.combo_detalle VALUES (1002,1003,20,true);
 INSERT INTO public.combo_detalle VALUES (1002,1002,5,true);
-INSERT INTO public.combo_detalle VALUES (1003,1001,4,true);
-INSERT INTO public.combo_detalle VALUES (1003,1002,1,true);
+INSERT INTO public.combo_detalle VALUES (1003,1003,40,true);
+INSERT INTO public.combo_detalle VALUES (1003,1002,5,true);
+INSERT INTO public.combo_detalle VALUES (1004,1020,1,true);
+INSERT INTO public.combo_detalle VALUES (1004,1011,5,true);
+INSERT INTO public.combo_detalle VALUES (1004,1019,5,true);
+INSERT INTO public.combo_detalle VALUES (1004,1012,5,true);
+INSERT INTO public.combo_detalle VALUES (1005,1011,1,true);
+INSERT INTO public.combo_detalle VALUES (1005,1019,1,true);
+INSERT INTO public.combo_detalle VALUES (1005,1016,1,true);
+INSERT INTO public.combo_detalle VALUES (1005,1012,1,true);
+INSERT INTO public.combo_detalle VALUES (1006,1012,3,true);
+INSERT INTO public.combo_detalle VALUES (1007,1009,5,true);
+INSERT INTO public.combo_detalle VALUES (1007,1004,1,true);
+INSERT INTO public.combo_detalle VALUES (1007,1014,1,true);
+INSERT INTO public.combo_detalle VALUES (1008,1009,5,true);
+INSERT INTO public.combo_detalle VALUES (1008,1013,1,true);
+INSERT INTO public.combo_detalle VALUES (1009,1008,2,true);
+INSERT INTO public.combo_detalle VALUES (1009,1017,1,true);
+INSERT INTO public.combo_detalle VALUES (1009,1013,1,true);
+INSERT INTO public.combo_detalle VALUES (1010,1007,2,true);
+INSERT INTO public.combo_detalle VALUES (1010,1012,1,true);
 
 
 -- 1. generar un ordenDetalle dado un IdOrden , un producto y una cantidad especifica por defecto la cantidad 1 , del producto se obtiene el idProducto y de este se busca su precio
