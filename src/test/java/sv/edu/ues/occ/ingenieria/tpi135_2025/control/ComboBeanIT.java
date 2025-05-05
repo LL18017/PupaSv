@@ -257,5 +257,51 @@ public class ComboBeanIT extends AbstractContainerTest {
             em.close();
         }
     }
-}
 
+    @Order(8)
+    @Test
+    public void findByNombre() {
+        System.out.println("Combo testIT findByNombre");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        String nombreExistente = "superCombo"; // Nombre creado en la prueba anterior
+        String nombreInexistente = "NoExisteCombo123";
+
+        try {
+            em.getTransaction().begin();
+
+            // Caso 1: Buscar combo existente
+            List<Combo> resultado = cut.findByNombre(nombreExistente);
+            Assertions.assertNotNull(resultado);
+            Assertions.assertFalse(resultado.isEmpty(), "Debe devolver al menos un combo");
+            Assertions.assertEquals(nombreExistente, resultado.get(0).getNombre());
+
+            // Caso 2: Buscar combo inexistente
+            List<Combo> vacio = cut.findByNombre(nombreInexistente);
+            Assertions.assertNotNull(vacio);
+            Assertions.assertTrue(vacio.isEmpty(), "Debe devolver una lista vacía si no hay coincidencias");
+
+            // Caso 3: Nombre nulo
+            Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                cut.findByNombre(null);
+            });
+
+            // Caso 4: Nombre vacío
+            Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                cut.findByNombre("   ");
+            });
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            Assertions.fail("Excepción inesperada: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+}

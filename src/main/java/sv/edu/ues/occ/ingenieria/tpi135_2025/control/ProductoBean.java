@@ -40,18 +40,20 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
     /**
-     * Encuentra un una lista de Productos segun un rango dado, un idTipoProducto y la propiedad activo.
+     * Encuentra un una lista de Productos segun un rango dado, un
+     * idTipoProducto y la propiedad activo.
      *
-     * @param first          rango de inicio de los registros totales.
-     * @param max            cantidad maxima de registros
+     * @param first rango de inicio de los registros totales.
+     * @param max cantidad maxima de registros
      * @param idTipoProducto id del tipoProducto relacionado con el producto
-     * @param activo         si registro cuenta con la propiedda activo true o false
+     * @param activo si registro cuenta con la propiedda activo true o false
      * @return lista de tipo T correspondiente al rango. devuelve una lista
      * vacion si no hay registros o si el rango es incorrecto
      * @throws IllegalArgumentException si se envian datos erroneos
-     * @throws EntityNotFoundException  si no existe el tipoProducto con el id dado
-     * @throws PersistenceException     si existe un error con la base de datos
-     * @throws IllegalStateException    si existe error al persistir dato
+     * @throws EntityNotFoundException si no existe el tipoProducto con el id
+     * dado
+     * @throws PersistenceException si existe un error con la base de datos
+     * @throws IllegalStateException si existe error al persistir dato
      */
     public List<Producto> findRangeByIdTipoProductosAndActivo(Integer idTipoProducto, boolean activo, Integer first, Integer max) {
         try {
@@ -75,13 +77,16 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
     /**
-     * Busca la cantidad de registros de la cantidad de Producto que cuentas con idTipoProdcuto especifico y la propiedad activo.
+     * Busca la cantidad de registros de la cantidad de Producto que cuentas con
+     * idTipoProdcuto especifico y la propiedad activo.
      *
      * @return la cantidda de registros de productos. devuelve 0
-     * @throws IllegalStateException    Si no se puede acceder al repositorio.
-     * @throws EntityNotFoundException  Si no existe registros con ese idTipoProducto.
+     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws EntityNotFoundException Si no existe registros con ese
+     * idTipoProducto.
      * @throws NonUniqueResultException si se recibe mas de un dato
-     * @throws PersistenceException     si hay un error general con la base de datos.
+     * @throws PersistenceException si hay un error general con la base de
+     * datos.
      */
     public Long countByIdTipoProductosAndActivo(Integer idTipoProducto, boolean activo) {
         try {
@@ -107,16 +112,17 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
     /**
-     * persite un registro Producto en la base de datos ademas de realizar su detalle.
+     * persite un registro Producto en la base de datos ademas de realizar su
+     * detalle.
      *
-     * @param registro Producto a ser persistida. devuelve una lista vacion si no hay registros o si el rango es incorrecto
-     * @throws IllegalStateException    Si no se puede acceder al repositorio o la
+     * @param registro Producto a ser persistida. devuelve una lista vacion si
+     * no hay registros o si el rango es incorrecto
+     * @throws IllegalStateException Si no se puede acceder al repositorio o la
      * @throws IllegalArgumentException si el registro es nulo.
-     * @throws EntityExistsException    si el producto ya existe ya existe
-     * @throws PersistenceException     si ocurrio un error con la base de datos
-     * @throws EntityNotFoundException  si el registro tipoProducto no existe
+     * @throws EntityExistsException si el producto ya existe ya existe
+     * @throws PersistenceException si ocurrio un error con la base de datos
+     * @throws EntityNotFoundException si el registro tipoProducto no existe
      */
-
     public void createProductoAndDetail(Producto registro, Integer idTipoProducto) {
         try {
             if (registro == null || idTipoProducto == null) {
@@ -146,20 +152,22 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
     /**
-     * Encuentra un una lista de Productos segun un rango dado  y la propiedad activo.
+     * Encuentra un una lista de Productos segun un rango dado y la propiedad
+     * activo.
      *
-     * @param first  rango de inicio de los registros totales.
-     * @param max    cantidad maxima de registros
+     * @param first rango de inicio de los registros totales.
+     * @param max cantidad maxima de registros
      * @param activo si registro cuenta con la propiedda activo true o false
      * @return lista de tipo T correspondiente al rango. devuelve una lista
      * vacion si no hay registros o si el rango es incorrecto
      * @throws IllegalArgumentException si se envian datos erroneos
-     * @throws EntityNotFoundException  si no existe el tipoProducto con el id dado
-     * @throws PersistenceException     si existe un error con la base de datos
-     * @throws IllegalStateException    si existe error al persistir dato
+     * @throws EntityNotFoundException si no existe el tipoProducto con el id
+     * dado
+     * @throws PersistenceException si existe un error con la base de datos
+     * @throws IllegalStateException si existe error al persistir dato
      */
     public List<Producto> findRangeProductoActivos(Integer first, Integer max, Boolean activo) {
-        if (first == null || max == null || first < 0 || max <= 0 || max>50) {
+        if (first == null || max == null || first < 0 || max <= 0 || max > 50) {
             throw new IllegalArgumentException("first , max no pueden ser nulos o menores que cero");
         }
         try {
@@ -174,13 +182,16 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
     }
 
     /**
-     * Busca la cantidad de registros de la cantidad de Producto que cuentas la propiedad activo.
+     * Busca la cantidad de registros de la cantidad de Producto que cuentas la
+     * propiedad activo.
      *
      * @return la cantidda de registros de productos. devuelve 0
-     * @throws IllegalStateException    Si no se puede acceder al repositorio.
-     * @throws EntityNotFoundException  Si no existe registros con ese idTipoProducto.
+     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws EntityNotFoundException Si no existe registros con ese
+     * idTipoProducto.
      * @throws NonUniqueResultException si se recibe mas de un dato
-     * @throws PersistenceException     si hay un error general con la base de datos.
+     * @throws PersistenceException si hay un error general con la base de
+     * datos.
      */
     public Long countProductoActivos(Boolean activo) {
         try {
@@ -202,9 +213,10 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
      * @return lista de tipo T correspondiente al rango. devuelve una lista
      * vacion si no hay registros o si el rango es incorrecto
      * @throws IllegalArgumentException si se envian datos erroneos
-     * @throws EntityNotFoundException  si no existe el tipoProducto con el id dado
-     * @throws PersistenceException     si existe un error con la base de datos
-     * @throws IllegalStateException    si existe error al persistir dato
+     * @throws EntityNotFoundException si no existe el tipoProducto con el id
+     * dado
+     * @throws PersistenceException si existe un error con la base de datos
+     * @throws IllegalStateException si existe error al persistir dato
      */
     public void deleteProductoAndDetail(Long idProducto, Integer idTipoProducto) {
         if (idProducto == null || idProducto <= 0) {
@@ -230,13 +242,13 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         }
     }
 
-
     /**
-     * evalua si los propiedades cuentas con los requisitos para ejecutar sus respectivas operaciones
+     * evalua si los propiedades cuentas con los requisitos para ejecutar sus
+     * respectivas operaciones
      *
      * @param idTipoProducto id del TipoProducto a evaluar
-     * @param first          primer dato requerido
-     * @param max            cantidda de datos que se requieren a evaluar
+     * @param first primer dato requerido
+     * @param max cantidda de datos que se requieren a evaluar
      * @return true si se han enviado de forma correcta
      * @throws IllegalArgumentException si se envian datos erroneos
      */
@@ -252,4 +264,35 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         }
         return true;
     }
+
+    public List<Producto> findListByNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacío");
+        }
+        try {
+            return em.createNamedQuery("Producto.findByNombre", Producto.class)
+                    .setParameter("nombre", nombre.trim())
+                    .getResultList();
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al acceder a la base de datos", e);
+        }
+    }
+
+    public Producto findByNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacío");
+        }
+        try {
+            return em.createNamedQuery("Producto.findByNombre", Producto.class)
+                    .setParameter("nombre", nombre.trim())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // O puedes lanzar una excepción si prefieres
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("Se encontraron múltiples productos con el mismo nombre");
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al acceder a la base de datos", e);
+        }
+    }
+
 }

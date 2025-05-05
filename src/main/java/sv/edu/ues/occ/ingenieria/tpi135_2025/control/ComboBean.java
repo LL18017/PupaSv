@@ -14,6 +14,7 @@ import java.io.Serializable;
 
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolationException;
+import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 /**
@@ -112,6 +113,21 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
             throw new ConstraintViolationException(e.getConstraintViolations());
         } catch (PersistenceException e) {
             throw new PersistenceException("errror con la base d edatos: " + e.getMessage());
+        }
+    }
+
+    public List<Combo> findByNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede ser nulo o vacío");
+        }
+
+        try {
+            return getEntityManager()
+                    .createNamedQuery("Combo.findByNombre", Combo.class)
+                    .setParameter("nombre", nombre)
+                    .getResultList();
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al buscar Combo por nombre exacto", e);
         }
     }
 

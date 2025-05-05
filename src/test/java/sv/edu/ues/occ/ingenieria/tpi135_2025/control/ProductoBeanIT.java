@@ -30,7 +30,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
         cut = new ProductoBean();
     }
 
-
     @Order(1)
     @Test
     public void createProducto() {
@@ -156,7 +155,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
         Assertions.assertEquals(idDePrueba, respuesta.getIdProducto());
 
         //fallo de argumentos id menor a 0
-
         em.getTransaction().begin();
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.update(registroActualizar, -63));
         em.getTransaction().commit();
@@ -243,7 +241,6 @@ public class ProductoBeanIT extends AbstractContainerTest {
 
     }
 
-
     @Order(10)
     @Test
     void findRangeProductoActivos() {
@@ -292,12 +289,64 @@ public class ProductoBeanIT extends AbstractContainerTest {
         Assertions.assertDoesNotThrow(() -> cut.deleteProductoAndDetail(idCreadoEnPrueba, idTipoProdcutoCreado));
         em.close();
 
-
         //error de argumentos
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(-90L, idTipoProdcutoCreado));
         Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(idCreadoEnPrueba, null));
 
     }
 
+    @Order(13)
+    @Test
+    public void findListByNombre() {
+        System.out.println("Producto testIT findListByNombre");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        // Caso válido
+        List<Producto> resultados = cut.findListByNombre("pepsi");
+        Assertions.assertNotNull(resultados, "La lista no debe ser nula");
+        Assertions.assertFalse(resultados.isEmpty(), "Debe retornar al menos un producto");
+        Assertions.assertEquals("pepsi", resultados.get(0).getNombre());
+
+        // Trim verifica que quita espacios
+        List<Producto> resultadosConEspacios = cut.findListByNombre("  pepsi  ");
+        Assertions.assertEquals(resultados.size(), resultadosConEspacios.size());
+
+        // Casos inválidos (nombre null o vacío)
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre("   "));
+
+        em.close();
+    }
+
+    @Order(14)
+    @Test
+    public void findByNombre() {
+        System.out.println("Producto testIT findByNombre");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        // Caso válido
+        Producto resultado = cut.findByNombre("pepsi");
+        Assertions.assertNotNull(resultado, "Debe encontrar un producto");
+        Assertions.assertEquals("pepsi", resultado.getNombre());
+
+        // Caso con espacios alrededor
+        Producto resultadoTrim = cut.findByNombre("   pepsi   ");
+        Assertions.assertNotNull(resultadoTrim, "Debe encontrar el producto con espacios");
+        Assertions.assertEquals("pepsi", resultadoTrim.getNombre());
+
+        // Caso con nombre inexistente → debe retornar null
+        Producto noExiste = cut.findByNombre("nombre que no existe");
+        Assertions.assertNull(noExiste, "Debe retornar null si no encuentra el producto");
+
+        // Casos inválidos (null o vacío)
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
+
+        em.close();
+    }
 
 }

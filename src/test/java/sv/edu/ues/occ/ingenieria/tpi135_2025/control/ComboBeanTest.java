@@ -60,7 +60,6 @@ public class ComboBeanTest {
         cut.setEntityManager(mockEm);
     }
 
-
     @Test
     public void testFindAll() {
         System.out.println("Combo test findAll");
@@ -270,15 +269,14 @@ public class ComboBeanTest {
 
         // id Inexistente
         when(mockEm.find(Combo.class, 12345L)).thenReturn(null);
-        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(comboModificar,  12345L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.update(comboModificar, 12345L));
 
         // EntityManager nulo (para lanzar RuntimeException)
         ComboBean cut2 = Mockito.spy(new ComboBean());
         Mockito.doReturn(null).when(cut2).getEntityManager();
 
-        Assertions.assertThrows(IllegalStateException.class, () ->
-                cut2.update(comboModificar, (Object) idModificado));
-
+        Assertions.assertThrows(IllegalStateException.class, ()
+                -> cut2.update(comboModificar, (Object) idModificado));
 
         // ConstraintViolationException
         EntityManager mockEm2 = Mockito.mock(EntityManager.class);
@@ -338,4 +336,37 @@ public class ComboBeanTest {
         Assertions.assertThrows(PersistenceException.class, () -> cut.delete(idEliminar));
 
     }
+
+    @Test
+    public void testFindByNombre() {
+        System.out.println("Combo test findByNombre");
+
+        // Caso 1: nombre nulo o vacío
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(""));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
+
+        // Caso 2: error en consulta (simulate PersistenceException)
+        String nombreError = "Error";
+        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Combo.class))
+                .thenThrow(new PersistenceException("DB error"));
+
+        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreError));
+
+        // Caso 3: consulta válida
+        String nombreValido = "Combo válido";
+        TypedQuery<Combo> mockQuery = Mockito.mock(TypedQuery.class);
+
+        // Se necesita redefinir el comportamiento para evitar conflictos con el anterior throw
+        Mockito.reset(mockEm);
+        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Combo.class)).thenReturn(mockQuery);
+        Mockito.when(mockQuery.setParameter("nombre", nombreValido)).thenReturn(mockQuery);
+        Mockito.when(mockQuery.getResultList()).thenReturn(LIST_COMBO_TEST);
+
+        List<Combo> resultado = cut.findByNombre(nombreValido);
+
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(3, resultado.size());
+    }
+
 }

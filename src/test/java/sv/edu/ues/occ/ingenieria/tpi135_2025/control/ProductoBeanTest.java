@@ -19,14 +19,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductoBeanTest {
+
     List<Producto> LIST_Producto_TEST = Arrays.asList(new Producto[]{
-            new Producto(1L),
-            new Producto(2L),
-            new Producto(3L),
-            new Producto(4L),
-            new Producto(5L),
-            new Producto(6L),
-    });
+        new Producto(1L),
+        new Producto(2L),
+        new Producto(3L),
+        new Producto(4L),
+        new Producto(5L),
+        new Producto(6L),});
 
     ProductoBean cut; // Clase bajo prueba
     EntityManager mockEm;
@@ -85,7 +85,9 @@ class ProductoBeanTest {
 
         //id Inexistente
         Mockito.when(mockEm.find(TipoProducto.class, 112233)).thenReturn(null);
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {cut.findRangeByIdTipoProductosAndActivo(112233, activo, first, max);});
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cut.findRangeByIdTipoProductosAndActivo(112233, activo, first, max);
+        });
 
         // Configurar el comportamiento de EntityManager y TypedQuery
         Mockito.when(mockEm.createNamedQuery("Producto.findActivosAndIdTipoProducto", Producto.class))
@@ -136,13 +138,11 @@ class ProductoBeanTest {
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(resultadoEsperado, resultado);
 
-
         //preparando para tirra excepciones
         Mockito.when(mockEm.createNamedQuery("Producto.countActivosAndIdTipoProducto", Long.class))
                 .thenReturn(mockTq2);
         Mockito.when(mockTq2.setParameter("idTipoProducto", idTipoProducto)).thenReturn(mockTq2);
         Mockito.when(mockTq2.setParameter("activo", activo)).thenReturn(mockTq2);
-
 
         // Forzar fallo al acceder al PersistenceException
         Mockito.doThrow(PersistenceException.class).when(mockTq2).getSingleResult();
@@ -176,7 +176,7 @@ class ProductoBeanTest {
         });
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            cut.createProductoAndDetail(registro,-60);
+            cut.createProductoAndDetail(registro, -60);
         });
         //fallo id inexistente
         Mockito.when(mockEm.find(TipoProducto.class, 112233)).thenReturn(null);
@@ -202,13 +202,11 @@ class ProductoBeanTest {
         assertEquals(idProducto, registro.getIdProducto());
         assertEquals(pkESperadado, productoDetalle.getProductoDetallePK());
 
-
         // Forzar fallo EntityExistsException
         cut.em = mockEm2;
         Mockito.when(mockEm2.find(TipoProducto.class, idTipoProducto)).thenReturn(new TipoProducto(idTipoProducto));
         Mockito.doThrow(EntityExistsException.class).when(mockEm2).persist(registro);
         Assertions.assertThrows(EntityExistsException.class, () -> cut.createProductoAndDetail(registro, idTipoProducto));
-
 
         // Forzar fallo PersistenceException
         Mockito.reset(mockEm2);
@@ -229,7 +227,6 @@ class ProductoBeanTest {
 //        fail("fallo exitosamente");
     }
 
-
     @Test
     void getEntityManager() {
         System.out.println("Producto test getEntityManager");
@@ -249,12 +246,12 @@ class ProductoBeanTest {
         Root<Producto> mockR = Mockito.mock(Root.class);
         TypedQuery<Producto> mockTq = Mockito.mock(TypedQuery.class);
         Long idProductoEliminado = LIST_Producto_TEST.get(0).getIdProducto();
-        Integer idTipoProdcuto=1;
+        Integer idTipoProdcuto = 1;
 
         // Test para idProducto nulo
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(null,idTipoProdcuto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(null, idTipoProdcuto));
         // Test para idTipoProducto nulo
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(idProductoEliminado,null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.deleteProductoAndDetail(idProductoEliminado, null));
         // Test para entidda inexistentes
         cut.em = mockEm;
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto")).thenReturn(mockTq);
@@ -262,10 +259,9 @@ class ProductoBeanTest {
         Mockito.when(mockTq.setParameter("idTipoProducto", idTipoProdcuto)).thenReturn(mockTq);
         Mockito.when(mockTq.executeUpdate()).thenReturn(0);
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.deleteProductoAndDetail(112233L,idTipoProdcuto));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> cut.deleteProductoAndDetail(112233L, idTipoProdcuto));
 
         // Flujo normal
-
         cut.em = mockEm;
         Mockito.when(mockTq.setParameter("idProducto", idProductoEliminado)).thenReturn(mockTq);
         Mockito.when(mockTq.setParameter("idTipoProducto", idTipoProdcuto)).thenReturn(mockTq);
@@ -278,8 +274,8 @@ class ProductoBeanTest {
         Mockito.when(mockEm.createQuery(mockCd)).thenReturn(mockTq);
         // Aseguramos que executeUpdate no haga nada (se ejecute sin lanzar excepciones)
         Mockito.when(mockTq.executeUpdate()).thenReturn(1);
-        cut.deleteProductoAndDetail(idProductoEliminado,idTipoProdcuto);
-        Assertions.assertDoesNotThrow(() -> cut.deleteProductoAndDetail(idProductoEliminado,idTipoProdcuto));
+        cut.deleteProductoAndDetail(idProductoEliminado, idTipoProdcuto);
+        Assertions.assertDoesNotThrow(() -> cut.deleteProductoAndDetail(idProductoEliminado, idTipoProdcuto));
 
         //PersistenceException
         Mockito.when(mockEm.createNamedQuery("ProductoDetalle.deleteByIdProductoAndIdProducto")).thenReturn(mockTq2);
@@ -287,7 +283,7 @@ class ProductoBeanTest {
         Mockito.when(mockTq2.setParameter("idTipoProducto", idTipoProdcuto)).thenReturn(mockTq2);
 
         Mockito.doThrow(PersistenceException.class).when(mockTq2).executeUpdate();
-        Assertions.assertThrows(PersistenceException.class, () -> cut.deleteProductoAndDetail(idProductoEliminado,idTipoProdcuto));
+        Assertions.assertThrows(PersistenceException.class, () -> cut.deleteProductoAndDetail(idProductoEliminado, idTipoProdcuto));
 //        fail("fallo exitosamente");
     }
 
@@ -329,7 +325,6 @@ class ProductoBeanTest {
         Assertions.assertThrows(PersistenceException.class, () -> cut.findRangeProductoActivos(first, max, activo));
 
 //        fail("fallo exitosamente");
-
     }
 
     @Test
@@ -350,7 +345,6 @@ class ProductoBeanTest {
         Assertions.assertEquals(esperado, resultado);
 
         // Forzar fallo al acceder al EntityManager
-
         Mockito.when(mockEm.createNamedQuery("Producto.countByAnyActivo", Long.class)).thenReturn(mockTq2);
         Mockito.when(mockTq2.setParameter("activo", activo)).thenReturn(mockTq2);
         //PersistenceException
@@ -361,9 +355,83 @@ class ProductoBeanTest {
         Mockito.doThrow(NonUniqueResultException.class).when(mockTq2).getSingleResult();
         Assertions.assertThrows(NonUniqueResultException.class, () -> cut.countProductoActivos(activo));
 
-
 //        fail("fallo exitosamente");
+    }
 
+    @Test
+    void testFindListByNombre() {
+        System.out.println("Producto test findListByNombre");
+
+        // Caso 1: nombre nulo o vacío
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(""));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre("   "));
+
+        // Caso 2: error en consulta (PersistenceException)
+        String nombreError = "ErrorNombre";
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class))
+                .thenThrow(new PersistenceException("Error de base de datos"));
+
+        Assertions.assertThrows(PersistenceException.class, () -> cut.findListByNombre(nombreError));
+
+        // Caso 3: consulta válida
+        String nombreValido = "Producto válido";
+        TypedQuery<Producto> mockQuery = Mockito.mock(TypedQuery.class);
+
+        // Resetear el mock para evitar conflicto con el throw anterior
+        Mockito.reset(mockEm);
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(mockQuery);
+        Mockito.when(mockQuery.setParameter("nombre", nombreValido.trim())).thenReturn(mockQuery);
+        Mockito.when(mockQuery.getResultList()).thenReturn(LIST_Producto_TEST);
+
+        List<Producto> resultado = cut.findListByNombre(nombreValido);
+
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(6, resultado.size());
+    }
+
+    @Test
+    void testFindByNombre() {
+        System.out.println("Producto test findByNombre");
+
+        // Caso 1: nombre nulo o vacío
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(""));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
+
+        String nombreValido = "Producto válido";
+
+        // Caso 2: resultado único correcto
+        Producto productoMock = new Producto(1L);
+        TypedQuery<Producto> queryOk = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryOk);
+        Mockito.when(queryOk.setParameter("nombre", nombreValido.trim())).thenReturn(queryOk);
+        Mockito.when(queryOk.getSingleResult()).thenReturn(productoMock);
+        Producto result = cut.findByNombre(nombreValido);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1L, result.getIdProducto());
+
+        // Caso 3: no se encuentra el producto (NoResultException)
+        TypedQuery<Producto> queryNoResult = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setParameter("nombre", nombreValido.trim())).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.getSingleResult()).thenThrow(new NoResultException());
+        Producto resultNull = cut.findByNombre(nombreValido);
+        Assertions.assertNull(resultNull);
+
+        // Caso 4: múltiples resultados (NonUniqueResultException)
+        TypedQuery<Producto> queryNonUnique = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryNonUnique);
+        Mockito.when(queryNonUnique.setParameter("nombre", nombreValido.trim())).thenReturn(queryNonUnique);
+        Mockito.when(queryNonUnique.getSingleResult()).thenThrow(new NonUniqueResultException());
+        Assertions.assertThrows(NonUniqueResultException.class, () -> cut.findByNombre(nombreValido));
+
+        // Caso 5: error de persistencia
+        TypedQuery<Producto> queryError = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryError);
+        Mockito.when(queryError.setParameter("nombre", nombreValido.trim())).thenReturn(queryError);
+        Mockito.when(queryError.getSingleResult()).thenThrow(new PersistenceException("Error BD"));
+        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreValido));
     }
 
 }
