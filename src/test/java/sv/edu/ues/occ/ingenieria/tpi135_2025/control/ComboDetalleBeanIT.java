@@ -7,6 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceException;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -320,4 +321,40 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
             em.close();
         }
     }
+
+    @Order(6)
+    @Test
+    public void calcularPrecioTotalPorIdComboTest() {
+        System.out.println("ComboDetalle testIT calcularPrecioTotalPorIdCombo");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        try {
+            // Combo con datos existentes
+            BigDecimal total = cut.calcularPrecioTotalPorIdCombo(idComboPrueba.intValue());
+            Assertions.assertNotNull(total, "El total no debe ser nulo");
+            Assertions.assertTrue(total.compareTo(BigDecimal.ZERO) >= 0, "El total debe ser mayor o igual a cero");
+            System.out.println("Total calculado para combo " + idComboPrueba + ": " + total);
+
+            // Combo inexistente
+            BigDecimal totalInexistente = cut.calcularPrecioTotalPorIdCombo(9999);
+            Assertions.assertNotNull(totalInexistente, "Debe retornar BigDecimal.ZERO si no hay datos");
+            Assertions.assertEquals(BigDecimal.ZERO, totalInexistente);
+
+            // Combo sin detalles (si has creado uno nuevo sin asociarle productos aún)
+            BigDecimal totalComboSinDetalle = cut.calcularPrecioTotalPorIdCombo(idComboCreado.intValue());
+            Assertions.assertNotNull(totalComboSinDetalle, "Debe retornar BigDecimal.ZERO si no hay detalles");
+            Assertions.assertEquals(BigDecimal.ZERO, totalComboSinDetalle);
+
+            // Parámetro nulo (si tu lógica no lo maneja internamente, puedes testearlo)
+            Assertions.assertThrows(IllegalArgumentException.class, () -> cut.calcularPrecioTotalPorIdCombo(null));
+
+        } catch (Exception e) {
+            Assertions.fail("Excepción inesperada: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
 }

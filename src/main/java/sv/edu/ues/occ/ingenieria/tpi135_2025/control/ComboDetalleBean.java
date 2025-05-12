@@ -16,6 +16,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -144,7 +145,7 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
                     .getSingleResult();
         } catch (NoResultException e) {
             throw new EntityNotFoundException("No se encontro resultado para ComboDetalle con idCombo=" + idCombo + " e idProducto=" + idProducto);
-        }catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new PersistenceException("Error con la base de datos", e);
         }
     }
@@ -246,4 +247,20 @@ public class ComboDetalleBean extends AbstractDataAccess<ComboDetalle> implement
             throw new PersistenceException("Error al obtener el rango de ComboDetalle", e);
         }
     }
+
+    public BigDecimal calcularPrecioTotalPorIdCombo(Integer idCombo) {
+        if (idCombo == null) {
+            throw new IllegalArgumentException("El idCombo no puede ser nulo");
+        }
+        try {
+            TypedQuery<BigDecimal> query = getEntityManager()
+                    .createNamedQuery("ComboDetalle.sumarPrecioTotalByIdCombo", BigDecimal.class);
+            query.setParameter("idCombo", idCombo);
+            BigDecimal resultado = query.getSingleResult();
+            return resultado != null ? resultado : BigDecimal.ZERO;
+        } catch (NoResultException | NullPointerException e) {
+            return BigDecimal.ZERO;
+        }
+    }
+
 }

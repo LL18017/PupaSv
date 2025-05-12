@@ -30,15 +30,20 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "ComboDetalle.findByCantidad", query = "SELECT c FROM ComboDetalle c WHERE c.cantidad = :cantidad"),
     @NamedQuery(name = "ComboDetalle.findByIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto"),
     @NamedQuery(name = "ComboDetalle.countByIdProducto", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto"),
-        @NamedQuery(name = "ComboDetalle.findByIdCombo", query = "SELECT c FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo"),
+    @NamedQuery(name = "ComboDetalle.findByIdCombo", query = "SELECT c FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo"),
     @NamedQuery(name = "ComboDetalle.countByIdCombo", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.combo.idCombo = :idCombo"),
-        @NamedQuery(name = "ComboDetalle.findByIdComboAndIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
+    @NamedQuery(name = "ComboDetalle.findByIdComboAndIdProducto", query = "SELECT c FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
     @NamedQuery(name = "ComboDetalle.countByIdComboAndIdProducto", query = "SELECT COUNT (c) FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
     @NamedQuery(name = "ComboDetalle.deleteByComboDetallePK", query = "DELETE  FROM ComboDetalle c WHERE c.producto.idProducto = :idProducto and c.combo.idCombo=:idCombo"),
-        @NamedQuery(name = "ComboDetalle.findProductoPrecioAndCantidadByIdCombo",query = "SELECT  pp, cd.cantidad  FROM ComboDetalle cd JOIN ProductoPrecio pp ON pp.idProducto.idProducto = cd.producto.idProducto WHERE cd.combo.idCombo = :idCombo"),
-        @NamedQuery(name = "ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo",query = "SELECT  pp,pp.idProducto, cd.cantidad  FROM ComboDetalle cd JOIN ProductoPrecio pp ON pp.idProducto.idProducto = cd.producto.idProducto WHERE cd.combo.idCombo = :idCombo"),
-        @NamedQuery(name = "ComboDetalle.findProductoPrecioAndCantidadByIdProducto",query = "SELECT  pp ,pp.idProducto.nombre FROM ProductoPrecio pp WHERE pp.idProducto.idProducto = :idProducto"),
-    @NamedQuery(name = "ComboDetalle.findByActivo", query = "SELECT c FROM ComboDetalle c WHERE c.activo = :activo")})
+    @NamedQuery(name = "ComboDetalle.findProductoPrecioAndCantidadByIdCombo", query = "SELECT  pp, cd.cantidad  FROM ComboDetalle cd JOIN ProductoPrecio pp ON pp.idProducto.idProducto = cd.producto.idProducto WHERE cd.combo.idCombo = :idCombo"),
+    @NamedQuery(name = "ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", query = "SELECT  pp,pp.idProducto, cd.cantidad  FROM ComboDetalle cd JOIN ProductoPrecio pp ON pp.idProducto.idProducto = cd.producto.idProducto WHERE cd.combo.idCombo = :idCombo"),
+    @NamedQuery(name = "ComboDetalle.findProductoPrecioAndCantidadByIdProducto", query = "SELECT  pp ,pp.idProducto.nombre FROM ProductoPrecio pp WHERE pp.idProducto.idProducto = :idProducto"),
+    @NamedQuery(name = "ComboDetalle.findByActivo", query = "SELECT c FROM ComboDetalle c WHERE c.activo = :activo"),
+    @NamedQuery(name = "ComboDetalle.sumarPrecioTotalByIdCombo",
+            query = "SELECT SUM(pp.precioSugerido * cd.cantidad) "
+            + "FROM ComboDetalle cd "
+            + "JOIN ProductoPrecio pp ON pp.idProducto.idProducto = cd.producto.idProducto "
+            + "WHERE cd.combo.idCombo = :idCombo")})
 
 public class ComboDetalle implements Serializable {
 
@@ -135,5 +140,5 @@ public class ComboDetalle implements Serializable {
     public String toString() {
         return "com.mycompany.extreciondeentities.entities.ComboDetalle[ comboDetallePK=" + comboDetallePK + " ]";
     }
-    
+
 }

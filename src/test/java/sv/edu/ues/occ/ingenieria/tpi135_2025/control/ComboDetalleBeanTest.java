@@ -6,6 +6,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import java.math.BigDecimal;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,6 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  * @author hdz
  */
@@ -149,8 +149,8 @@ public class ComboDetalleBeanTest {
     }
 
     @Test
-    void testFindByIdComboAndIdProducto_variosCasos() {
-        System.out.println("comboDetalle test finbyidcomboand");
+    void testFindByIdComboAndIdProducto() {
+        System.out.println("ComboDetalleBean test FindByIdComboAndIdProducto");
         Long idCombo = 1L, idProducto = 2L;
         ComboDetalle esperado = new ComboDetalle();
 
@@ -171,40 +171,41 @@ public class ComboDetalleBeanTest {
         Mockito.when(mockTypedQuery.getSingleResult()).thenThrow(new NoResultException());
 
         // Verificar que se lanza la excepción EntityNotFoundException
-        assertThrows(EntityNotFoundException.class, () ->
-                cut.findByIdComboAndIdProducto(idCombo, idProducto)
+        assertThrows(EntityNotFoundException.class, ()
+                -> cut.findByIdComboAndIdProducto(idCombo, idProducto)
         );
 
         // Caso: PersistenceException (Debería lanzar PersistenceException)
         Mockito.doThrow(PersistenceException.class).when(mockTypedQuery).getSingleResult();
 
         // Verificar que se lanza la excepción PersistenceException
-        assertThrows(PersistenceException.class, () ->
-                cut.findByIdComboAndIdProducto(idCombo, idProducto)
+        assertThrows(PersistenceException.class, ()
+                -> cut.findByIdComboAndIdProducto(idCombo, idProducto)
         );
 
         // Caso: idCombo nulo o inválido → IllegalArgumentException
-        assertThrows(IllegalArgumentException.class, () ->
-                cut.findByIdComboAndIdProducto(null, idProducto)
+        assertThrows(IllegalArgumentException.class, ()
+                -> cut.findByIdComboAndIdProducto(null, idProducto)
         );
 
-        assertThrows(IllegalArgumentException.class, () ->
-                cut.findByIdComboAndIdProducto(0L, idProducto)
+        assertThrows(IllegalArgumentException.class, ()
+                -> cut.findByIdComboAndIdProducto(0L, idProducto)
         );
 
         // Caso: idProducto nulo o inválido → IllegalArgumentException
-        assertThrows(IllegalArgumentException.class, () ->
-                cut.findByIdComboAndIdProducto(idCombo, null)
+        assertThrows(IllegalArgumentException.class, ()
+                -> cut.findByIdComboAndIdProducto(idCombo, null)
         );
 
-        assertThrows(IllegalArgumentException.class, () ->
-                cut.findByIdComboAndIdProducto(idCombo, 0L)
+        assertThrows(IllegalArgumentException.class, ()
+                -> cut.findByIdComboAndIdProducto(idCombo, 0L)
         );
     }
 
-
     @Test
-    void testDeleteByComboDetallePK_variosCasos() {
+    void testDeleteByComboDetallePK() {
+        System.out.println("ComboDetalleBean test DeleteByComboDetallePK");
+
         Long idCombo = 1L, idProducto = 2L;
         Query mockQuery = Mockito.mock(Query.class);
         Combo mockCombo = Mockito.mock(Combo.class);
@@ -274,7 +275,9 @@ public class ComboDetalleBeanTest {
     }
 
     @Test
-    void testFindRangeByCombo_variosCasos() {
+    void testFindRangeByCombo() {
+        System.out.println("ComboDetalleBean test testFindRangeByCombo");
+
         Long idCombo = 1L;
         int first = 0;
         int max = 10;
@@ -302,7 +305,9 @@ public class ComboDetalleBeanTest {
     }
 
     @Test
-    void testUpdateByComboDetallePK_casos() {
+    void testUpdateByComboDetallePK() {
+        System.out.println("ComboDetalleBean test UpdateByComboDetallePK");
+
         Long idCombo = 1L;
         Long idProducto = 2L;
         ComboDetalle existente = new ComboDetalle();
@@ -347,4 +352,52 @@ public class ComboDetalleBeanTest {
         });
         assertEquals("Error al actualizar ComboDetalle", ex2.getMessage());
     }
+
+    @Test
+    void testCalcularPrecioTotalPorIdCombo() {
+        System.out.println("ComboDetalleBean test calcularPrecioTotalPorIdCombo");
+        Integer idCombo = 1;
+        // CASO 5: idCombo nulo debe lanzar IllegalArgumentException
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            cut.calcularPrecioTotalPorIdCombo(null);
+        });
+        assertEquals("El idCombo no puede ser nulo", ex.getMessage());
+
+        // Caso 1: valor devuelto correctamente
+        TypedQuery<BigDecimal> queryOK = Mockito.mock(TypedQuery.class);
+        when(mockEm.createNamedQuery("ComboDetalle.sumarPrecioTotalByIdCombo", BigDecimal.class)).thenReturn(queryOK);
+        when(queryOK.setParameter("idCombo", idCombo)).thenReturn(queryOK);
+        when(queryOK.getSingleResult()).thenReturn(new BigDecimal("25.50"));
+
+        BigDecimal resultado = cut.calcularPrecioTotalPorIdCombo(idCombo);
+        assertEquals(new BigDecimal("25.50"), resultado);
+
+        // Caso 2: resultado null debe devolver BigDecimal.ZERO
+        TypedQuery<BigDecimal> queryNull = Mockito.mock(TypedQuery.class);
+        when(mockEm.createNamedQuery("ComboDetalle.sumarPrecioTotalByIdCombo", BigDecimal.class)).thenReturn(queryNull);
+        when(queryNull.setParameter("idCombo", idCombo)).thenReturn(queryNull);
+        when(queryNull.getSingleResult()).thenReturn(null);
+
+        BigDecimal resultadoNull = cut.calcularPrecioTotalPorIdCombo(idCombo);
+        assertEquals(BigDecimal.ZERO, resultadoNull);
+
+        // Caso 3: excepción NoResultException también retorna BigDecimal.ZERO
+        TypedQuery<BigDecimal> queryNoResult = Mockito.mock(TypedQuery.class);
+        when(mockEm.createNamedQuery("ComboDetalle.sumarPrecioTotalByIdCombo", BigDecimal.class)).thenReturn(queryNoResult);
+        when(queryNoResult.setParameter("idCombo", idCombo)).thenReturn(queryNoResult);
+        when(queryNoResult.getSingleResult()).thenThrow(NoResultException.class);
+
+        BigDecimal resultadoNoResult = cut.calcularPrecioTotalPorIdCombo(idCombo);
+        assertEquals(BigDecimal.ZERO, resultadoNoResult);
+
+        // Caso 4: excepción NullPointerException también retorna BigDecimal.ZERO
+        TypedQuery<BigDecimal> queryNPE = Mockito.mock(TypedQuery.class);
+        when(mockEm.createNamedQuery("ComboDetalle.sumarPrecioTotalByIdCombo", BigDecimal.class)).thenReturn(queryNPE);
+        when(queryNPE.setParameter("idCombo", idCombo)).thenReturn(queryNPE);
+        when(queryNPE.getSingleResult()).thenThrow(NullPointerException.class);
+
+        BigDecimal resultadoNPE = cut.calcularPrecioTotalPorIdCombo(idCombo);
+        assertEquals(BigDecimal.ZERO, resultadoNPE);
+    }
+
 }
