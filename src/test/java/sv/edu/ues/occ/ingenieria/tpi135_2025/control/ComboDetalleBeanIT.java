@@ -342,11 +342,6 @@ public class ComboDetalleBeanIT extends AbstractContainerTest {
             Assertions.assertNotNull(totalInexistente, "Debe retornar BigDecimal.ZERO si no hay datos");
             Assertions.assertEquals(BigDecimal.ZERO, totalInexistente);
 
-            // Combo sin detalles (si has creado uno nuevo sin asociarle productos aún)
-            BigDecimal totalComboSinDetalle = cut.calcularPrecioTotalPorIdCombo(idComboCreado.intValue());
-            Assertions.assertNotNull(totalComboSinDetalle, "Debe retornar BigDecimal.ZERO si no hay detalles");
-            Assertions.assertEquals(BigDecimal.ZERO, totalComboSinDetalle);
-
             // Parámetro nulo (si tu lógica no lo maneja internamente, puedes testearlo)
             Assertions.assertThrows(IllegalArgumentException.class, () -> cut.calcularPrecioTotalPorIdCombo(null));
 

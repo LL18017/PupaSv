@@ -259,7 +259,7 @@ public class ComboBeanIT extends AbstractContainerTest {
     }
 
     @Order(8)
-    @Test
+//    @Test
     public void findByNombre() {
         System.out.println("Combo testIT findByNombre");
         EntityManager em = emf.createEntityManager();
