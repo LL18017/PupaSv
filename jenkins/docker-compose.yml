@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
+      dockerfile: jenkins.Dockerfile
     container_name: jenkins
     user: root
     ports:
@@ -17,11 +19,9 @@ services:
       - /usr/bin/docker:/usr/bin/docker
     networks:
       - redev
-
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
-    user: "1000:1000"  # Ejecución como usuario no root
     ports:
       - "9000:9000"
     networks:
@@ -40,3 +40,17 @@ volumes:
 networks:
   redev:
     driver: bridge
+
+
+
+#jenkins
+#1.agregar tool de maven con el nombre 'mvn 3.8.7' la version que sea la del nombre
+#2.agregar los plugin de 'Quality Gates' , 'SonarQube Scanner for Jenkins' y 'NodeJS Plugin'
+#3.agregar en tool un nombre para 'node' y  'SonarQube Scanner' los nombres deben ser "nodejs" y "sonar-scaner"
+#4.en configuraciones globales agregar el jenkins location de http://jenkins:8080/
+#5.en configuraciones globales agregar en SonarQube servers location de http://sonarqube:9000 y nombre de sonarqube
+#6.en configuraciones globales agregar en Quality Gates url de http://sonarqube:9000 y nombre de quality-gate y las credenciales de sonar
+
+#sonar
+#1 ir a administracion ->General y agregar la url http://sonarqube:9000
+#2 ir a administracion ->cofiguration -> webhook y agregar el nombre 'webhook-sonar' la url 'http://jenkins:8080/sonarqube-webhook'
