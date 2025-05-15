@@ -6,6 +6,8 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -304,4 +306,40 @@ public class ComboBeanIT extends AbstractContainerTest {
         }
     }
 
+    @Order(10)
+    @Test
+    void findRangeWithPrice() {
+        System.out.println("Combo testIT findRangeWithPrice");
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        //flujo normal
+        cut.em.getTransaction().begin();
+        List<Object[]> respuesta = cut.findRangeWithPrice(first, max);
+        cut.em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        for (Object[] fila : respuesta) {
+            Long idCombo = (Long) fila[0];
+            Boolean activo = (Boolean) fila[1];
+            String nombre = (String) fila[2];
+            String descripcion = (String) fila[3];
+            String url = (String) fila[4];
+            BigDecimal totalPrecio = (BigDecimal) fila[5];
+
+            System.out.println("Combo: " + idCombo + " | " + nombre + " | Total: $" + totalPrecio);
+        }
+        Assertions.assertEquals(10, respuesta.size());
+
+        //fallo de argumentos
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeWithPrice(null, max));
+        cut.em.getTransaction().commit();
+
+        //fallo de 0
+        cut.em.getTransaction().begin();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findRangeWithPrice(0, 0));
+        cut.em.getTransaction().commit();
+        em.close();
+//        Assertions.fail("fallo exitosamente");
+    }
 }

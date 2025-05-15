@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductoResourceSI extends AbstractContainerTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductoResourceSI.class);
     Long totalEnScript = 20L;
     Long idParaTest = 1001L;
     Integer idTipoProductoCreado = 1003;
@@ -245,5 +248,32 @@ public class ProductoResourceSI extends AbstractContainerTest {
 //        Assertions.fail("fallo exitosamente");
 
     }
+
+    @Order(2)
+    @Test
+    public void testGetByName() {
+        System.out.println("Producto  testSI getBYName");
+        Assertions.assertTrue(servidorDeAplicaion.isRunning());
+
+        String nombre = "tama";
+        String path = "producto";
+        String formato = String.format("producto/%s", nombre);
+
+        //todos los registros
+        Response respuesta = target.path(formato).request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(200, respuesta.getStatus());
+        Assertions.assertNotNull(respuesta);
+        List<Producto> registros = respuesta.readEntity(new GenericType<List<Producto>>() {
+        });
+
+        Assertions.assertEquals(2, registros.size());
+
+//
+//        //fallo de argumentos id Inexistente
+        respuesta = target.path(path).queryParam("idTipoProducto", 112233).request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(404, respuesta.getStatus());
+//        Assertions.fail("fallo exitosamente");
+    }
+
 
 }

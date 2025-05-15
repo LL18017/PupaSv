@@ -13,6 +13,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -359,79 +360,77 @@ class ProductoBeanTest {
     }
 
     @Test
-    void testFindListByNombre() {
-        System.out.println("Producto test findListByNombre");
-
-        // Caso 1: nombre nulo o vacío
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(""));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre("   "));
-
-        // Caso 2: error en consulta (PersistenceException)
-        String nombreError = "ErrorNombre";
-        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class))
-                .thenThrow(new PersistenceException("Error de base de datos"));
-
-        Assertions.assertThrows(PersistenceException.class, () -> cut.findListByNombre(nombreError));
-
-        // Caso 3: consulta válida
-        String nombreValido = "Producto válido";
-        TypedQuery<Producto> mockQuery = Mockito.mock(TypedQuery.class);
-
-        // Resetear el mock para evitar conflicto con el throw anterior
-        Mockito.reset(mockEm);
-        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter("nombre", nombreValido.trim())).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(LIST_Producto_TEST);
-
-        List<Producto> resultado = cut.findListByNombre(nombreValido);
-
-        Assertions.assertNotNull(resultado);
-        Assertions.assertEquals(6, resultado.size());
-    }
-
-    @Test
     void testFindByNombre() {
         System.out.println("Producto test findByNombre");
 
         // Caso 1: nombre nulo o vacío
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(""));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null,first,max));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("",first,max));
 
         String nombreValido = "Producto válido";
 
         // Caso 2: resultado único correcto
-        Producto productoMock = new Producto(1L);
+        List<Producto> productosMock = new ArrayList<>();
+        productosMock.add(new Producto(1L));
         TypedQuery<Producto> queryOk = Mockito.mock(TypedQuery.class);
         Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryOk);
-        Mockito.when(queryOk.setParameter("nombre", nombreValido.trim())).thenReturn(queryOk);
-        Mockito.when(queryOk.getSingleResult()).thenReturn(productoMock);
-        Producto result = cut.findByNombre(nombreValido);
+        Mockito.when(queryOk.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryOk);
+        Mockito.when(queryOk.setFirstResult(first)).thenReturn(queryOk);
+        Mockito.when(queryOk.setMaxResults(max)).thenReturn(queryOk);
+        Mockito.when(queryOk.getResultList()).thenReturn(productosMock);
+        List<Producto> result = cut.findByNombre(nombreValido,first,max);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1L, result.getIdProducto());
 
-        // Caso 3: no se encuentra el producto (NoResultException)
+        // Caso 3: no se encuentra el productos
         TypedQuery<Producto> queryNoResult = Mockito.mock(TypedQuery.class);
         Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryNoResult);
-        Mockito.when(queryNoResult.setParameter("nombre", nombreValido.trim())).thenReturn(queryNoResult);
-        Mockito.when(queryNoResult.getSingleResult()).thenThrow(new NoResultException());
-        Producto resultNull = cut.findByNombre(nombreValido);
-        Assertions.assertNull(resultNull);
+        Mockito.when(queryNoResult.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setFirstResult(first)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setMaxResults(max)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.getResultList()).thenThrow(new NoResultException());
 
-        // Caso 4: múltiples resultados (NonUniqueResultException)
-        TypedQuery<Producto> queryNonUnique = Mockito.mock(TypedQuery.class);
-        Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryNonUnique);
-        Mockito.when(queryNonUnique.setParameter("nombre", nombreValido.trim())).thenReturn(queryNonUnique);
-        Mockito.when(queryNonUnique.getSingleResult()).thenThrow(new NonUniqueResultException());
-        Assertions.assertThrows(NonUniqueResultException.class, () -> cut.findByNombre(nombreValido));
+        Assertions.assertThrows(NoResultException.class,()-> cut.findByNombre(nombreValido,first,max));
+
 
         // Caso 5: error de persistencia
         TypedQuery<Producto> queryError = Mockito.mock(TypedQuery.class);
         Mockito.when(mockEm.createNamedQuery("Producto.findByNombre", Producto.class)).thenReturn(queryError);
-        Mockito.when(queryError.setParameter("nombre", nombreValido.trim())).thenReturn(queryError);
-        Mockito.when(queryError.getSingleResult()).thenThrow(new PersistenceException("Error BD"));
-        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreValido));
+        Mockito.when(queryError.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryError);
+        Mockito.when(queryError.setFirstResult(first)).thenReturn(queryError);
+        Mockito.when(queryError.setMaxResults(max)).thenReturn(queryError);
+        Mockito.when(queryError.getResultList()).thenThrow(new PersistenceException("Error BD"));
+        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreValido,first,max));
+    }
+
+    @Test
+    void countProductoByName() {
+        System.out.println("Producto test countProductoByName");
+        Long esperado = 1L;
+        String nombre = "test";
+
+        //flujo normal
+        cut.em = mockEm;
+        Mockito.when(mockEm.createNamedQuery("Producto.countByNombre", Long.class)).thenReturn(mockTq);
+        Mockito.when(mockTq.setParameter("nombre", "%"+nombre+"%")).thenReturn(mockTq);
+        Mockito.when(mockTq.getSingleResult()).thenReturn(esperado);
+
+        Long resultado = cut.countProductoByName(nombre);
+        Mockito.when(mockTq.setParameter("nombre", nombre)).thenReturn(mockTq);
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(esperado, resultado);
+
+        // Forzar fallo al acceder al EntityManager
+        Mockito.when(mockEm.createNamedQuery("Producto.countByNombre", Long.class)).thenReturn(mockTq2);
+        Mockito.when(mockTq2.setParameter("nombre","%"+ nombre+"%")).thenReturn(mockTq2);
+        //PersistenceException
+        Mockito.doThrow(PersistenceException.class).when(mockTq2).getSingleResult();
+
+        Assertions.assertThrows(PersistenceException.class, () -> cut.countProductoByName(nombre));
+        //NonUniqueResultException
+        Mockito.doThrow(NonUniqueResultException.class).when(mockTq2).getSingleResult();
+        Assertions.assertThrows(NonUniqueResultException.class, () -> cut.countProductoByName(nombre));
+
+//        fail("fallo exitosamente");
     }
 
 }

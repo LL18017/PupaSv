@@ -131,4 +131,17 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
         }
     }
 
+    public List<Object[]> findRangeWithPrice(Integer first, Integer max) throws IllegalStateException, IllegalArgumentException {
+        if (first == null || first <0) {
+            throw new IllegalArgumentException("El valor de first no puede ser negativo o nulo");
+        }  if (max == null || max <=0) {
+            throw new IllegalArgumentException("El valor de max no puede ser negativo o nulo");
+        }
+        try {
+            return getEntityManager().createNamedQuery("Combo.findAll",Object[].class).setFirstResult(first).setMaxResults(max).getResultList();
+        } catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+    }
+
 }

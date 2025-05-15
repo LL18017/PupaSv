@@ -193,4 +193,37 @@ class ProductoResourceTest {
 
         //fail("Esta prueba no pasa quemado");
     }
+
+    @Test
+    void findRangeByName() {
+        System.out.println("Producto test findRangeByName");
+        cut = new ProductoResource();
+        mockP = Mockito.mock(ProductoBean.class);
+
+        cut.pBean= mockP;
+        Integer first=0;
+        Integer max=10;
+        Integer idTipoProducto=2;
+        Boolean activo=true;
+        String nombre="test";
+
+        //normal
+        Mockito.when(mockP.findByNombre(nombre,first, max)).thenReturn(TEST_TP);
+        Mockito.when(mockP.countProductoByName(nombre)).thenReturn((long) TEST_TP.size());
+        Response response = cut.findRangeByName(first, max,nombre);
+        Assertions.assertEquals(200, response.getStatus());
+        Mockito.verify(mockP).findByNombre(nombre,first, max);
+        Mockito.verify(mockP).countProductoByName(nombre);
+
+
+        //excepciones
+
+        Mockito.reset(mockP);
+        Mockito.when(mockP.findByNombre(nombre,first, max)).thenThrow(persistenceExcepcion);
+        response = cut.findRangeByName(first, max,nombre);
+        Assertions.assertEquals(500, response.getStatus());
+
+        //fail("Esta prueba no pasa quemado");
+    }
+
 }

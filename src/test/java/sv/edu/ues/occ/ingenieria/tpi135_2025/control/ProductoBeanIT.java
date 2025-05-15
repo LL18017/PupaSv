@@ -295,58 +295,51 @@ public class ProductoBeanIT extends AbstractContainerTest {
 
     }
 
-    @Order(13)
-    @Test
-    public void findListByNombre() {
-        System.out.println("Producto testIT findListByNombre");
 
-        EntityManager em = emf.createEntityManager();
-        cut.em = em;
-
-        // Caso válido
-        List<Producto> resultados = cut.findListByNombre("pepsi");
-        Assertions.assertNotNull(resultados, "La lista no debe ser nula");
-        Assertions.assertFalse(resultados.isEmpty(), "Debe retornar al menos un producto");
-        Assertions.assertEquals("pepsi", resultados.get(0).getNombre());
-
-        // Trim verifica que quita espacios
-        List<Producto> resultadosConEspacios = cut.findListByNombre("  pepsi  ");
-        Assertions.assertEquals(resultados.size(), resultadosConEspacios.size());
-
-        // Casos inválidos (nombre null o vacío)
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findListByNombre("   "));
-
-        em.close();
-    }
 
     @Order(14)
     @Test
-    public void findByNombre() {
+    public void findListByNombre() {
         System.out.println("Producto testIT findByNombre");
 
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
         // Caso válido
-        Producto resultado = cut.findByNombre("pepsi");
+        List<Producto> resultado = cut.findByNombre("pepsi",first,max);
         Assertions.assertNotNull(resultado, "Debe encontrar un producto");
-        Assertions.assertEquals("pepsi", resultado.getNombre());
+        Assertions.assertEquals("pepsi", resultado.get(0).getNombre());
 
         // Caso con espacios alrededor
-        Producto resultadoTrim = cut.findByNombre("   pepsi   ");
-        Assertions.assertNotNull(resultadoTrim, "Debe encontrar el producto con espacios");
-        Assertions.assertEquals("pepsi", resultadoTrim.getNombre());
+        List<Producto> resultadoTrim = cut.findByNombre("tam",first,max);
+        Assertions.assertNotNull(resultadoTrim, "Debe encontrar 2 registros de tamales");
+        Assertions.assertEquals(2, resultadoTrim.size());
 
         // Caso con nombre inexistente → debe retornar null
-        Producto noExiste = cut.findByNombre("nombre que no existe");
-        Assertions.assertNull(noExiste, "Debe retornar null si no encuentra el producto");
+        List<Producto> noExiste = cut.findByNombre("nombre que no existe",first,max);
+        Assertions.assertTrue(noExiste.isEmpty(), "Debe retornar null si no encuentra el producto");
 
         // Casos inválidos (null o vacío)
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
-
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null,first,max));
         em.close();
+    }
+
+    @Order(15)
+    @Test
+    void countProductoByName() {
+        System.out.println("Producto testIT countProductoByName");
+        EntityManager em = emf.createEntityManager();
+        String nombre = "tamal";
+        Long cantiddaEsperada = 2L;//segun script db
+        cut.em = em;
+        em.getTransaction().begin();
+        Long respuesta = cut.countProductoByName(nombre);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(cantiddaEsperada, respuesta);
+        em.close();
+//        Assertions.fail("fallo exitosamente");
+
     }
 
 }

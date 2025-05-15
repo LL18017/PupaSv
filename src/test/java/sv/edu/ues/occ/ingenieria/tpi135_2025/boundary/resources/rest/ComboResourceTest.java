@@ -13,6 +13,7 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,23 +47,31 @@ class ComboResourceTest {
         cut.comboBean= mockP;
         Integer first=0;
         Integer max=10;
+        List<Object[]> lista = new ArrayList<>();
+
+        // Simulando fila 1: idCombo=1, activo=true, nombre="Combo1", descripcion="Desc1", url="url1", suma=100.0
+        lista.add(new Object[] {1L, true, "Combo1", "Desc1", "url1", 100.0});
+
+        // Simulando fila 2: idCombo=2, activo=false, nombre="Combo2", descripcion="Desc2", url="url2", suma=250.5
+        lista.add(new Object[] {2L, false, "Combo2", "Desc2", "url2", 250.5});
 
         //id cero y activo null
-        Mockito.when(mockP.findRange(first, max)).thenReturn(TEST_TP);
+        Mockito.when(mockP.findRangeWithPrice(first, max)).thenReturn(lista);
         Mockito.when(mockP.count()).thenReturn((long) TEST_TP.size());
         Response response = cut.findRange(first, max);
         Assertions.assertEquals(200, response.getStatus());
-        Mockito.verify(mockP).findRange(first, max);
+        Mockito.verify(mockP).findRangeWithPrice(first, max);
         Mockito.verify(mockP).count();
 
-        //excepciones
-
-        Mockito.reset(mockP);
-        Mockito.when(mockP.findRange(first, max)).thenThrow(persistenceExcepcion);
+        // excepciones
+        ComboBean mockComboBean = Mockito.mock(ComboBean.class);
+        cut.comboBean= mockComboBean;
+        Mockito.when(mockComboBean.findRangeWithPrice(first, max)).thenThrow(persistenceExcepcion);
         response = cut.findRange(first, max);
         Assertions.assertEquals(500, response.getStatus());
 
-        //fail("Esta prueba no pasa quemado");
+        // Forzar fallo
+//        Assertions.fail("Esta prueba no pasa quemado");
     }
 
 

@@ -52,9 +52,10 @@ public class ProductoResource extends GeneralRest implements Serializable {
     @Path("")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max, @QueryParam("idTipoProducto") @DefaultValue("0") Integer idTipoProducto, @QueryParam("activo") Boolean activo) {
+    public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max,
+                              @QueryParam("idTipoProducto") @DefaultValue("0") Integer idTipoProducto,
+                              @QueryParam("activo") Boolean activo) {
         try {
-
             //findRange NORMAL
             if (activo == null && idTipoProducto == 0) {
                 List<Producto> registros = pBean.findRange(first, max);
@@ -78,6 +79,22 @@ public class ProductoResource extends GeneralRest implements Serializable {
 
         } catch (Exception e) {
             return responseExcepcions(e, Long.valueOf(idTipoProducto));
+        }
+    }
+
+
+    @Path("{nombre}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRangeByName(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max,
+                               @PathParam("nombre") @DefaultValue("") String nombre) {
+        try {
+
+            List<Producto> encontrados = pBean.findByNombre(nombre,first,max);
+            long total = pBean.countProductoByName(nombre);
+            return Response.ok(encontrados).header(Headers.TOTAL_RECORD, total).type(MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            return responseExcepcions(e, null);
         }
     }
 

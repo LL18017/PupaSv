@@ -369,4 +369,42 @@ public class ComboBeanTest {
         Assertions.assertEquals(3, resultado.size());
     }
 
+    @Test
+    public void testFindAllwithPrice() {
+        System.out.println("Combo test findAll");
+        ComboBean cut = new ComboBean();
+        Integer first=0;
+        Integer max=10;
+        // Caso 1: EntityManager nulo
+        Assertions.assertThrows(IllegalStateException.class, () -> cut.findRangeWithPrice(first,max));
+
+        EntityManager mockEm = Mockito.mock(EntityManager.class);
+        TypedQuery mockTq = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.findAll", Object[].class)).thenReturn(mockTq);
+        Mockito.when(mockTq.setFirstResult(first)).thenReturn(mockTq);
+        Mockito.when(mockTq.setMaxResults(max)).thenReturn(mockTq);
+        Mockito.when(mockTq.getResultList()).thenReturn(LIST_COMBO_TEST);
+
+        // Caso 2: Flujo normal
+        cut.em=mockEm;
+        List<Object[]> result = cut.findRangeWithPrice(first,max);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(3, result.size());
+
+        // Caso 3: Error de base de datos
+        ComboBean cut2 = new ComboBean();
+        EntityManager mockEm2 = Mockito.mock(EntityManager.class);
+        cut2.em = mockEm2;
+
+        TypedQuery mockTq2 = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm2.createNamedQuery("Combo.findAll", Object[].class)).thenReturn(mockTq2);
+        Mockito.when(mockTq2.setFirstResult(first)).thenReturn(mockTq2);
+        Mockito.when(mockTq2.setMaxResults(max)).thenReturn(mockTq2);
+        Mockito.when(mockTq2.getResultList()).thenThrow(PersistenceException.class);
+        Assertions.assertThrows(PersistenceException.class, () -> cut2.findRangeWithPrice(first,max));
+
+//        Assertions.fail("fallo exitosamente");
+    }
+
 }

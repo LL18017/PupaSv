@@ -265,31 +265,43 @@ public class ProductoBean extends AbstractDataAccess<Producto> implements Serial
         return true;
     }
 
-    public List<Producto> findListByNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
+
+    public List<Producto> findByNombre(String nombre,Integer first, Integer max) {
+        if (nombre == null || nombre.isEmpty()) {
             throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacío");
         }
         try {
             return em.createNamedQuery("Producto.findByNombre", Producto.class)
-                    .setParameter("nombre", nombre.trim())
+                    .setParameter("nombre", "%"+nombre+"%")
+                    .setFirstResult(first)
+                    .setMaxResults(max)
                     .getResultList();
+        } catch (NoResultException e) {
+            throw  e;
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("Se encontraron múltiples productos con el mismo nombre");
         } catch (PersistenceException e) {
             throw new PersistenceException("Error al acceder a la base de datos", e);
         }
     }
 
-    public Producto findByNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacío");
-        }
+    /**
+     * Busca la cantidad de registros de la cantidad de Producto que cuentas de acuerdo a nombre
+     * @return la cantidda de registros de productos. devuelve 0
+     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws EntityNotFoundException Si no existe registros con ese
+     * idTipoProducto.
+     * @throws NonUniqueResultException si se recibe mas de un dato
+     * @throws PersistenceException si hay un error general con la base de
+     * datos.
+     */
+    public Long countProductoByName(String nombre) {
         try {
-            return em.createNamedQuery("Producto.findByNombre", Producto.class)
-                    .setParameter("nombre", nombre.trim())
+            return em.createNamedQuery("Producto.countByNombre", Long.class)
+                    .setParameter("nombre", "%"+nombre+"%")
                     .getSingleResult();
-        } catch (NoResultException e) {
-            return null; // O puedes lanzar una excepción si prefieres
         } catch (NonUniqueResultException e) {
-            throw new NonUniqueResultException("Se encontraron múltiples productos con el mismo nombre");
+            throw new NonUniqueResultException("El valor devuelto no es un resultado único");
         } catch (PersistenceException e) {
             throw new PersistenceException("Error al acceder a la base de datos", e);
         }

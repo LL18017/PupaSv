@@ -529,7 +529,7 @@ INSERT INTO public.combo VALUES (1008, 'tarde de dulce', true, '5 empanadas de p
 INSERT INTO public.combo VALUES (1009, 'tradiCombo', true, '2 tamales de elote, crema junto con un chocolate','https://comedera.com/wp-content/uploads/sites/9/2024/06/Tamales-de-Elote.jpg');
 
 INSERT INTO public.combo VALUES (1010, 'sabor guanaco', true, '2 tamales de maiz  y un cafe','https://cocinaalchile.com/wp-content/uploads/2019/11/2.jpg');
-INSERT INTO public.combo VALUES (1011, 'sabor guanaco', true, '2 tamales de maiz  y un cafe','https://cocinaalchile.com/wp-content/uploads/2019/11/2.jpg');
+INSERT INTO public.combo VALUES (1011, 'sabor guanaco2fdz', true, '2 tamales de maiz  y un cafe','https://cocinaalchile.com/wp-content/uploads/2019/11/2.jpg');
 
 INSERT INTO public.combo_detalle VALUES (1001,1003,10,true);
 INSERT INTO public.combo_detalle VALUES (1001,1001,3,true);

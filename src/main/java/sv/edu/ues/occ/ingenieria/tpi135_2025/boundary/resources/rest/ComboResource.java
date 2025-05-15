@@ -49,7 +49,7 @@ public class ComboResource extends GeneralRest implements Serializable {
             @QueryParam("max") @DefaultValue("20") Integer max) {
 
         try {
-            List<Combo> combos = comboBean.findRange(first, max);
+            List<Object[]> combos = comboBean.findRangeWithPrice(first, max);
             long total = comboBean.count();
             return Response.ok(combos)
                     .header(Headers.TOTAL_RECORD, total)

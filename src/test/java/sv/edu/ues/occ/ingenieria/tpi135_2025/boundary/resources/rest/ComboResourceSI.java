@@ -55,10 +55,10 @@ public class ComboResourceSI extends AbstractContainerTest {
         // Flujo correcto
         Assertions.assertEquals(200, respuesta.getStatus());
         Assertions.assertNotNull(respuesta);
-        List<Combo> registros = respuesta.readEntity(new GenericType<List<Combo>>() {
+        List<Object[]> registros = respuesta.readEntity(new GenericType<List<Object[]>>() {
         });
-        Assertions.assertEquals(cantidadEnScript, registros.size());
-
+        Assertions.assertEquals(10, registros.size());
+       
         // Argumentos erróneos
         respuesta = target.path("combo").queryParam("first", first).queryParam("max", -80)
                 .request(MediaType.APPLICATION_JSON).get();

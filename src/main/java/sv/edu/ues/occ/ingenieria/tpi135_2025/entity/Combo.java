@@ -25,7 +25,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "combo")
 @NamedQueries({
-    @NamedQuery(name = "Combo.findAll", query = "SELECT c FROM Combo c"),
+    @NamedQuery(name = "Combo.findAll", query = "SELECT c.idCombo, c.activo, c.nombre, c.descripcionPublica, c.url, SUM(pp.precioSugerido) " +
+            "FROM ComboDetalle cd JOIN cd.combo c JOIN cd.producto p JOIN ProductoPrecio pp ON pp.idProducto = p GROUP BY c.idCombo, c.activo, c.nombre, c.descripcionPublica, c.url ORDER BY c.idCombo"),
     @NamedQuery(name = "Combo.findByIdCombo", query = "SELECT c FROM Combo c WHERE c.idCombo = :idCombo"),
     @NamedQuery(name = "Combo.findByNombre", query = "SELECT c FROM Combo c WHERE c.nombre = :nombre"),
     @NamedQuery(name = "Combo.findByActivo", query = "SELECT c FROM Combo c WHERE c.activo = :activo"),
