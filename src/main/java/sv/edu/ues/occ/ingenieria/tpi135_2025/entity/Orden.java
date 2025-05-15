@@ -4,7 +4,6 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.Date;

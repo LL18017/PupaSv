@@ -6,16 +6,14 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
-import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 /**
  * @author hdz bean para control de entidad Combo
@@ -116,21 +114,6 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
         }
     }
 
-    public List<Combo> findByNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede ser nulo o vacío");
-        }
-
-        try {
-            return getEntityManager()
-                    .createNamedQuery("Combo.findByNombre", Combo.class)
-                    .setParameter("nombre", nombre)
-                    .getResultList();
-        } catch (PersistenceException e) {
-            throw new PersistenceException("Error al buscar Combo por nombre exacto", e);
-        }
-    }
-
     public List<Object[]> findRangeWithPrice(Integer first, Integer max) throws IllegalStateException, IllegalArgumentException {
         if (first == null || first <0) {
             throw new IllegalArgumentException("El valor de first no puede ser negativo o nulo");
@@ -141,6 +124,48 @@ public class ComboBean extends AbstractDataAccess<Combo> implements Serializable
             return getEntityManager().createNamedQuery("Combo.findAll",Object[].class).setFirstResult(first).setMaxResults(max).getResultList();
         } catch (PersistenceException e) {
             throw new PersistenceException(e);
+        }
+    }
+
+
+    public List<Object[]> findByNombre(String nombre, Integer first, Integer max) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacío");
+        }
+        try {
+            return em.createNamedQuery("Combo.findByNombre", Object[].class)
+                    .setParameter("nombre", "%"+nombre+"%")
+                    .setFirstResult(first)
+                    .setMaxResults(max)
+                    .getResultList();
+        } catch (NoResultException e) {
+            throw  e;
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("Se encontraron múltiples productos con el mismo nombre");
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al acceder a la base de datos", e);
+        }
+    }
+
+    /**
+     * Busca la cantidad de registros de la cantidad de Producto que cuentas de acuerdo a nombre
+     * @return la cantidda de registros de productos. devuelve 0
+     * @throws IllegalStateException Si no se puede acceder al repositorio.
+     * @throws EntityNotFoundException Si no existe registros con ese
+     * idTipoProducto.
+     * @throws NonUniqueResultException si se recibe mas de un dato
+     * @throws PersistenceException si hay un error general con la base de
+     * datos.
+     */
+    public Long countProductoByName(String nombre) {
+        try {
+            return em.createNamedQuery("Combo.countByNombre", Long.class)
+                    .setParameter("nombre", "%"+nombre+"%")
+                    .getSingleResult();
+        } catch (NonUniqueResultException e) {
+            throw new NonUniqueResultException("El valor devuelto no es un resultado único");
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Error al acceder a la base de datos", e);
         }
     }
 

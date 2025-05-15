@@ -4,14 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
-import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.function.Executable;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.NonUniqueResultException;
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -19,6 +13,7 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +31,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
 /**
  * @author hdz
@@ -338,38 +334,6 @@ public class ComboBeanTest {
     }
 
     @Test
-    public void testFindByNombre() {
-        System.out.println("Combo test findByNombre");
-
-        // Caso 1: nombre nulo o vacío
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(""));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("   "));
-
-        // Caso 2: error en consulta (simulate PersistenceException)
-        String nombreError = "Error";
-        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Combo.class))
-                .thenThrow(new PersistenceException("DB error"));
-
-        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreError));
-
-        // Caso 3: consulta válida
-        String nombreValido = "Combo válido";
-        TypedQuery<Combo> mockQuery = Mockito.mock(TypedQuery.class);
-
-        // Se necesita redefinir el comportamiento para evitar conflictos con el anterior throw
-        Mockito.reset(mockEm);
-        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Combo.class)).thenReturn(mockQuery);
-        Mockito.when(mockQuery.setParameter("nombre", nombreValido)).thenReturn(mockQuery);
-        Mockito.when(mockQuery.getResultList()).thenReturn(LIST_COMBO_TEST);
-
-        List<Combo> resultado = cut.findByNombre(nombreValido);
-
-        Assertions.assertNotNull(resultado);
-        Assertions.assertEquals(3, resultado.size());
-    }
-
-    @Test
     public void testFindAllwithPrice() {
         System.out.println("Combo test findAll");
         ComboBean cut = new ComboBean();
@@ -406,5 +370,84 @@ public class ComboBeanTest {
 
 //        Assertions.fail("fallo exitosamente");
     }
+
+
+    @Test
+    void testFindByNombre() {
+        System.out.println("Combo test findByNombre");
+        Integer first=0;
+        Integer max=10;
+        // Caso 1: nombre nulo o vacío
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null,first,max));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre("",first,max));
+
+        String nombreValido = "Combo válido";
+
+        // Caso 2: resultado único correcto
+        List<Combo> productosMock = new ArrayList<>();
+        productosMock.add(new Combo(1L));
+        TypedQuery queryOk = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Object[].class)).thenReturn(queryOk);
+        Mockito.when(queryOk.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryOk);
+        Mockito.when(queryOk.setFirstResult(first)).thenReturn(queryOk);
+        Mockito.when(queryOk.setMaxResults(max)).thenReturn(queryOk);
+        Mockito.when(queryOk.getResultList()).thenReturn(productosMock);
+        List result = cut.findByNombre(nombreValido,first,max);
+        Assertions.assertNotNull(result);
+
+        // Caso 3: no se encuentra el productos
+        TypedQuery queryNoResult = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Object[].class)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setFirstResult(first)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.setMaxResults(max)).thenReturn(queryNoResult);
+        Mockito.when(queryNoResult.getResultList()).thenThrow(new NoResultException());
+
+        Assertions.assertThrows(NoResultException.class,()-> cut.findByNombre(nombreValido,first,max));
+
+
+        // Caso 5: error de persistencia
+        TypedQuery<Combo> queryError = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.findByNombre", Combo.class)).thenReturn(queryError);
+        Mockito.when(queryError.setParameter("nombre", "%"+nombreValido+"%")).thenReturn(queryError);
+        Mockito.when(queryError.setFirstResult(first)).thenReturn(queryError);
+        Mockito.when(queryError.setMaxResults(max)).thenReturn(queryError);
+        Mockito.when(queryError.getResultList()).thenThrow(new PersistenceException("Error BD"));
+        Assertions.assertThrows(PersistenceException.class, () -> cut.findByNombre(nombreValido,first,max));
+    }
+
+    @Test
+    void countProductoByName() {
+        System.out.println("Combo test countCountByName");
+        Long esperado = 1L;
+        String nombre = "test";
+
+        //flujo normal
+        cut.em = mockEm;
+        TypedQuery mockTq= Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.countByNombre", Long.class)).thenReturn(mockTq);
+        Mockito.when(mockTq.setParameter("nombre", "%"+nombre+"%")).thenReturn(mockTq);
+        Mockito.when(mockTq.getSingleResult()).thenReturn(esperado);
+
+        Long resultado = cut.countProductoByName(nombre);
+        Mockito.when(mockTq.setParameter("nombre", nombre)).thenReturn(mockTq);
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(esperado, resultado);
+
+        // Forzar fallo al acceder al EntityManager
+        TypedQuery mockTq2 = Mockito.mock(TypedQuery.class);
+        Mockito.when(mockEm.createNamedQuery("Combo.countByNombre", Long.class)).thenReturn(mockTq2);
+        Mockito.when(mockTq2.setParameter("nombre","%"+ nombre+"%")).thenReturn(mockTq2);
+        //PersistenceException
+        Mockito.doThrow(PersistenceException.class).when(mockTq2).getSingleResult();
+
+        Assertions.assertThrows(PersistenceException.class, () -> cut.countProductoByName(nombre));
+        //NonUniqueResultException
+        Mockito.doThrow(NonUniqueResultException.class).when(mockTq2).getSingleResult();
+        Assertions.assertThrows(NonUniqueResultException.class, () -> cut.countProductoByName(nombre));
+
+//        fail("fallo exitosamente");
+    }
+
 
 }

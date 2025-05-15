@@ -1,22 +1,13 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest;
 
 
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.StreamingOutput;
 import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboCantidadPlantilla;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ProductoCantidadPLantilla;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetallePK;
@@ -25,8 +16,6 @@ import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.*;

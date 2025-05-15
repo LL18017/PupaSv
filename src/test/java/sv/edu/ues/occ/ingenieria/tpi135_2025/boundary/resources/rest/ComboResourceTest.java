@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboBean;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ProductoBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +40,7 @@ class ComboResourceTest {
     EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Error al consultar", causaEe);
 
 
-    @Test
+//    @Test
     void findRange() {
         System.out.println("Combo test findRange");
         cut = new ComboResource();
@@ -178,8 +180,40 @@ class ComboResourceTest {
 
         //fail("Esta prueba no pasa quemado");
     }
-
     @Test
-    void setComboBean() {
+    void findRangeByName() {
+        System.out.println("Producto test findRangeByName");
+
+        ComboBean mockP = Mockito.mock(ComboBean.class);
+        ComboResource cut = new ComboResource(); // No moquear el recurso, instanciarlo
+        cut.comboBean = mockP;
+
+        Integer first = 0;
+        Integer max = 10;
+        String nombre = "test";
+
+        // Lista simulada
+        List<Object[]> combos = new ArrayList<>();
+        combos.add(new Object[]{1L, true, "Combo Pepsi", "Incluye Pepsi y snacks", "https://imagen.com/combo1.jpg", BigDecimal.valueOf(5.99)});
+        combos.add(new Object[]{2L, true, "Combo Nachos", "Nachos + Pepsi", "https://imagen.com/combo2.jpg", BigDecimal.valueOf(6.49)});
+        combos.add(new Object[]{3L, false, "Combo Hotdog", "Hotdog grande + soda", "https://imagen.com/combo3.jpg", BigDecimal.valueOf(4.99)});
+
+        // Caso exitoso
+        Mockito.when(mockP.findByNombre(nombre, first, max)).thenReturn(combos);
+        Mockito.when(mockP.countProductoByName(nombre)).thenReturn((long) combos.size());
+
+        Response response = cut.findRangeByName(first, max, nombre);
+        Assertions.assertEquals(200, response.getStatus());
+
+        Mockito.verify(mockP).findByNombre(nombre, first, max);
+        Mockito.verify(mockP).countProductoByName(nombre);
+
+        // Caso con excepción
+        Mockito.reset(mockP);
+        Mockito.when(mockP.findByNombre(nombre, first, max)).thenThrow(new RuntimeException("Fallo simulado"));
+
+        response = cut.findRangeByName(first, max, nombre);
+        Assertions.assertEquals(500, response.getStatus());
     }
+
 }

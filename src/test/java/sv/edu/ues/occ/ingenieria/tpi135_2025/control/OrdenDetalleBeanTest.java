@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -27,7 +26,7 @@ public class OrdenDetalleBeanTest {
     @Test
     void testConstructor() {
         System.out.println("OrdenDetalle Test de Constructor");
-        assertNotNull(new OrdenDetalleBean());
+        Assertions.assertNotNull(new OrdenDetalleBean());
         //Assertions.fail("Esta prueba no pasa quemado ");
     }
 
@@ -35,7 +34,7 @@ public class OrdenDetalleBeanTest {
     public void testOrderParameterQuery() {
         OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
         System.out.println("OrdenDetalle Test de OrderParameterQuery");
-        assertEquals("idOrdenDetalle", ordenDetalleBean.orderParameterQuery());
+        Assertions.assertEquals("idOrdenDetalle", ordenDetalleBean.orderParameterQuery());
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 
@@ -45,9 +44,9 @@ public class OrdenDetalleBeanTest {
         EntityManager em = Mockito.mock(EntityManager.class);
         ordenDetalleBean.em = em;
         System.out.println("OrdenDetalle Test de getEntityManager");
-        assertNotNull(ordenDetalleBean.getEntityManager());
-        assertEquals(em, ordenDetalleBean.getEntityManager());
-        //Assertions.fail("Esta prueba no pasa quemado ");
+        Assertions.assertNotNull(ordenDetalleBean.getEntityManager());
+        Assertions.assertEquals(em, ordenDetalleBean.getEntityManager());
+        //Assertions.assertions.fail("Esta prueba no pasa quemado ");
     }
 
     @Test
@@ -56,7 +55,7 @@ public class OrdenDetalleBeanTest {
         EntityManager em = Mockito.mock(EntityManager.class);
         System.out.println("OrdenDetalle Test de setEntityManager");
         ordenDetalleBean.setEntityManager(em);
-        assertEquals(em, ordenDetalleBean.getEntityManager());
+        Assertions.assertEquals(em, ordenDetalleBean.getEntityManager());
         //Assertions.fail("Esta prueba no pasa quemado");
     }
 
@@ -79,8 +78,8 @@ public class OrdenDetalleBeanTest {
         when(queryMock.getSingleResult()).thenReturn(detalleEsperado);
 
         OrdenDetalle resultado = ordenDetalleBean.findByIdOrdenAndIdPrecioProducto(1L, 1L);
-        assertNotNull(resultado);
-        assertEquals(detalleEsperado, resultado);
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(detalleEsperado, resultado);
 
         //errores
         TypedQuery tp = Mockito.spy(TypedQuery.class);
@@ -148,8 +147,8 @@ public class OrdenDetalleBeanTest {
         when(queryMock.getResultList()).thenReturn(mockList);
 
         List<OrdenDetalle> result = ordenDetalleBean.findRangeByIdOrden(1L, 0, 2);
-        assertNotNull(result);
-        assertEquals(2, result.size());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
 
         //no existe
         Mockito.reset(queryMock);
@@ -205,7 +204,7 @@ public class OrdenDetalleBeanTest {
         when(queryMock.getSingleResult()).thenReturn(5L);
 
         Long result = ordenDetalleBean.countByIdOrden(1L);
-        assertEquals(Long.valueOf(5L), result);
+        Assertions.assertEquals(Long.valueOf(5L), result);
         TypedQuery tp = Mockito.mock(TypedQuery.class);
         when(em.createNamedQuery("OrdenDetalle.countByIdOrden", Long.class)).thenReturn(tp);
         when(tp.setParameter("idOrden", 1L)).thenReturn(tp);
@@ -434,9 +433,9 @@ public class OrdenDetalleBeanTest {
         when(tp.setParameter("idCombo", 1002L)).thenReturn(tp);
 
         doThrow(NoResultException.class).when(tp).getResultList();
-        assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
         doThrow(PersistenceException.class).when(tp).getResultList();
-        assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
 
     }
 
@@ -476,7 +475,7 @@ public class OrdenDetalleBeanTest {
         when(tp.setParameter("idProductoPrecio", idProductoPrecio)).thenReturn(tp);
 
         doThrow(PersistenceException.class).when(tp).executeUpdate();
-        assertThrows(PersistenceException.class, () -> ordenDetalleBean.delete(idOrden, idProductoPrecio));
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.delete(idOrden, idProductoPrecio));
 
 
     }
@@ -528,7 +527,7 @@ public class OrdenDetalleBeanTest {
 
         doThrow(PersistenceException.class).when(em2).merge(registro);
         ordenDetalleBean.em = em2;
-        assertThrows(PersistenceException.class, () -> ordenDetalleBean.update(registro, idOrden, idProductoPrecio));
+        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.update(registro, idOrden, idProductoPrecio));
 
 
     }

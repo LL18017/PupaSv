@@ -7,8 +7,6 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
@@ -22,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PagoResourceSI extends AbstractContainerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(PagoResourceSI.class);
     Long totalEnScript = 4L;
     Long idParaTest = 1001L;
     Long idPagoCreado = 1001L;

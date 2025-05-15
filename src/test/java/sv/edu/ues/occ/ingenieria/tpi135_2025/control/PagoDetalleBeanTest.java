@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 import java.math.BigDecimal;

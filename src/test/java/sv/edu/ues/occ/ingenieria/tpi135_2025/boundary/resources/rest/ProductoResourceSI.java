@@ -6,8 +6,6 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 
@@ -20,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductoResourceSI extends AbstractContainerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductoResourceSI.class);
     Long totalEnScript = 20L;
     Long idParaTest = 1001L;
     Integer idTipoProductoCreado = 1003;

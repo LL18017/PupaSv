@@ -19,7 +19,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboPrecioPlantilla;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.TipoProducto;
 
 /**
@@ -261,7 +263,7 @@ public class ComboBeanIT extends AbstractContainerTest {
     }
 
     @Order(8)
-//    @Test
+    @Test
     public void findByNombre() {
         System.out.println("Combo testIT findByNombre");
         EntityManager em = emf.createEntityManager();
@@ -274,24 +276,23 @@ public class ComboBeanIT extends AbstractContainerTest {
             em.getTransaction().begin();
 
             // Caso 1: Buscar combo existente
-            List<Combo> resultado = cut.findByNombre(nombreExistente);
+            List<Object[]> resultado = cut.findByNombre(nombreExistente,first,max);
             Assertions.assertNotNull(resultado);
             Assertions.assertFalse(resultado.isEmpty(), "Debe devolver al menos un combo");
-            Assertions.assertEquals(nombreExistente, resultado.get(0).getNombre());
 
             // Caso 2: Buscar combo inexistente
-            List<Combo> vacio = cut.findByNombre(nombreInexistente);
+            List<Object[]> vacio = cut.findByNombre(nombreInexistente,first,max);
             Assertions.assertNotNull(vacio);
             Assertions.assertTrue(vacio.isEmpty(), "Debe devolver una lista vacía si no hay coincidencias");
 
             // Caso 3: Nombre nulo
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                cut.findByNombre(null);
+                cut.findByNombre(null,first,max);
             });
 
             // Caso 4: Nombre vacío
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                cut.findByNombre("   ");
+                cut.findByNombre("   ",first,max);
             });
 
             em.getTransaction().commit();
@@ -318,16 +319,6 @@ public class ComboBeanIT extends AbstractContainerTest {
         List<Object[]> respuesta = cut.findRangeWithPrice(first, max);
         cut.em.getTransaction().commit();
         Assertions.assertNotNull(respuesta);
-        for (Object[] fila : respuesta) {
-            Long idCombo = (Long) fila[0];
-            Boolean activo = (Boolean) fila[1];
-            String nombre = (String) fila[2];
-            String descripcion = (String) fila[3];
-            String url = (String) fila[4];
-            BigDecimal totalPrecio = (BigDecimal) fila[5];
-
-            System.out.println("Combo: " + idCombo + " | " + nombre + " | Total: $" + totalPrecio);
-        }
         Assertions.assertEquals(10, respuesta.size());
 
         //fallo de argumentos
@@ -341,5 +332,46 @@ public class ComboBeanIT extends AbstractContainerTest {
         cut.em.getTransaction().commit();
         em.close();
 //        Assertions.fail("fallo exitosamente");
+    }
+
+
+    @Order(14)
+    @Test
+    public void findListByNombre() {
+        System.out.println("Combo testIT findByNombre");
+
+        EntityManager em = emf.createEntityManager();
+        cut.em = em;
+
+        // Caso válido
+        List<Object[]> resultado = cut.findByNombre("pupus",first,max);
+        Assertions.assertNotNull(resultado, "Debe encontrar un combo");
+        Assertions.assertEquals(3, resultado.size());
+
+        // Caso con nombre inexistente → debe retornar null
+        List<Object[]> noExiste = cut.findByNombre("nombre que no existe",first,max);
+        Assertions.assertTrue(noExiste.isEmpty(), "Debe retornar null si no encuentra el producto");
+
+        // Casos inválidos (null o vacío)
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cut.findByNombre(null,first,max));
+        em.close();
+    }
+
+    @Order(15)
+    @Test
+    void countProductoByName() {
+        System.out.println("Producto testIT countProductoByName");
+        EntityManager em = emf.createEntityManager();
+        String nombre = "pupusa";
+        Long cantiddaEsperada = 3L;//segun script db
+        cut.em = em;
+        em.getTransaction().begin();
+        Long respuesta = cut.countProductoByName(nombre);
+        em.getTransaction().commit();
+        Assertions.assertNotNull(respuesta);
+        Assertions.assertEquals(cantiddaEsperada, respuesta);
+        em.close();
+//        Assertions.fail("fallo exitosamente");
+
     }
 }

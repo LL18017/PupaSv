@@ -18,12 +18,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboPrecioPlantilla;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.ComboBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hdz Recurso REST para entidad Combo
@@ -50,9 +53,57 @@ public class ComboResource extends GeneralRest implements Serializable {
 
         try {
             List<Object[]> combos = comboBean.findRangeWithPrice(first, max);
+            List<ComboPrecioPlantilla> combosJson = combos.stream()
+                    .map(arr -> new ComboPrecioPlantilla(
+                            (Long) arr[0],
+                            (Boolean) arr[1],
+                            (String) arr[2],
+                            (String) arr[3],
+                            (String) arr[4],
+                            (BigDecimal) arr[5]
+                    ))
+                    .collect(Collectors.toList());
+
             long total = comboBean.count();
-            return Response.ok(combos)
+            return Response.ok(combosJson)
                     .header(Headers.TOTAL_RECORD, total)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception e) {
+         return responseExcepcions(e,null);
+        }
+
+    }
+
+    @GET
+    @Path("{nombre}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response findRangeByName(@QueryParam("first") @DefaultValue("0") Integer first,
+            @QueryParam("max") @DefaultValue("20") Integer max,
+    @PathParam("nombre") @DefaultValue("") String nombre) {
+
+        try {
+            List<Object[]> combos = comboBean.findByNombre(nombre,first, max);
+            if (!combos.isEmpty()){
+
+            List<ComboPrecioPlantilla> combosJson = combos.stream()
+                    .map(arr -> new ComboPrecioPlantilla(
+                            (Long) arr[0],
+                            (Boolean) arr[1],
+                            (String) arr[2],
+                            (String) arr[3],
+                            (String) arr[4],
+                            (BigDecimal) arr[5]
+                    ))
+                    .collect(Collectors.toList());
+
+            long total = comboBean.countProductoByName(nombre);
+                return Response.ok(combosJson)
+                        .header(Headers.TOTAL_RECORD, total)
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+            return Response.ok(List.of())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {

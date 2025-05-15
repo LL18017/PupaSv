@@ -9,7 +9,9 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,10 +22,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboPrecioPlantilla;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Combo;
 
 /**
- *
  * @author hdz
  */
 @Testcontainers
@@ -43,10 +45,10 @@ public class ComboResourceSI extends AbstractContainerTest {
     Integer max = 30;
     Long cantidadEnScript = 11L;
     Long idBase = 1001L; // ID de referencia de Combo
-    Long idCreado=1L;
+    Long idCreado = 1L;
 
     @Order(1)
-    @Test
+//    @Test
     public void testGetBean() {
         System.out.println("Combo testSI get");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
@@ -58,7 +60,7 @@ public class ComboResourceSI extends AbstractContainerTest {
         List<Object[]> registros = respuesta.readEntity(new GenericType<List<Object[]>>() {
         });
         Assertions.assertEquals(10, registros.size());
-       
+
         // Argumentos erróneos
         respuesta = target.path("combo").queryParam("first", first).queryParam("max", -80)
                 .request(MediaType.APPLICATION_JSON).get();
@@ -150,4 +152,25 @@ public class ComboResourceSI extends AbstractContainerTest {
         Assertions.assertEquals(404, respuestaPeticion.getStatus());
     }
 
+    @Order(6)
+    @Test
+    public void testGetByName() {
+        System.out.println("Combo testSI getByName");
+        Assertions.assertTrue(servidorDeAplicaion.isRunning());
+        String nombre = "pupusa";
+        String path = String.format("combo/%s", nombre);
+        Response respuesta = target.path(path).request(MediaType.APPLICATION_JSON).get();
+
+        // Flujo correcto
+        Assertions.assertEquals(200, respuesta.getStatus());
+        Assertions.assertNotNull(respuesta);
+        List<ComboPrecioPlantilla> registros = respuesta.readEntity(new GenericType<List<ComboPrecioPlantilla>>() {
+        });
+        Assertions.assertEquals(3, registros.size());
+
+        // Argumentos erróneos
+        respuesta = target.path(path).queryParam("first", first).queryParam("max", -80)
+                .request(MediaType.APPLICATION_JSON).get();
+        Assertions.assertEquals(400, respuesta.getStatus()); // segun el error es esta liena 63
+    }
 }

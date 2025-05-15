@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 
 
 @Testcontainers
@@ -91,10 +90,10 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         ProductoPrecio precio = response.readEntity(ProductoPrecio.class);
-        assertNotNull(precio);
-        assertEquals(idProductoPrecioPrueba,  precio.getIdProductoPrecio());
+        Assertions.assertNotNull(precio);
+        Assertions.assertEquals(idProductoPrecioPrueba,  precio.getIdProductoPrecio());
         // fail("Esta prueba no pasa quemado");
     }
 
@@ -107,7 +106,7 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
         Response response = target.path(formatoPath).request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         List<ProductoPrecio> resultados = response.readEntity(new GenericType<List<ProductoPrecio>>() {});
 
 
@@ -132,10 +131,10 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(registro, MediaType.APPLICATION_JSON));
         ProductoPrecio resultado = response.readEntity(ProductoPrecio.class);
-        assertEquals(200, response.getStatus());
-        assertEquals(formatoFechaActualizada,resultado.getFechaDesde());
-        assertEquals(precioActualizadoValor,resultado.getPrecioSugerido());
-        assertEquals(createdId,resultado.getIdProductoPrecio());
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(formatoFechaActualizada,resultado.getFechaDesde());
+        Assertions.assertEquals(precioActualizadoValor,resultado.getPrecioSugerido());
+        Assertions.assertEquals(createdId,resultado.getIdProductoPrecio());
         //fail("Esta prueba no pasa quemado");
     }
 
@@ -148,11 +147,11 @@ public class ProductoPrecioResourceSI extends AbstractContainerTest {
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
 
-        assertEquals(200, response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
         Response getResponse = target.path(createdId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-        assertEquals(404, getResponse.getStatus());
+        Assertions.assertEquals(404, getResponse.getStatus());
         //fail("Esta prueba no pasa quemado");
     }
 

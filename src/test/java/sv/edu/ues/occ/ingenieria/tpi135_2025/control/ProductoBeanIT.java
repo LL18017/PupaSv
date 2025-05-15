@@ -4,8 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Producto;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoDetalle;
@@ -17,7 +15,6 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductoBeanIT extends AbstractContainerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductoBeanIT.class);
     ProductoBean cut;
 
     Long totalEnScript = 20l;//cantidad en el script

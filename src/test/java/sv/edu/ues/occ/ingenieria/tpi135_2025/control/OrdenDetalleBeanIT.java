@@ -3,9 +3,6 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.control;
 
 import jakarta.persistence.*;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
@@ -14,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;  // ✅ CORRECTO
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;

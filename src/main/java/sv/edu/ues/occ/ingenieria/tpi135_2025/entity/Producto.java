@@ -7,8 +7,6 @@ package sv.edu.ues.occ.ingenieria.tpi135_2025.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 
