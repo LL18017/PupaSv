@@ -76,7 +76,7 @@ public class ComboResource extends GeneralRest implements Serializable {
     }
 
     @GET
-    @Path("{nombre}")
+    @Path("nombre/{nombre}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRangeByName(@QueryParam("first") @DefaultValue("0") Integer first,
             @QueryParam("max") @DefaultValue("20") Integer max,

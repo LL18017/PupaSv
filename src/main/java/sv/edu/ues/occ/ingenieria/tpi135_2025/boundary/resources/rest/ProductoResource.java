@@ -83,7 +83,7 @@ public class ProductoResource extends GeneralRest implements Serializable {
     }
 
 
-    @Path("{nombre}")
+    @Path("nombre/{nombre}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRangeByName(@QueryParam("first") @DefaultValue("0") Integer first, @QueryParam("max") @DefaultValue("20") Integer max,
