@@ -1,8 +1,8 @@
 package sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas;
 
 public class ProductoCantidadPLantilla {
-    Long idProducto;
-    Integer cantidad;
+    private Long idProducto;
+    private Integer cantidad;
 
     public ProductoCantidadPLantilla(Long idProducto, Integer cantidad) {
         this.idProducto = idProducto;

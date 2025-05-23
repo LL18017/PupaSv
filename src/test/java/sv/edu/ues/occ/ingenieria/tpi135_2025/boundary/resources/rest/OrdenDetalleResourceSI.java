@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetallePK;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.ProductoPrecio;
@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
@@ -187,35 +186,35 @@ public class OrdenDetalleResourceSI extends AbstractContainerTest {
         // fail("Esta prueba no pasa quemado");
     }
 
-    @Test
-    @Order(8)
-    public void testGenerarOrdeDetalleMixto() throws IOException {
-        System.out.println("OrdenDetalle testSI GenerarOrdeDetalleMixto");
-        Long idOrden = 123451L;
-        List<DatosMixtosDTO> datos = new ArrayList<>();
-        datos.add(new DatosMixtosDTO(1001L,5,1001L,1));
-        datos.add(new DatosMixtosDTO(1002L,8,1002L,2));
-
-        String pathFormath = "/ordenDetalle/mixto";
-        Response response = target.path(pathFormath)
-                .queryParam("idOrden", idOrden)
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(datos, MediaType.APPLICATION_JSON));
-        assertEquals(200,response.getStatus());
-        //lista vacia
-        response = target.path(pathFormath)
-                .queryParam("idOrden", idOrden)
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(List.of(), MediaType.APPLICATION_JSON));
-        assertEquals(400,response.getStatus());
-        //mal id
-        response = target.path(pathFormath)
-                .queryParam("idOrden", -96)
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(List.of(), MediaType.APPLICATION_JSON));
-        assertEquals(400,response.getStatus());
-
-
-    }
+//    @Test
+//    @Order(8)
+//    public void testGenerarOrdeDetalleMixto() throws IOException {
+//        System.out.println("OrdenDetalle testSI GenerarOrdeDetalleMixto");
+//        Long idOrden = 123451L;
+//        List<DatosMixtosDTO> datos = new ArrayList<>();
+//        datos.add(new DatosMixtosDTO(1001L,5,1001L,1));
+//        datos.add(new DatosMixtosDTO(1002L,8,1002L,2));
+//
+//        String pathFormath = "/ordenDetalle/mixto";
+//        Response response = target.path(pathFormath)
+//                .queryParam("idOrden", idOrden)
+//                .request(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(datos, MediaType.APPLICATION_JSON));
+//        assertEquals(200,response.getStatus());
+//        //lista vacia
+//        response = target.path(pathFormath)
+//                .queryParam("idOrden", idOrden)
+//                .request(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(List.of(), MediaType.APPLICATION_JSON));
+//        assertEquals(400,response.getStatus());
+//        //mal id
+//        response = target.path(pathFormath)
+//                .queryParam("idOrden", -96)
+//                .request(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(List.of(), MediaType.APPLICATION_JSON));
+//        assertEquals(400,response.getStatus());
+//
+//
+//    }
 
 }

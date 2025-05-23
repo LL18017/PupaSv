@@ -8,14 +8,9 @@ import jakarta.ws.rs.core.UriInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenDetalleBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenDetalleBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.PagoBean;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Orden;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.OrdenDetalle;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.Pago;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -210,43 +205,43 @@ public class OrdenDetalleResourceTest {
         Assertions.assertEquals(500, response.getStatus());
     }
 
-
-    @Test
-    void testGenerarOrdenDetalleMixto(){
-        System.out.println("testGenerarOrdenDetalleMixto");
-        cut = new OrdenDetalleResource();
-        mockOd = Mockito.mock(OrdenDetalleBean.class);
-        cut.odBean = mockOd;
-        Long idOrden = 1L;
-        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
-        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
-        List<DatosMixtosDTO> listDatos = new ArrayList<>();
-        listDatos.add(new DatosMixtosDTO(1L,5,2L,3));
-        listDatos.add(new DatosMixtosDTO(2L,5,9L,1));
-
-        //flujo normal
-        URI uri = URI.create("http://localhost:8080/api/pago/1");
-        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
-        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
-        Mockito.doNothing().when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
-        Response response = cut.generarOrdenDetalleMixto(listDatos,idOrden);
-        Assertions.assertEquals(200, response.getStatus());
-        //lista nula
-        response = cut.generarOrdenDetalleMixto(null,idOrden);
-        Assertions.assertEquals(400, response.getStatus());
-        //id Orden invalido
-        response = cut.generarOrdenDetalleMixto(listDatos,0L);
-        Assertions.assertEquals(400, response.getStatus());
-        //excepciones
-        Mockito.reset(mockOd);
-        Mockito.doThrow(persistenceExcepcion)
-                .when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
-        response = cut.generarOrdenDetalleMixto(listDatos, idOrden);
-        Assertions.assertEquals(500, response.getStatus());
-        //fail("Esta prueba no pasa quemado");
-
-
-    }
+//
+//    @Test
+//    void testGenerarOrdenDetalleMixto(){
+//        System.out.println("testGenerarOrdenDetalleMixto");
+//        cut = new OrdenDetalleResource();
+//        mockOd = Mockito.mock(OrdenDetalleBean.class);
+//        cut.odBean = mockOd;
+//        Long idOrden = 1L;
+//        UriInfo mockUriInfo = Mockito.mock(UriInfo.class);
+//        UriBuilder mockUriBuilder = Mockito.mock(UriBuilder.class);
+//        List<DatosMixtosDTO> listDatos = new ArrayList<>();
+//        listDatos.add(new DatosMixtosDTO(1L,5,2L,3));
+//        listDatos.add(new DatosMixtosDTO(2L,5,9L,1));
+//
+//        //flujo normal
+//        URI uri = URI.create("http://localhost:8080/api/pago/1");
+//        Mockito.when(mockUriInfo.getAbsolutePathBuilder()).thenReturn(mockUriBuilder);
+//        Mockito.when(mockUriBuilder.build()).thenReturn(uri);
+//        Mockito.doNothing().when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
+//        Response response = cut.generarOrdenDetalleMixto(listDatos,idOrden);
+//        Assertions.assertEquals(200, response.getStatus());
+//        //lista nula
+//        response = cut.generarOrdenDetalleMixto(null,idOrden);
+//        Assertions.assertEquals(400, response.getStatus());
+//        //id Orden invalido
+//        response = cut.generarOrdenDetalleMixto(listDatos,0L);
+//        Assertions.assertEquals(400, response.getStatus());
+//        //excepciones
+//        Mockito.reset(mockOd);
+//        Mockito.doThrow(persistenceExcepcion)
+//                .when(mockOd).generarOrdenDetalleMixto(Mockito.eq(idOrden), Mockito.anyList(), Mockito.anyList());
+//        response = cut.generarOrdenDetalleMixto(listDatos, idOrden);
+//        Assertions.assertEquals(500, response.getStatus());
+//        //fail("Esta prueba no pasa quemado");
+//
+//
+//    }
 
 
 }

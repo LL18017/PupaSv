@@ -104,6 +104,7 @@ public class PagoDetalleResource extends GeneralRest implements Serializable {
             if (exite == null) {
                 return Response.status(404).header(Headers.WRONG_PARAMETER, "no existe el pago con id: " + id).build();
             }
+            registro.setIdPago(new Pago(id));
             pdBean.create(registro);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.path(String.valueOf(registro.getIdPagoDetalle()));

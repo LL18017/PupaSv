@@ -10,16 +10,15 @@ import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboCantidadPlantilla;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ProductoCantidadPLantilla;
-import sv.edu.ues.occ.ingenieria.tpi135_2025.control.DatosMixtosDTO;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.control.OrdenDetalleBean;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("ordenDetalle")
 @Produces(MediaType.APPLICATION_JSON)
@@ -200,7 +199,7 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("mixto")
     public Response generarOrdenDetalleMixto(
-            List<DatosMixtosDTO> datos,
+            DatosMixtosDTO datos,
             @QueryParam("idOrden") Long idOrden) {
 
         try {
@@ -208,19 +207,15 @@ public class OrdenDetalleResource extends GeneralRest implements Serializable {
                 return Response.status(400).header(Headers.WRONG_PARAMETER,"idOrden no puede ser nulo o menor que cero").build();
             }
 
-            if (datos == null || datos.isEmpty()) {
+            if (datos == null) {
                 return Response.status(400).header(Headers.WRONG_PARAMETER,"almenos una lista debe poseer data").build();
             }
-            List<Object[]> productos = datos.stream()
-                    .map(p -> new Object[]{p.getIdProductos(), p.getCantidadProductos()})
-                    .toList();
-            List<Object[]> combos = datos.stream()
-                    .map(p -> new Object[]{p.getIdCombos(), p.getCantidadCombo()})
-                    .toList();
-
+            List<ProductoCantidadPLantilla> productos = datos.getProductoList();
+            List<ComboCantidadPlantilla> combos = datos.getComboList();
             odBean.generarOrdenDetalleMixto(idOrden, productos, combos);
             return Response.ok().build();
         } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             return responseExcepcions(e, null);
         }
     }

@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.StreamingOutput;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ComboCantidadPlantilla;
+import sv.edu.ues.occ.ingenieria.tpi135_2025.boundary.resources.rest.plantillas.ProductoCantidadPLantilla;
 import sv.edu.ues.occ.ingenieria.tpi135_2025.entity.*;
 
 /**
@@ -262,7 +264,7 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
      * @throws NoResultException        si no se encuentra información necesaria para productos o combos en la base de datos.
      * @throws PersistenceException     si ocurre un error al persistir los datos en la base de datos.
      */
-    public void generarOrdenDetalleMixto(Long idOrden, List<Object[]> productosList, List<Object[]> comboList) {
+    public void generarOrdenDetalleMixto(Long idOrden, List<ProductoCantidadPLantilla> productosList, List<ComboCantidadPlantilla> comboList) {
         if (idOrden == null || idOrden <= 0) {
             throw new IllegalArgumentException("La orden es inválida o no tiene ID.");
         }
@@ -273,9 +275,9 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
         try {
             // Productos individuales
             if (productosList != null && !productosList.isEmpty()) {
-                for (Object[] producto : productosList) {
-                    Long idProducto = (Long) producto[0];
-                    Integer cantidad = (Integer) producto[1];
+                for (ProductoCantidadPLantilla producto : productosList) {
+                    Long idProducto = producto.getIdProducto();
+                    Integer cantidad = producto.getCantidad();
                     if (cantidad < 1 || cantidad == null) {
                         cantidad = 1;
                     }
@@ -297,9 +299,9 @@ public class OrdenDetalleBean extends AbstractDataAccess<OrdenDetalle> implement
             }
             // Productos desde combos
             if (comboList != null && !comboList.isEmpty()) {
-                for (Object[] combo : comboList) {
-                    Long idCombo = (Long) combo[0];
-                    Integer cantidadDeCombo = (Integer) combo[1];
+                for (ComboCantidadPlantilla combo : comboList) {
+                    Long idCombo = combo.getIdCombo();
+                    Integer cantidadDeCombo = combo.getCantidad();
 
                     List<Object[]> resultados = em.createNamedQuery(
                                     "ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)

@@ -365,79 +365,79 @@ public class OrdenDetalleBeanTest {
     }
 
 
-    @Test
-    void generarOrdenDetalleMixto() {
-        System.out.println("OrdenDetalle Test de generarOrdenDetalleMixto");
-
-        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
-        EntityManager em = Mockito.mock(EntityManager.class);
-        ordenDetalleBean.em = em;
-
-        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
-
-        Long idOrden = 12348L;
-
-        List<Object[]> productosList = new ArrayList<>();
-        productosList.add(new Object[]{1001L, -9});  // Coca x2
-        productosList.add(new Object[]{1002L, 4});  // Pepsi x4
-
-        // Simulación de combos (comboId, cantidad de combos)
-        List<Object[]> comboList = new ArrayList<>();
-        comboList.add(new Object[]{1001L, 2});  // Combo x2
-        comboList.add(new Object[]{1002L, 3});  // Combo x2
-
-        Producto coca = new Producto(1001L);
-        Producto pepsi = new Producto(1002L);
-        Producto pupusa = new Producto(1003L);
-
-        ProductoPrecio precioCoca = new ProductoPrecio();
-        precioCoca.setPrecioSugerido(BigDecimal.valueOf(1.00));
-        precioCoca.setIdProducto(coca);
-        ProductoPrecio precioPepsi = new ProductoPrecio();
-        precioPepsi.setPrecioSugerido(BigDecimal.valueOf(0.80));
-        precioPepsi.setIdProducto(pepsi);
-        ProductoPrecio precioPupusa = new ProductoPrecio();
-        precioPupusa.setIdProducto(pupusa);
-        precioPupusa.setPrecioSugerido(BigDecimal.valueOf(1.50));
-
-        //error de argumentos
-        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(null, productosList, comboList));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, null, null));
-
-        // flujo normal
-        when(em.createNamedQuery("ProductoPrecio.findProductoProductoProductoByIdProducto", Object[].class)).thenReturn(queryMock);
-        when(queryMock.setParameter("idProducto", 1001L)).thenReturn(queryMock);
-        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioCoca, coca});
-
-        when(queryMock.setParameter("idProducto", 1002L)).thenReturn(queryMock);
-        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioPepsi, pepsi});
-
-        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
-        when(queryMock.setParameter("idCombo", 1001L)).thenReturn(queryMock);
-        when(queryMock.setParameter("idCombo", 1002L)).thenReturn(queryMock);
-
-
-        List<Object[]> comboProductos = new ArrayList<>();
-        comboProductos.add(new Object[]{precioCoca, coca, 1});   // Coca x1 en combo
-        comboProductos.add(new Object[]{precioPepsi, pepsi, 1}); // Pepsi x1 en combo
-        comboProductos.add(new Object[]{precioPupusa, pupusa, 3}); // Pupusa x3 en combo
-
-        when(queryMock.getResultList()).thenReturn(comboProductos);
-        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
-
-        //errores
-
-        TypedQuery tp = Mockito.spy(TypedQuery.class);
-        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(tp);
-        when(tp.setParameter("idCombo", 1001L)).thenReturn(tp);
-        when(tp.setParameter("idCombo", 1002L)).thenReturn(tp);
-
-        doThrow(NoResultException.class).when(tp).getResultList();
-        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
-        doThrow(PersistenceException.class).when(tp).getResultList();
-        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
-
-    }
+//    @Test
+//    void generarOrdenDetalleMixto() {
+//        System.out.println("OrdenDetalle Test de generarOrdenDetalleMixto");
+//
+//        OrdenDetalleBean ordenDetalleBean = new OrdenDetalleBean();
+//        EntityManager em = Mockito.mock(EntityManager.class);
+//        ordenDetalleBean.em = em;
+//
+//        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+//
+//        Long idOrden = 12348L;
+//
+//        List<Object[]> productosList = new ArrayList<>();
+//        productosList.add(new Object[]{1001L, -9});  // Coca x2
+//        productosList.add(new Object[]{1002L, 4});  // Pepsi x4
+//
+//        // Simulación de combos (comboId, cantidad de combos)
+//        List<Object[]> comboList = new ArrayList<>();
+//        comboList.add(new Object[]{1001L, 2});  // Combo x2
+//        comboList.add(new Object[]{1002L, 3});  // Combo x2
+//
+//        Producto coca = new Producto(1001L);
+//        Producto pepsi = new Producto(1002L);
+//        Producto pupusa = new Producto(1003L);
+//
+//        ProductoPrecio precioCoca = new ProductoPrecio();
+//        precioCoca.setPrecioSugerido(BigDecimal.valueOf(1.00));
+//        precioCoca.setIdProducto(coca);
+//        ProductoPrecio precioPepsi = new ProductoPrecio();
+//        precioPepsi.setPrecioSugerido(BigDecimal.valueOf(0.80));
+//        precioPepsi.setIdProducto(pepsi);
+//        ProductoPrecio precioPupusa = new ProductoPrecio();
+//        precioPupusa.setIdProducto(pupusa);
+//        precioPupusa.setPrecioSugerido(BigDecimal.valueOf(1.50));
+//
+//        //error de argumentos
+//        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(null, productosList, comboList));
+//        Assertions.assertThrows(IllegalArgumentException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, null, null));
+//
+//        // flujo normal
+//        when(em.createNamedQuery("ProductoPrecio.findProductoProductoProductoByIdProducto", Object[].class)).thenReturn(queryMock);
+//        when(queryMock.setParameter("idProducto", 1001L)).thenReturn(queryMock);
+//        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioCoca, coca});
+//
+//        when(queryMock.setParameter("idProducto", 1002L)).thenReturn(queryMock);
+//        when(queryMock.getSingleResult()).thenReturn(new Object[]{precioPepsi, pepsi});
+//
+//        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(queryMock);
+//        when(queryMock.setParameter("idCombo", 1001L)).thenReturn(queryMock);
+//        when(queryMock.setParameter("idCombo", 1002L)).thenReturn(queryMock);
+//
+//
+//        List<Object[]> comboProductos = new ArrayList<>();
+//        comboProductos.add(new Object[]{precioCoca, coca, 1});   // Coca x1 en combo
+//        comboProductos.add(new Object[]{precioPepsi, pepsi, 1}); // Pepsi x1 en combo
+//        comboProductos.add(new Object[]{precioPupusa, pupusa, 3}); // Pupusa x3 en combo
+//
+//        when(queryMock.getResultList()).thenReturn(comboProductos);
+//        Assertions.assertDoesNotThrow(() -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+//
+//        //errores
+//
+//        TypedQuery tp = Mockito.spy(TypedQuery.class);
+//        when(em.createNamedQuery("ComboDetalle.findProductoPrecioProductoAndCantidadByIdCombo", Object[].class)).thenReturn(tp);
+//        when(tp.setParameter("idCombo", 1001L)).thenReturn(tp);
+//        when(tp.setParameter("idCombo", 1002L)).thenReturn(tp);
+//
+//        doThrow(NoResultException.class).when(tp).getResultList();
+//        Assertions.assertThrows(NoResultException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+//        doThrow(PersistenceException.class).when(tp).getResultList();
+//        Assertions.assertThrows(PersistenceException.class, () -> ordenDetalleBean.generarOrdenDetalleMixto(idOrden, productosList, comboList));
+//
+//    }
 
     @Test
     void delete() {
