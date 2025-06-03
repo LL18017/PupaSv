@@ -1,6 +1,6 @@
 FROM jenkins/jenkins:lts
 
-USER jenkins
+USER root
 
 RUN apt-get update && \
     apt-get install -y \
@@ -17,4 +17,4 @@ RUN apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 RUN git config --global --add safe.directory /usr/local/proyectos/PupaSv/.git
 RUN git config --global --add safe.directory /usr/local/proyectos/PupaSvFE/.git
-RUN usermod -aG docker jenkins
+RUN groupadd docker && usermod -aG docker jenkins

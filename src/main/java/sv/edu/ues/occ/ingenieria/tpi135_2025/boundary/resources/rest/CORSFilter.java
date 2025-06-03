@@ -23,7 +23,7 @@ public class CORSFilter implements Filter {
         res.setHeader("Access-Control-Allow-Headers", "Origin, Accept, Content-Type, Access-Control-Request-Method, " +
                 "Access-Control-Request-Headers, Authorization,not-found-id-sala");
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Expose-Headers", "Location");
+        res.setHeader("Access-Control-Expose-Headers", "Location, Total-records");
 
         // Verificar si es una preflight request
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
