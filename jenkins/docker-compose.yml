@@ -16,6 +16,7 @@ services:
       - jenkins_home:/var/jenkins_home
       - /usr/local/proyectos/PupaSv:/usr/local/proyectos/PupaSv
       - /usr/local/proyectos/PupaSvFE:/usr/local/proyectos/PupaSvFE
+      - /usr/local/proyectos/PupaSvETE:/usr/local/proyectos/PupaSvETE
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     networks:
