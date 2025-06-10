@@ -6,8 +6,11 @@ pipeline {
     }
 
     environment {
-        PROJECT_ROOT = 'PupaSv' // Directorio clonado
+        PROJECT_ROOT = 'PupaSv'
+        BACKEND_PROD_IMAGE = 'backend-pupa'
+         BACKEND_CONTAINER = 'backend-pupa-container'
     }
+
 
     stages {
         stage('Limpiar Workspace') {
@@ -74,9 +77,33 @@ pipeline {
     }
 
 
-    post {
-        always {
-            echo 'Pipeline finalizado'
-        }
-    }
+   post {
+       success {
+         archiveArtifacts artifacts: 'PupaSv/target/**.war', fingerprint: true
+
+         sh '''
+           if docker images --format '{{.Repository}}:{{.Tag}}' | grep -q "^$BACKEND_PROD_IMAGE:"; then
+               echo "La imagen $BACKEND_PROD_IMAGE existe. Eliminando..."
+               docker rmi -f $(docker images -q $BACKEND_PROD_IMAGE)
+           else
+               echo "La imagen $BACKEND_PROD_IMAGE no existe. Nada que eliminar."
+           fi
+         '''
+
+         dir("${PROJECT_ROOT}") {
+           // Construir imagen para producción
+           sh 'docker build -t $BACKEND_PROD_IMAGE .'
+
+           // Eliminar contenedor anterior si existe
+           sh '''
+             if [ "$(docker ps -aq -f name=$BACKEND_CONTAINER)" ]; then
+               docker rm -f $BACKEND_CONTAINER
+             fi
+           '''
+
+           // Ejecutar contenedor
+           sh 'docker run -d --name $BACKEND_CONTAINER -p 9080:9080 -e DB_HOST=db16 -e DB_NAME=TipicoSV -e DB_PORT=5432 -e DB_USER=postgres -e DB_PASSWORD=12345 --network tpi_pupa_network $BACKEND_PROD_IMAGE'
+         }
+       }
+     }
 }
