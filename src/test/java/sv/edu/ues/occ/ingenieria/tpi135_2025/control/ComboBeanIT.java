@@ -269,13 +269,14 @@ public class ComboBeanIT extends AbstractContainerTest {
         EntityManager em = emf.createEntityManager();
         cut.em = em;
 
-        String nombreExistente = "superCombo"; // Nombre creado en la prueba anterior
-        String nombreInexistente = "NoExisteCombo123";
+        String nombreExistente = "tradiCombo"; // Nombre creado en la prueba anterior
+        String nombreInexistente = "khbaLGC;AEKHCB;AEjb;aekjc;i";
 
         try {
             em.getTransaction().begin();
 
             // Caso 1: Buscar combo existente
+//            cut.findAll().stream().forEach(e-> System.out.println(e.getNombre()));
             List<Object[]> resultado = cut.findByNombre(nombreExistente,first,max);
             Assertions.assertNotNull(resultado);
             Assertions.assertFalse(resultado.isEmpty(), "Debe devolver al menos un combo");
