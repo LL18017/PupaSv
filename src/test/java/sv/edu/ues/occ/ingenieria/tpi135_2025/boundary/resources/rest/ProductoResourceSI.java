@@ -254,7 +254,7 @@ public class ProductoResourceSI extends AbstractContainerTest {
 
         String nombre = "tama";
         String path = "producto";
-        String formato = String.format("producto/%s", nombre);
+        String formato = String.format("producto/nombre/%s", nombre);
 
         //todos los registros
         Response respuesta = target.path(formato).request(MediaType.APPLICATION_JSON).get();

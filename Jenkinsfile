@@ -3,7 +3,6 @@ pipeline {
 
     tools {
         maven 'mvn 3.8.7'
-        nodejs 'nodejs'
     }
 
     environment {
@@ -72,31 +71,6 @@ pipeline {
                 """
             }
         }
-           stage('Ejecutar Análisis SonarQube') {
-                        environment {
-                            scannerHome = tool name: 'sonar-scaner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                        }
-                        steps {
-                            dir("${PROJECT_ROOT}") {
-                                withSonarQubeEnv('sonarqube') {
-                                    sh '''
-                                    mvn clean compile
-                                    /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scaner/bin/sonar-scanner \
-                                    -Dsonar.projectKey=PupaSv \
-                                    -Dsonar.projectName=PupaSv \
-                                    -Dsonar.projectVersion=0.0.6 \
-                                    -Dsonar.sources=src/main \
-                                    -Dsonar.tests=src/test \
-                                    -Dsonar.language=java \
-                                    -Dsonar.java.binaries=target/classes
-                                    '''
-                                }
-                            }
-                            timeout(time: 3, unit: 'MINUTES') {
-                                waitForQualityGate abortPipeline: true
-                            }
-                        }
-                    }
     }
 
 

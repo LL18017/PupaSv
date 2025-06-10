@@ -158,7 +158,7 @@ public class ComboResourceSI extends AbstractContainerTest {
         System.out.println("Combo testSI getByName");
         Assertions.assertTrue(servidorDeAplicaion.isRunning());
         String nombre = "pupusa";
-        String path = String.format("combo/%s", nombre);
+        String path = String.format("combo/nombre/%s", nombre);
         Response respuesta = target.path(path).request(MediaType.APPLICATION_JSON).get();
 
         // Flujo correcto
