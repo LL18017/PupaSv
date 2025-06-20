@@ -78,11 +78,17 @@ pipeline {
 
   post {
   success {
+     script {
+            def hora = new Date().format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('America/El_Salvador'))
+            writeFile file: 'PupaSv/target/info.txt', text: "Build: ${currentBuild.number}\nCreado: ${hora}\n"
 
-    archiveArtifacts artifacts: 'PupaSv/target/**.war', fingerprint: true
-        echo "Artefacto generado exitosamente"
-        echo "Build #: ${pipelineNumber}"
-        echo "Fecha de creación: ${fechaCreacion}"
+            archiveArtifacts artifacts: 'PupaSv/target/**.war, PupaSv/target/info.txt', fingerprint: true
+
+            echo "Artefacto generado exitosamente"
+            echo "Pipeline backend número: ${currentBuild.number}"
+            echo "Fecha de creación: ${hora}"
+        }
+
     sh """
           if docker ps --filter "name=${env.BACKEND_CONTAINER}" --format '{{.Names}}' | grep -w ${env.BACKEND_CONTAINER}; then
             docker stop ${env.BACKEND_CONTAINER}
