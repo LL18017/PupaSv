@@ -42,6 +42,7 @@ public class OrdenBeanIT extends AbstractContainerTest {
     @Order(1)
     @Test
     public void contar() {
+        System.out.println("examen final de tpi");
         System.out.println("Orden testIT Contar");
         EntityManager em = emf.createEntityManager();
         cut.em = em;
